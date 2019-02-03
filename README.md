@@ -1,1 +1,2 @@
-# masters_thesis
+# Masters Thesis
+## Time Line
