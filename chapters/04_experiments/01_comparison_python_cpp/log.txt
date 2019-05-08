@@ -7,7 +7,7 @@ tasks:
 	straight: v = (0.1, 0.0, 0.0)
 	diagonal: v = (0.1, 0.1, 0.0)
 	turn:     v = (0.1, 0.0, 0.1)
-	obstacle: v = (0.1, 0.0, 0.0) x_obs = 0.6, y_obs = 0.0
+	obstacle: v = (0.1, 0.0, 0.0) x_obs = 1.6, y_obs = 1.0, r_obs = 1.0
 
 parameters:
 	see configs_hrp2.yaml
