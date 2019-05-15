@@ -45,10 +45,45 @@
 
   \tableofcontents
   
+  %% chapters
+  \chapter{Introduction}
+  % humanoids (icub, others), problem statement, research aim and objectives
+    
+  \chapter{Background}
+  \section{Humanoid Walking}
+  \include{chapters/02_background/01_zmp}  % zero moment point
+  \include{chapters/02_background/02_lip}  % linear inverted pendulum
+  \include{chapters/02_background/03_nmpc} % nonlinear model predictive control
+  \include{chapters/02_background/04_ip}   % interpolation
+  \include{chapters/02_background/05_ki}   % kinematics
   
+  \section{Machine Learning}  
+  \include{chapters/02_background/06_bc}   % behavioural cloning
+  \include{chapters/02_background/07_rl}   % reinforcement learning
+  \include{chapters/02_background/08_ip}   % image processing
+   
+  \chapter{State of the Art}
+  % contributions
+   
+  \chapter{Methods}
+  \section{Software}
+  \include{chapters/03_methods/01_eig}     % eigen
+  \include{chapters/03_methods/02_qp}      % qpoases
+  \include{chapters/03_methods/03_rbdl}    % rbdl
+  \include{chapters/03_methods/04_yarp}    % yarp
+  \include{chapters/03_methods/05_pyt}     % pytorch
+  \include{chapters/03_methods/06_cv}      % opencv
   
+  \section{Implementation}  
+   
+  \chapter{Experiments}
   
-
+  \section{User Controlled Walking}
+  
+  \section{Autonomous Walking}
+    
+  \chapter{Conclusion}
+  
   \part{Appendix}
   \begin{appendix}
     \chapter{Lists}
