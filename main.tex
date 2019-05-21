@@ -49,30 +49,34 @@
   \chapter{Introduction}
   % humanoids (icub, others), problem statement, research aim and objectives
     
+  \chapter{State of the Art}
+  \label{sec::2_sota}
+  % contributions
+    
   \chapter{Background}
+  \input{chapters/03_background/00_in}   % introduction to background
   \section{Humanoid Walking}
-  \include{chapters/02_background/01_zmp}  % zero moment point
-  \include{chapters/02_background/02_lip}  % linear inverted pendulum
-  \include{chapters/02_background/03_nmpc} % nonlinear model predictive control
-  \include{chapters/02_background/04_ip}   % interpolation
-  \include{chapters/02_background/05_ki}   % kinematics
+  \label{sec::31_hm}
+  \input{chapters/03_background/01_zmp}  % zero moment point
+  \input{chapters/03_background/02_lip}  % linear inverted pendulum
+  \input{chapters/03_background/03_nmpc} % nonlinear model predictive control
+  \input{chapters/03_background/04_ip}   % interpolation
+  \input{chapters/03_background/05_ki}   % kinematics
   
   \section{Machine Learning}  
-  \include{chapters/02_background/06_bc}   % behavioural cloning
-  \include{chapters/02_background/07_rl}   % reinforcement learning
-  \include{chapters/02_background/08_ip}   % image processing
-   
-  \chapter{State of the Art}
-  % contributions
+  \label{sec::32_ml}
+  \input{chapters/03_background/06_bc}   % behavioral cloning
+  \input{chapters/03_background/07_rl}   % reinforcement learning
+  \input{chapters/03_background/08_ip}   % image processing
    
   \chapter{Methods}
   \section{Software}
-  \include{chapters/03_methods/01_eig}     % eigen
-  \include{chapters/03_methods/02_qp}      % qpoases
-  \include{chapters/03_methods/03_rbdl}    % rbdl
-  \include{chapters/03_methods/04_yarp}    % yarp
-  \include{chapters/03_methods/05_pyt}     % pytorch
-  \include{chapters/03_methods/06_cv}      % opencv
+  %\input{chapters/04_methods/01_eig}     % eigen
+  %\input{chapters/04_methods/02_qp}      % qpoases
+  %\input{chapters/04_methods/03_rbdl}    % rbdl
+  %\input{chapters/04_methods/04_yarp}    % yarp
+  %\input{chapters/04_methods/05_pyt}     % pytorch
+  %\input{chapters/04_methods/06_cv}      % opencv
   
   \section{Implementation}  
    
@@ -81,17 +85,18 @@
   \section{User Controlled Walking}
   
   \section{Autonomous Walking}
-    
+
   \chapter{Conclusion}
-  
+
   \part{Appendix}
   \begin{appendix}
     \chapter{Lists}
     \listoffigures
     \listoftables
-    \bibliography{chapters/06_appendix/references}{}
+    \bibliographystyle{plain}
+    \bibliography{chapters/07_appendix/references}
     \citestyle{egu}
     \bibliographystyle{plainnat}
-    \include{chapters/06_appendix/deposition}
+    \include{chapters/07_appendix/deposition}
   \end{appendix}
 \end{document}
