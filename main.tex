@@ -27,6 +27,10 @@
 \usepackage                             {natbib}
 \usepackage                             {hyperref}
 
+% my packages
+\usepackage{bm}
+\usepackage{subcaption}
+
 % links
 \definecolor{darkblue}{rgb}{0.0,0.0,0.4}
 \definecolor{darkgreen}{rgb}{0.0,0.4,0.0}
@@ -40,7 +44,7 @@
 \begin{document}
   %% title pages similar to providet template instead of maketitle
   \include{chapters/00_title/titlepages-ger} % select either german
-  \include{chapters/00_titletitlepages-eng} % or english title page
+  \include{chapters/00_title/titlepages-eng} % or english title page
   \include{chapters/00_title/abstracts}
 
   \tableofcontents
@@ -92,7 +96,6 @@
     \listoftables
     \bibliographystyle{unsrt}
     \bibliography{chapters/07_appendix/references}
-    \citestyle{egu}
     \include{chapters/07_appendix/deposition}
   \end{appendix}
 \end{document}
