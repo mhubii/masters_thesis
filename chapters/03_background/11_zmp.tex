@@ -61,3 +61,26 @@ Therein, $r_x$, and $r_y$ are the x-, and y-coordinates of the zero moment point
 \\\\
 We have now found a simple analytic expression for the relationship of the zero moment point and the center of mass, which will help us to formulate an optimal control problem that we can solve in real time. This simplification is of course only true to some extend, and we need to find a way to verify its accuracy. The easiest way to do so is to measure the real zero moment point. We will further elaborate on this within the next paragraph - Measurement of the Zero Moment Point, and we will derive a method that only relies on force torque sensors in the ankle.
 \subsubsection{Measurement of the Zero Moment Point}
+There are several methods that enable us to measure the position of the zero moment point, among them the utilization of pressure sensitive soles, as outlined in \cite{kajita2014introduction}. Furthermore, there exist approximate approaches that involve the knowledge of all acting external forces \cite{huang2001planning}, which can for example be obtained from unconstrained inverse dynamics \cite{michel2017dynamic}. Since we can rely on measurements of force torque sensors that are located at the ankles, we will infer the position of the zero moment point from them \cite{kajita2014introduction}. If we consider the force torque sensor to be located a position $\bm{p}_i$ (fig. \ref{fig::311_force_torque}), then we can obtain the moment about any point $\bm{p}$ according to eq. \ref{eq::311_moment}.
+\begin{align}
+	\bm{\tau}(\bm{p}) = (\bm{p}_i-\bm{p})\times \bm{f}_i + \bm{\tau}_i
+	\label{eq::311_moment}
+\end{align}
+by definition, the moment about the zero moment point vanishes along the horizontal axes, therefore we can then set $\tau_x = \tau_y = 0$ in eq. \ref{eq::311_moment} and then solve for the position to obtain the zero moment point (eq. \ref{eq::311_x_pos_zmp} and \ref{eq::311_y_pos_zmp}).
+\begin{align}
+	p_x &= \frac{\left[-\tau_{i,y}-(p_{i,z}-p_z)f_{i,x}+p_{i,x}f_{i,z}\right]}{f_{i,z}}
+	\label{eq::311_x_pos_zmp}\\
+	p_y &= \frac{\left[-\tau_{i,x}-(p_{i,z}-p_z)f_{i,y}+p_{i,y}f_{i,z}\right]}{f_{i,z}}
+	\label{eq::311_y_pos_zmp}
+\end{align}
+For the case of double support, we can further include an additional force torque sensor to our measurements. Similar to equation \ref{eq::311_moment}, the total moment about the point $\bm{p}$, then equates to
+\begin{align}
+	\bm{\tau}(\bm{p}) = \sum_{i \in L, R} (\bm{p}_i-\bm{p})\times \bm{f}_i + \bm{\tau}_i
+\end{align}
+Which can yet again be solved for the position of the zero moment point if we set the moment along the horizontal axes to be zero
+\begin{align}
+	p_x &= \frac{\sum_{i \in L, R}\left[-\tau_{i,y}-(p_{i,z}-p_z)f_{i,x}+p_{i,x}f_{i,z}\right]}{f_{i,z}}
+	\label{eq::311_x_pos_zmp_ds}\\
+p_y &= \frac{\sum_{i \in L, R}\left[-\tau_{i,x}-(p_{i,z}-p_z)f_{i,y}+p_{i,y}f_{i,z}\right]}{f_{i,z}}
+	\label{eq::311_y_pos_zmp_ds}
+\end{align}
