@@ -73,14 +73,4 @@ by definition, the moment about the zero moment point vanishes along the horizon
 	p_y &= \frac{\left[-\tau_{i,x}-(p_{i,z}-p_z)f_{i,y}+p_{i,y}f_{i,z}\right]}{f_{i,z}}
 	\label{eq::311_y_pos_zmp}
 \end{align}
-For the case of double support, we can further include an additional force torque sensor to our measurements. Similar to equation \ref{eq::311_moment}, the total moment about the point $\bm{p}$, then equates to
-\begin{align}
-	\bm{\tau}(\bm{p}) = \sum_{i \in L, R} (\bm{p}_i-\bm{p})\times \bm{f}_i + \bm{\tau}_i
-\end{align}
-Which can yet again be solved for the position of the zero moment point if we set the moment along the horizontal axes to be zero
-\begin{align}
-	p_x &= \frac{\sum_{i \in L, R}\left[-\tau_{i,y}-(p_{i,z}-p_z)f_{i,x}+p_{i,x}f_{i,z}\right]}{f_{i,z}}
-	\label{eq::311_x_pos_zmp_ds}\\
-p_y &= \frac{\sum_{i \in L, R}\left[-\tau_{i,x}-(p_{i,z}-p_z)f_{i,y}+p_{i,y}f_{i,z}\right]}{f_{i,z}}
-	\label{eq::311_y_pos_zmp_ds}
-\end{align}
+If we further choose our coordinate system to lie along the z-axis of the force torque sensor, we can simplify equations \ref{eq::311_x_pos_zmp} and \ref{eq::311_y_pos_zmp} 
