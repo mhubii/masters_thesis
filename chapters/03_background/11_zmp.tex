@@ -73,4 +73,26 @@ by definition, the moment about the zero moment point vanishes along the horizon
 	p_y &= \frac{\left[-\tau_{i,x}-(p_{i,z}-p_z)f_{i,y}+p_{i,y}f_{i,z}\right]}{f_{i,z}}
 	\label{eq::311_y_pos_zmp}
 \end{align}
-If we further choose our coordinate system to lie along the z-axis of the force torque sensor, we can simplify equations \ref{eq::311_x_pos_zmp} and \ref{eq::311_y_pos_zmp} 
+If we further choose our coordinate system to lie along the z-axis of the force torque sensor (fig. ...), we can simplify equations \ref{eq::311_x_pos_zmp} and \ref{eq::311_y_pos_zmp} to find
+\begin{align}
+	p_x &= \frac{(-\tau_{i,y}-f_{1,x}d)}{f_{1,z}} 
+	\label{eq::311_x_pos_zmp_simp}\\
+	p_y &= \frac{(\tau_{i,x}-f_{1,y}d)}{f_{1,z}}
+	\label{eq::311_y_pos_zmp_simp}
+\end{align}
+We can use equations \ref{eq::311_x_pos_zmp_simp} and \ref{eq::311_y_pos_zmp_simp} to determine the position of the zero moment point for the left and the right foot with respect to coordinates frames that are attached to the respective foot. These circumstances change once not only one, but both feet are in contact with the ground. What still holds true, in the case of a dynamically balanced gait, is the fact that the positions which we just obtained from equations \ref{eq::311_x_pos_zmp_simp} and \ref{eq::311_y_pos_zmp_simp} represent points where the interaction of the robot with the environment can solely be described by a single force along the z-axis. All other forces or torques cancel out. Therefore, to determine the position of the zero moment point for the double support phase, we need to modify equation \ref{eq::311_moment} slightly. This yields 
+\begin{align}
+	\bm{\tau}(\bm{p}) = \sum_{i\in\{L, R\}} (\bm{p}_i - \bm{p})\times\bm{f}_i
+	\label{eq::311_moment_ds}
+\end{align}
+where the individual torques are now zero and the only forces $\bm{f}_i$ that exist between the robot and the environment can be described by the z-component which are measured at the ankles' force torque sensors. Yet again, to obtain the position of the zero moment point, we have to set the x-, and y-components of the torque in equation \ref{eq::311_moment_ds} to zero and find
+\begin{align}
+	p_x &= \frac{\sum_{i\in\{L, R\}}p_{i,x}f_{i,z}}{\sum_{i\in\{L, R\}}f_{i,z}} \\
+	p_y &= \frac{\sum_{i\in\{L, R\}}p_{i,y}f_{i,z}}{\sum_{i\in\{L, R\}}f_{i,z}}
+\end{align}
+These expressions of course only hold true in a shared coordinate system and therefore we need to transform the position of the zero moment point which we obtained from equations \ref{eq::311_x_pos_zmp_simp} and \ref{eq::311_y_pos_zmp_simp} to the world frame. Finally, we can write down the formulation for the zero moment point which holds equally true for the single and double support phase
+\begin{align}
+	p_x &= \frac{p_{R,x}f_{R,z}+p_{L,x}f_{L,z}}{f_{R,z}+f_{L,z}}  \\
+	p_y &= \frac{p_{R,y}f_{R,z}+p_{L,y}f_{L,z}}{f_{R,z}+f_{L,z}}
+\end{align}
+At this point we are now equipped with a general understanding for the zero moment point, as well as with the knowledge of simplified models to compute it analytically, and a method to measure it so that we can evaluate the performance of a potential pattern generator which is based upon the zero moment point. Therefore, in the next chapter - Nonlinear Model Predictive Control, we will try to understand a method that allows us to generate dynamically balanced center of mass and feet trajectories, which 
