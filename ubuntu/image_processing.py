@@ -37,7 +37,7 @@ thresh = 24
 
 for i in range(r_conf.shape[0]):
     for j in range(l_conf.shape[1]):
-        rj = j - int(int(l_disp[i, j])>>4)
+        rj = j - int(int(l_disp[i, j])>>4) # bitshift by 4, divides by powers of 2 (here: 2**4)
         if rj >= 0 and rj < r_conf.shape[1]:
             disp = abs(l_disp[i, j] + r_disp[i, rj])
             if disp < thresh:
