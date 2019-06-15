@@ -1,21 +1,43 @@
 \subsection{Image Processing}
 In the previous sections we have learned about two different approaches to train neural nets on solving certain tasks. Although we came to understand that the complexity of the task to be solved correlates strongly with the amount of data at hand, there exist domains from which it is undeniably easier to do so. To equip a neural net with some sort of prior knowledge by switching the domain may therefore not only be highly desirable but sometimes also needed if the amount or quality of data is not sufficient. One domain which is of special interest when it comes to interacting in a three dimensional environment is a domain that represents depth information. If there are any, it may sometimes be possible to extract this kind of prior knowledge from a depth camera. As for this work, we need to rely on stereo cameras and powerful algorithms that allow us to compute depth images in real time. The algorithm that helps us to do so, in terms of the extraction of weighted least squares disparity maps, will be presented in the following paragraph - Depth Map Extraction.
 \subsubsection{Depth Map Extraction}
-As already pointed out, the depth map is generated from stereo camera images by a technique called stereo matching \cite{hamzah2010sum}. This method works best for  
+As already pointed out, the depth map is generated from stereo camera images by a technique called stereo matching \cite{hamzah2010sum}. This method works best for edge filtered images, as will become clear soon. To obtain edge filtered images, the RGB images are first converted into grayscale, which are then convolved with the Sobel kernel $\bm{S}_x$ along the horizontal axis \cite{sobel2014an} (figure \ref{fig::323_image_preprocessing}). 
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=.25]{chapters/03_background/img/image_preprocessing.png}
-	\caption{}
+	\includegraphics[scale=.28]{chapters/03_background/img/image_preprocessing.png}
+	\caption{Image preprocessing to obtain edge filtered images.}
 	\label{fig::323_image_preprocessing}
 \end{figure}
+When having a look at the Sobel kernel $\bm{S}_x$ (equation \ref{eq::323_sobel}), it immediately becomes clear that it approximates the derivative of an image, either along the horizontal or vertical axis, of which we only consider the first case.
+\begin{align}
+	\bm{S}_x=
+	\begin{pmatrix}
+		-1 & 0 & +1 \\
+		-2 & 0 & +2 \\
+		-1 & 0 & +1
+	\end{pmatrix}
+	\label{eq::323_sobel}
+\end{align}
+
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=.3]{chapters/03_background/img/left_disparity_map.png}
+	\includegraphics[scale=.28]{chapters/03_background/img/left_disparity_map.png}
 	\caption{}
 	\label{fig::323_left_disparity_map}
 \end{figure}
-\cite{sobel2014an}   sobel\\
-\cite{hamzah2010sum} stereo matching\\
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=.28]{chapters/03_background/img/confidence_map.png}
+	\caption{}
+	\label{fig::323_confidence_map}
+\end{figure}
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=.28]{chapters/03_background/img/weighted_least_squares_disparity.png}
+	\caption{}
+	\label{fig::323_weighted_least_squares_disparity}
+\end{figure}
+
 \cite{egnal2004stereo} left right consistency\\
 \cite{min2014fast}   wls\\
 \cite{tomasi1998bilateral} bilateral
