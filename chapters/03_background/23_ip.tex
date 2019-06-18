@@ -1,9 +1,5 @@
 \subsection{Image Processing}
-In the previous sections we have learned about two different approaches to train neural nets on solving certain tasks. Although we came to understand that the complexity of the task to be solved correlates strongly with the amount of data at hand, there exist domains from which it is undeniably easier to do so. To equip a neural net with some sort of prior knowledge by switching the domain may therefore not only be highly desirable but sometimes also needed if the amount or quality of data is not sufficient. One domain which is of special interest when it comes to interacting in a three dimensional environment is a domain that represents depth information. If there are any, it may sometimes be possible to extract this kind of prior knowledge from a depth camera. As for this work, we need to rely on stereo cameras and powerful algorithms that allow us to compute depth images in real time. As a requirement for the algorithm to work properly, it is important to calibrate the robot's cameras. Therefore, the next paragraph - Mono and Stereo Camera Calibration, will explain in detail why, and how to calibrate cameras.
-\subsubsection{Mono and Stereo Camera Calibration}
-asd
-\\\\
-The algorithm that helps us to do so, in terms of the extraction of weighted least squares disparity maps, will be presented in the following paragraph - Depth Map Extraction.
+In the previous sections we have learned about two different approaches to train neural nets on solving certain tasks. Although we came to understand that the complexity of the task to be solved correlates strongly with the amount of data at hand, there exist domains from which it is undeniably easier to do so. To equip a neural net with some sort of prior knowledge by switching the domain may therefore not only be highly desirable but sometimes also needed if the amount or quality of data is not sufficient. One domain which is of special interest when it comes to interacting in a three dimensional environment is a domain that represents depth information. If there are any, it may sometimes be possible to extract this kind of prior knowledge from a depth camera. As for this work, we need to rely on stereo cameras and powerful algorithms that allow us to compute depth images in real time. The algorithm that helps us to do so, in terms of the extraction of weighted least squares disparity maps, will be presented in the following paragraph - Depth Map Extraction.
 \subsubsection{Depth Map Extraction}
 As already pointed out, the depth map is generated from stereo camera images by a technique called stereo block matching \cite{hamzah2010sum}. This method works best for edge filtered images, as will become clear soon. To obtain edge filtered images $\bm{E}$, the stereo RGB images are first converted into grayscale $\bm{G}$, which are then convolved with the Sobel kernel $\bm{S}_x$ along the horizontal axis \cite{sobel2014an} (equation \ref{eq::323_sobel_conv}, figure \ref{fig::323_image_preprocessing}). 
 \begin{align}
@@ -26,17 +22,45 @@ When having a look at the Sobel kernel $\bm{S}_x$ (equation \ref{eq::323_sobel})
 	\end{pmatrix}
 	\label{eq::323_sobel}
 \end{align}
-To understand the block matching algorithm, we first need to figure out the transformation that images undergo for a change in perspective, which is caused by the two different positions of the cameras within the stereo camera pair. 
+To understand the block matching algorithm, we first need to figure out the transformation that images undergo for a change in perspective, which is caused by the two different positions of the cameras within the stereo camera pair. For an ideal setup, we have two identical cameras, and they are neither rotated relatively to each other, nor is there any other translation, but a shift along the x-axis (figure. \ref{fig::323_stereo_camera}). This may of course not always be true, and there are methods to correct for uncertainties, which we will present in the following paragraph, but omit for simplicity right now. The principle goal, for the inference of depth information from two images, is to find points in the right image that correspond to points in the left image. By triangulation, the displacement or disparity of a point in the right image, relative to its corresponding point in the left image, can then be used to extract the depth. The farther a point $\bm{X}$ lies away from the cameras, the smaller its displacement will be. In figure \ref{fig::323_stereo_camera}, we can see that a point $\bm{X}$, which is seen by the left camera, could in principle lie anywhere on the epipolar line at $\bm{x}'$, as seen from the right camera, if there is no depth information available. 
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=.28]{chapters/03_background/img/stereo_camera.png}
+	\caption{The stereo setup with a left and a right camera.}
+	\label{fig::323_stereo_camera}
+\end{figure}
+It results that, to find correspondences, one only has to search along the epipolar line. Also, since points in the right image that correspond to points in the left image, will always be displaced to the left, one only has to search in this direction. The procedure is shown in figure \ref{fig::323_left_disparity_map}. Instead of looking for single pixel correspondences, it is advised to search for whole block correspondences, since it reduces the noise drastically. Blocks of a defined block size $N$ are taken from the left image, and then the sum of absolute differences $SAD$ is computed for every displacement $d$ in the right image, ranging from zero to number of disparities $D$ (equation \ref{eq::323_sad}, figure \ref{fig::323_left_disparity_map}).
+\begin{align}
+	SAD(d) = \sum_{x,y=0}^N |\bm{E}_{left}(x,y) - \bm{E}_{right}(x-d,y)|
+	\label{eq::323_sad}
+\end{align}
+The disparity $d$ that minimizes the sum of absolute differences $SAD$ is taken to serve as the best correspondence and is therefore used in the disparity map.  Here we can already see that due to the uniqueness of the edge filtered the images $\bm{E}$, it is easier to find correspondences there, rather than in the grayscale or RGB images.
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_background/img/left_disparity_map.png}
-	\caption{}
+	\caption{Generation of the left disparity map by the block matching algorithm.}
 	\label{fig::323_left_disparity_map}
 \end{figure}
+To further refine the disparity map, and especially to assure good results in textureless  regions, we apply a weighted least squares filtering, which is based on the confidence of depth measures. The confidence of depth measures is obtained from the variance within the disparity map $\bm{D}$ (equation \ref{eq::323_variance}, figure \ref{fig::323_confidence_map}).
+\begin{align}
+	 \text{Var}(\bm{D}) = \text{E}\left[\bm{D}^2\right] - \text{E}\left[\bm{D}\right]^2
+	\label{eq::323_variance}
+\end{align} 
+Therein the expectation value for $\bm{D}$ is computed with the kernel $\bm{K}$ from equation following equation
+\begin{align}
+	\bm{K} = \alpha
+	\begin{pmatrix}
+	1 & \dots & 1 \\
+	\vdots & \ddots & \vdots \\
+	1 & \dots & 1
+	\end{pmatrix},
+	\label{eq::323_kernel}
+\end{align}
+where $\alpha = \frac{1}{\text{width}\cdot\text{height}}$.
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_background/img/confidence_map.png}
-	\caption{}
+	\caption{Generation of the confidence map from the variance within the disparity map.}
 	\label{fig::323_confidence_map}
 \end{figure}
 \begin{figure}[h]
@@ -49,3 +73,6 @@ To understand the block matching algorithm, we first need to figure out the tran
 \cite{egnal2004stereo} left right consistency\\
 \cite{min2014fast}   wls\\
 \cite{tomasi1998bilateral} bilateral
+\\\\
+As a requirement for the algorithm to work properly, it is important to calibrate the robot's cameras. Therefore, the next chapter - Mono and Stereo Camera Calibration, will explain in detail why, and how to calibrate cameras.
+\subsubsection{Mono and Stereo Camera Calibration}
