@@ -29,12 +29,12 @@ To understand the block matching algorithm, we first need to figure out the tran
 	\caption{The stereo setup with a left and a right camera.}
 	\label{fig::323_stereo_camera}
 \end{figure}
-It results that, to find correspondences, one only has to search along the epipolar line. Also, since points in the right image that correspond to points in the left image, will always be displaced to the left, one only has to search in this direction. The procedure is shown in figure \ref{fig::323_left_disparity_map}. Instead of looking for single pixel correspondences, it is advised to search for whole block correspondences, since it reduces the noise drastically. Blocks of a defined block size $N$ are taken from the left image, and then the sum of absolute differences $SAD$ is computed for every displacement $d$ in the right image, ranging from zero to number of disparities $D$ (equation \ref{eq::323_sad}, figure \ref{fig::323_left_disparity_map}).
+It results that, to find correspondences, one only has to search along the epipolar line. Also, since points in the right image that correspond to points in the left image, will always be displaced to the left, one only has to search in this direction. The procedure is shown in figure \ref{fig::323_left_disparity_map}. Instead of looking for single pixel correspondences, it is advised to search for whole block correspondences, since it reduces the noise drastically. Blocks of a defined block size $N$ are taken from the left image, and then the sum of absolute differences SAD is computed for every displacement $d$ in the right image, ranging from zero to number of disparities $D$ (equation \ref{eq::323_sad}, figure \ref{fig::323_left_disparity_map}).
 \begin{align}
-	SAD(d) = \sum_{x,y=0}^N |\bm{E}_{left}(x,y) - \bm{E}_{right}(x-d,y)|
+	\text{SAD}(d) = \sum_{x,y=0}^N |\bm{E}_\text{left}(x,y) - \bm{E}_\text{right}(x-d,y)|
 	\label{eq::323_sad}
 \end{align}
-The disparity $d$ that minimizes the sum of absolute differences $SAD$ is taken to serve as the best correspondence and is therefore used in the disparity map.  Here we can already see that due to the uniqueness of the edge filtered the images $\bm{E}$, it is easier to find correspondences there, rather than in the grayscale or RGB images.
+The disparity $d$ that minimizes the sum of absolute differences SAD is taken to serve as the best correspondence and is therefore used in the disparity map.  Here we can already see that due to the uniqueness of the edge filtered the images $\bm{E}$, it is easier to find correspondences there, rather than in the grayscale or RGB images.
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_background/img/left_disparity_map.png}
@@ -46,31 +46,44 @@ To further refine the disparity map, and especially to assure good results in te
 	 \text{Var}(\bm{D}) = \text{E}\left[\bm{D}^2\right] - \text{E}\left[\bm{D}\right]^2
 	\label{eq::323_variance}
 \end{align} 
-Therein the expectation value for $\bm{D}$ is computed with the kernel $\bm{K}$ from equation following equation
+Therein, the expectation value for $\bm{D}$ is computed by a convolution with the kernel $\bm{K}$ from the following equation
 \begin{align}
-	\bm{K} = \alpha
+	\bm{K} &= \alpha
 	\begin{pmatrix}
 	1 & \dots & 1 \\
 	\vdots & \ddots & \vdots \\
 	1 & \dots & 1
-	\end{pmatrix},
+	\end{pmatrix} \\
+	\text{E}\left[\bm{D}\right] &= \bm{K}*\bm{D},
 	\label{eq::323_kernel}
 \end{align}
-where $\alpha = \frac{1}{\text{width}\cdot\text{height}}$.
+where $\alpha = \frac{1}{\text{width}\cdot\text{height}}$ is the normalization factor. The expectation value of the disparity map squared $\text{E}\left[\bm{D}^2\right]$ is computed in the same way, except for that all elements are squared prior to summing them up. Given the variance, we can introduce a concept which is named confidence map. The confidence map $\text{Con}(\bm{D})$ is a measure for the certainty of the computed disparity, and is defined to be linearly dependent on the variance as follows
+\begin{align}
+	\text{Con}(\bm{D}) = \max\left(1-r\text{Var}(\bm{D}),0\right),
+\end{align}
+where $r$ is a roll-off factor that defines the change of confidence with growing variance. The resulting disparity confidence is shown in figure \ref{fig::323_confidence_map}, and is used to outweigh outlying disparity values from the final weighted least squares disparity map. 
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_background/img/confidence_map.png}
 	\caption{Generation of the confidence map from the variance within the disparity map.}
 	\label{fig::323_confidence_map}
 \end{figure}
+Prior to that, we further introduce an additional measure for the prevention of accidentally assigned correspondences in the initial block matching algorithm by using a left right consistency check \cite{egnal2004stereo}. Therefore, the block matching algorithm is used on the right image, and we search for correspondences in the left image. In contrast to the computation of the left disparity map $\bm{D}_\text{left}$, for the right disparity map $\bm{D}_\text{right}$, we only need to check for correspondences along the epipolar line in the positive displacement direction. The left right consistency $\bm{L}$ is then obtained by 
+\begin{align}
+	\bm{L}(x, y) = 
+	\begin{cases}
+	\min \left[\text{Con}(\bm{D}_\text{left})(x, y), \text{Con}(\bm{D}_\text{right})(x + d_\text{left}, y)\right] & \text{for } \Delta d < t  \\
+	0 & \text{else}
+	\end{cases},
+\end{align}
+where $d_\text{left}$ is the disparity of $\bm{D}_\text{left}$ at position $(x,y)$, and therefore represents the index shift which results from the block matching algorithm. Furthermore, if $\Delta d = \bm{D}_\text{left}(x, y) + \bm{D}_\text{right}(x + d_\text{left}, y)$ is smaller than a threshold $t$, then the left right consistency $\bm{L}$ is taken to be a lower bound approximation of the confidences. Otherwise, the consistency is taken to be false, and hence zero.
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_background/img/weighted_least_squares_disparity.png}
-	\caption{}
+	\caption{Generation of the confidence weighted least squares disparity from the disparity map, and the left right consistency.}
 	\label{fig::323_weighted_least_squares_disparity}
 \end{figure}
 
-\cite{egnal2004stereo} left right consistency\\
 \cite{min2014fast}   wls\\
 \cite{tomasi1998bilateral} bilateral
 \\\\
