@@ -76,7 +76,7 @@ Prior to that, we further introduce an additional measure for the prevention of 
 	0 & \text{else}
 	\end{cases},
 \end{align}
-where $d_\text{left}$ is the disparity of $\bm{D}_\text{left}$ at position $(x,y)$, and therefore represents the index shift which results from the block matching algorithm. Furthermore, if $\Delta d = \bm{D}_\text{left}(x, y) + \bm{D}_\text{right}(x + d_\text{left}, y)$ is smaller than a threshold $t$, then the left right consistency $\bm{L}$ is taken to be a lower bound approximation of the confidences. Otherwise, the consistency is taken to be false, and hence zero.
+where $d_\text{left}$ is the disparity of $\bm{D}_\text{left}$ at position $(x,y)$, and therefore represents the index shift which results from the block matching algorithm. Furthermore, if $\Delta d = \bm{D}_\text{left}(x, y) + \bm{D}_\text{right}(x + d_\text{left}, y)$ is smaller than a threshold $t$, then the left right consistency $\bm{L}$ is taken to be a lower bound approximation of the confidences. Otherwise, the consistency is taken to be false, and hence zero (figure \ref{fig::323_weighted_least_squares_disparity}). 
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_background/img/weighted_least_squares_disparity.png}
