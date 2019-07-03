@@ -104,7 +104,37 @@ where $\text{WLS}(\bm{U})$ is the weighted least squares filtered version of the
 \\\\
 As already mentioned for figure \ref{fig::323_stereo_camera}, the assumption of a simply translated stereo camera pair is almost never correct. In addition, there exist camera intrinsics that deform the observed image, and so the epipolar lines. Therefore, as a requirement for the algorithm to work properly, it is important to calibrate the robot's cameras. The next chapter - Mono and Stereo Camera Calibration, will explain in detail how this is done.
 \subsubsection{Mono and Stereo Camera Calibration}
-todo \\
+To correct images, as we observe them with a camera, it is required to have a mathematical description of it. A simple one for a camera is the pinhole model, which is shown in figure \ref{fig::323_point_hole_camera}.  
 \cite{duane1971close} lense distortion\\
 \cite{zhang2000flexible} extrinsic and intrinsic parameter estimation \\
 \cite{loop1999computing} rectification??\\
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=.28]{chapters/03_background/img/point_hole_camera.png}
+	\caption{}
+	\label{fig::323_point_hole_camera}
+\end{figure}
+\begin{figure}[h]
+	\centering
+	\subcaptionbox{}%
+	[.4\linewidth]{\includegraphics[scale=.2]{chapters/03_background/img/gazebo_calib_left.jpg}}
+	\subcaptionbox{}%
+	[.4\linewidth]{\includegraphics[scale=.2]{chapters/03_background/img/gazebo_corners.jpg}}
+	\caption{}
+	\label{fig::323_distortion}
+\end{figure}
+\begin{figure}[h]
+	\centering
+	\subcaptionbox{}%
+	[.4\linewidth]{\includegraphics[scale=.2]{chapters/03_background/img/gazebo_rectified_left.jpg}}
+	\subcaptionbox{}%
+	[.4\linewidth]{\includegraphics[scale=.2]{chapters/03_background/img/gazebo_rectified_right.jpg}}
+	\caption{}
+	\label{fig::323_rectified}
+\end{figure}
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=.28]{chapters/03_background/img/calibration_process.png}
+	\caption{}
+	\label{fig::323_calibration_process}
+\end{figure}
