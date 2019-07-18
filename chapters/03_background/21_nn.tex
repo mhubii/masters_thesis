@@ -24,14 +24,20 @@ Therein, the bias $\bm{b}$ can be understood as a shift of isolines that are int
 	\label{fig::321_classification}
 \end{figure}
 \subsubsection{Convolutional Neural Network}
-\cite{fukushima1980neocognitron} % convolutional neural networks under neocognitron
-\cite{zeiler2014visualizing} % understanding neural networks
+The concept of convolutional neural networks was first inspired by biological structures inside the visual cortex of the human brain. They where first introduced as neocognitron \cite{fukushima1980neocognitron}, and soon after termed convolutional neural networks for their mathematical properties, in that they equal convolutions. Figure \ref{fig::321_convolutional} shows how an input $\bm{x}$ is fed forward through the network architecture across two layers.   
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_background/img/convolutional.png}
 	\caption{Convolutional neural network with a total of three layers of which one is the input layer. For visualization, the kernel size is set to be three, and the stride is set to be one.}
 	\label{fig::321_convolutional}
 \end{figure}
+The operation is again visualized by utilizing orange circles, which may be referred to as neurons. These neurons are connected by weights $k^{l,n}_{ij}$, which together constitute the kernel $\bm{k}^{l,n}$ of each convolution. Therein, $l$ stands for the current layer, and $n$ indexes the kernel within a layer, as there may in principle be many different kernels for a single layer. Mathematically speaking, we can formulate the process as follows
+\begin{align}
+	\bm{y}^{0,0} &= f(\bm{x}*\bm{k}^{0,0}) \\
+	\bm{y}^{1,0} &= f(\bm{y}^{0,0}*\bm{k}^{1,0})	
+\end{align}
+One thing to notice is that the deeper we go, meaning the more layers we have, the more of the initial input contributes to the current activation. This can be seen in figure \ref{fig::321_convolutional}, where each neuron within the first layer only sees a kernel size sized snipped of the original input $\bm{x}$, whereas a neuron within the second layer already sees all of it. 
+\cite{zeiler2014visualizing} % understanding neural networks
 \subsubsection{Long Short-Term Memory}
 \cite{hochreiter1997long} % lstm
 \begin{figure}[h]
