@@ -20,11 +20,11 @@ Therein, the bias $\bm{b}$ can be understood as a shift of isolines that are int
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_background/img/classification.png}
-	\caption{Simple interpretation of a fully connected neural network with one layer that takes $\bm{x}=(x_0\,\,x_1)^T$ as input.}
+	\caption{Simple interpretation of a fully connected neural network with one layer that takes $\bm{x}=(x_0\,\,x_1)^T$ as input. The dotted lines are isolines to the hyperplane, which showcase the effect of the bias $\bm{b}$.}
 	\label{fig::321_classification}
 \end{figure}
 \subsubsection{Convolutional Neural Network}
-The concept of convolutional neural networks was first inspired by biological structures inside the visual cortex of the human brain. They where first introduced as neocognitron \cite{fukushima1980neocognitron}, and soon after termed convolutional neural networks for their mathematical properties, in that they equal convolutions. Figure \ref{fig::321_convolutional} shows how an input $\bm{x}$ is fed forward through the network architecture across two layers.   
+The concept of convolutional neural networks was first inspired by biological structures inside the visual cortex of the human brain. It was introduced as neocognitron \cite{fukushima1980neocognitron}, and soon after termed convolutional neural network for its mathematical properties, in that it equals convolutions. Figure \ref{fig::321_convolutional} shows how an input $\bm{x}$ is fed forward through the network architecture across two layers.   
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_background/img/convolutional.png}
@@ -36,9 +36,16 @@ The operation is again visualized by utilizing orange circles, which may be refe
 	\bm{y}^{0,0} &= f(\bm{x}*\bm{k}^{0,0}) \\
 	\bm{y}^{1,0} &= f(\bm{y}^{0,0}*\bm{k}^{1,0})	
 \end{align}
-One thing to notice is that the deeper we go, meaning the more layers we have, the more of the initial input contributes to the current activation. This can be seen in figure \ref{fig::321_convolutional}, where each neuron within the first layer only sees a kernel size sized snipped of the original input $\bm{x}$, whereas a neuron within the second layer already sees all of it. 
-\cite{zeiler2014visualizing} % understanding neural networks
+One thing to notice is that the deeper we go, meaning the more layers we have, the more of the initial input contributes to the current activation. This can be seen in figure \ref{fig::321_convolutional}, where each neuron within the first layer only sees a kernel size sized snipped of the original input $\bm{x}$, whereas a neuron within the second layer already sees all of it. This intuitive understanding of convolution neural networks is backed by visualizations of the highest activity neuron's gradient with respect to the input \cite{zeiler2014visualizing}, where the gradient itself equals the transposed convolution.  Figure \ref{fig::321_transposed_conv} shows transposed convolutions for a classification network that was trained on ImageNet \cite{deng2009imagenet}. It can be seen that while superficial layers learn to understand edges, deeper layers grab more complex spatial correlations within images, such as car wheels within the third layer.
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=.28]{chapters/03_background/img/transposed_conv.png}
+	\caption{Analysis of neurons with highest activation, corresponding to a subset of ImageNet. For the first layer, the kernel itself is shown, and image patches at the kernel's scale. For the second and third layer, a single neuron with highest activation is upscaled by transposed convolutions to the first layer's feature map. Images taken from \cite{zeiler2014visualizing}.}
+	\label{fig::321_transposed_conv}
+\end{figure}
+Therefore, convolutional neural networks are particularly well suited for understanding spatial correlations, and while recent advancements also propose the promising use of convoltional neural networks for time series analysis \cite{vaswani2017attention}, a simpler approach are long short-term memory units, which will be explained in the next chapter - Long Short-Term Memory. 
 \subsubsection{Long Short-Term Memory}
+
 \cite{hochreiter1997long} % lstm
 \begin{figure}[h]
 	\centering
