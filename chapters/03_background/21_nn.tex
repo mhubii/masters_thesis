@@ -2,6 +2,8 @@
 \label{sec::321_nn}
 \cite{weng1992cresceptron} % max pooling
 \cite{krizhevsky2012imagenet} % relu
+\subsubsection{Backpropagation}
+\cite{linnainmaa1970representation}
 \subsubsection{Fully Connected Neural Network}
 The biologically inspired perceptron model \cite{viglione19704} lay the foundation for neural networks and it got extended pretty soon to the multi-layer perceptron model
 \cite{ivakhnenko1971polynomial}, which is known today as the fully connected neural network. Due to its similarity to the brain's structure, it is often depicted as in figure \ref{fig::321_fully_connected}, where each orange circle represents a neuron that is connected to its surroundings via simple weights $w_{ij}$, as neurons inside the brain are by axons.
@@ -36,7 +38,7 @@ The operation is again visualized by utilizing orange circles, which may be refe
 	\bm{y}^{0,0} &= f(\bm{x}*\bm{k}^{0,0}) \\
 	\bm{y}^{1,0} &= f(\bm{y}^{0,0}*\bm{k}^{1,0})	
 \end{align}
-One thing to notice is that the deeper we go, meaning the more layers we have, the more of the initial input contributes to the current activation. This can be seen in figure \ref{fig::321_convolutional}, where each neuron within the first layer only sees a kernel size sized snipped of the original input $\bm{x}$, whereas a neuron within the second layer already sees all of it. This intuitive understanding of convolution neural networks is backed by visualizations of the highest activity neuron's gradient with respect to the input \cite{zeiler2014visualizing}, where the gradient itself equals the transposed convolution.  Figure \ref{fig::321_transposed_conv} shows transposed convolutions for a classification network that was trained on ImageNet \cite{deng2009imagenet}. It can be seen that while superficial layers learn to understand edges, deeper layers grab more complex spatial correlations within images, such as car wheels within the third layer.
+One thing to notice is that the deeper we go, meaning the more layers we have, the more of the initial input contributes to the current activation. This can be seen in figure \ref{fig::321_convolutional}, where each neuron within the first layer only sees a kernel size sized snipped of the original input $\bm{x}$, whereas a neuron within the second layer already sees all of it. This intuitive understanding of convolution neural networks is backed by visualizations of the highest activity neuron's gradient with respect to the input, where the gradient itself equals the transposed convolution \cite{simonyan2013deep}.  Figure \ref{fig::321_transposed_conv} shows transposed convolutions for a classification network that was trained on ImageNet \cite{deng2009imagenet}. It can be seen that while superficial layers learn to understand edges, deeper layers grab more complex spatial correlations within images, such as car wheels within the third layer.
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_background/img/transposed_conv.png}
@@ -45,19 +47,26 @@ One thing to notice is that the deeper we go, meaning the more layers we have, t
 \end{figure}
 Therefore, convolutional neural networks are particularly well suited for understanding spatial correlations, and while recent advancements also propose the promising use of convoltional neural networks for time series analysis \cite{vaswani2017attention}, a simpler approach are long short-term memory units, which will be explained in the next chapter - Long Short-Term Memory. 
 \subsubsection{Long Short-Term Memory}
-
-\cite{hochreiter1997long} % lstm
+Long short-term memory units where introduced to overcome the vanishing and exploding gradient problem for recurrent neural networks in time series analysis \cite{hochreiter1997long}. That is the gradient tends to diverge exponentially over the course of the backward pass towards earlier inputs, resulting in intractable updates for the weights of the neural network. This issue got solved by adding a constant recurrent self-connection that allows for constant error propagation through the network, which got further refined by replacing the constant self-connection with a forget gate \cite{gers1999learning}. The inner workings of a long short-term memory unit is shown in figure \ref{fig::321_lstm}. 
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_background/img/lstm.png}
 	\caption{Long short-term memory unit with cell states $\bm{c}_i$, hidden states $\bm{h}_i$, input $\bm{x}_t$, and activation functions $\sigma/\tanh$, as well as addition $+$ and multiplication $\times$ operators.}
 	\label{fig::321_lstm}
 \end{figure}
+The underlying mathematical operations can therein be expressed as follows
+\begin{align}
+	\bm{i}_t &= \sigma(\bm{W}_{ii}\bm{x}_t+\bm{b}_{ii}+\bm{W}_{hi}\bm{h}_{t-1}+\bm{b}_{hi})\\
+	\bm{f}_t &= \sigma(\bm{W}_{if}\bm{x}_t+\bm{b}_{if}+\bm{W}_{hf}\bm{h}_{t-1}+\bm{b}_{hf})\\
+	\bm{g}_t &= \tanh(\bm{W}_{ig}\bm{x}_t+\bm{b}_{ig}+\bm{W}_{hg}\bm{h}_{t-1}+\bm{b}_{hg})\\
+	\bm{o}_t &= \sigma(\bm{W}_{io}\bm{x}_t+\bm{b}_{io}+\bm{W}_{ho}\bm{h}_{t-1}+\bm{b}_{ho})\\
+	\bm{c}_t &= \bm{f}_t\circ c_{t-1} + \bm{i}_t\circ\bm{g}_t\\
+	\bm{h}_t &= \bm{o}_t \circ\tanh(\bm{c}_t),
+\end{align}
+where $\circ$ represents the Hadamard product. The sigmoid function $\sigma$, which ranges from 0 to 1, assures that the input gate $\bm{i}_t$, the forget gate $\bm{f}_t$, and the output gate $\bm{o}_t$ let only pass values of interest into, and out of the cell. Multiple long short-term memory units can then be linked for time series analysis as shown in figure \ref{fig::321_lstm_chain}.
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_background/img/lstm_chain.png}
 	\caption{Chain of long short-term memory units for temporal understanding of the input sequence $\bm{x}_i$.}
 	\label{fig::321_lstm_chain}
 \end{figure}
-\subsubsection{Backpropagation}
-\cite{linnainmaa1970representation}
