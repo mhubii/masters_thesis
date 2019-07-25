@@ -75,4 +75,17 @@ where $\circ$ represents the Hadamard product. The sigmoid function $\sigma$, wh
 	\label{fig::321_lstm_chain}
 \end{figure}
 \subsubsection{Backpropagation}
-\cite{linnainmaa1970representation}
+The currently most popular way to train a neural network is backpropagation, which got first introduced in \cite{linnainmaa1970representation}. It has no biological equivalent but poses an effective way to optimize a huge amount of parameters. Newer methods use evolutionary algorithms and treat network parameters as population that develops over time \cite{montana1989training}, but we wont consider them further. The reason for why backpropagation works so well to optimize neural networks, is the simplicity of the mathematical operations that make them up. Not only do the activation functions have an analytical derivative, but further can we just apply the chain rule multiple times on the loss function, so to find the gradient for every network parameter. Suppose we have the loss $L$, then the derivative with respect to the weights $\bm{W}_l$ of layer $l$, is just given as
+\begin{align}
+	\frac{\partial L}{\partial \bm{W}_l} = \bm{\delta}_l\bm{x}_{l-1}^T,
+	\label{eq::321_bp}
+\end{align}
+where for the last layer $N$, and all previous layers $l$, we have
+\begin{align}
+	\bm{\delta}_N &= \frac{\partial L}{\partial \bm{x}_N} \circ f_N'(\bm{W}_N\bm{x}_{N-1}) \\
+	\bm{\delta}_l &= \bm{W}^T_{l+1}\bm{\delta}_{t+1} \circ f_{l}'(\bm{W}_l\bm{x}_{l-1}),
+\end{align} % https://sudeepraja.github.io/Neural/
+with $f'$ being the derivative of the corresponding activation function. The update for the next time-step $t+1$ is then performed according to an optimizer specific learning rate $\bm{\alpha}_{\bm{W}^t_l}$ as follows
+\begin{align}
+	\bm{W}_l^{t+1} = \bm{W}_l^t - \bm{\alpha}_{\bm{W}^t_l}\circ\frac{\partial L}{\partial \bm{W}^l}.
+\end{align}
