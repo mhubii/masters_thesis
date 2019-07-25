@@ -1,9 +1,13 @@
 \subsection{Neural Networks}
 \label{sec::321_nn}
-\cite{weng1992cresceptron} % max pooling
-\cite{krizhevsky2012imagenet} % relu
-\subsubsection{Backpropagation}
-\cite{linnainmaa1970representation}
+Neural networks are inspired by the brain's structure, and as we will see later in this chapter, their building blocks can be thought of as neurons (figure \ref{fig::321_neuron}).
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=.35]{chapters/03_background/img/neuron.png}
+	\caption{Biological neuron, which connects its cell body to dendrites of surrounding neurons via an axon. \cite{haggstrom2014medical}}
+	\label{fig::321_neuron}
+\end{figure}
+And although neural networks have gained early attention in research, they have only recently become powerful for their implementation on graphic processing units (GPUs) \cite{oh2004gpu}. This was caused by their mathematical description that is linear and can be parallalized very well. Running neural nets on GPUs on the other hand consumes a lot of energy, which stays in contrast to biological neurons, which communicate by brief energy efficient spikes \cite{hodgkin1952quantitative}. And while there are around 100 billion neurons in the human brain, currently huge neural networks have around a factor of 10000 less \cite{goodfellow2016deep}. Not only is the number of neurons in a neural net comparably small, but also is their complexity way below that of a biological neuron. To tackle this discrepancy, and to learn complicated tasks, it is therefore required to introduce activation functions for neural networks, such as the rectifying linear unit \cite{krizhevsky2012imagenet}. This enables neural networks to be used on a variety of problems, but they currently lack in transferring knowledge between different domains, and tend to over-fit certain tasks. There exist methods to deal with this tendency, such as max-pooling \cite{weng1992cresceptron} or dropout \cite{srivastava2014dropout} layers, which efficiently just reduce the number of neurons within a neural net. To build a good understanding of neural networks, we will introduce different architectures in the following that will be used throughout this thesis, and we will start with the simplest in the next paragraph - Fully Connected Neural Network.
 \subsubsection{Fully Connected Neural Network}
 The biologically inspired perceptron model \cite{viglione19704} lay the foundation for neural networks and it got extended pretty soon to the multi-layer perceptron model
 \cite{ivakhnenko1971polynomial}, which is known today as the fully connected neural network. Due to its similarity to the brain's structure, it is often depicted as in figure \ref{fig::321_fully_connected}, where each orange circle represents a neuron that is connected to its surroundings via simple weights $w_{ij}$, as neurons inside the brain are by axons.
@@ -70,3 +74,5 @@ where $\circ$ represents the Hadamard product. The sigmoid function $\sigma$, wh
 	\caption{Chain of long short-term memory units for temporal understanding of the input sequence $\bm{x}_i$.}
 	\label{fig::321_lstm_chain}
 \end{figure}
+\subsubsection{Backpropagation}
+\cite{linnainmaa1970representation}

@@ -7,7 +7,7 @@ The goal in reinforcement learning is not only to learn actions $a_t$ at time-st
 	\caption{Reinforcement learning setup. TODO replace by small letters}
 	\label{fig::323_rl}
 \end{figure}
-The difficulty in optimizing the policy $\pi_\theta$, is to have an agent to discard immediate rewards over future expected rewards. For discrete action spaces, this got well solved by deep Q-learning \cite{mnih2015human}. Different approaches for continuous action spaces like trust region policy optimization \cite{schulman2015trust} are rather complicated. The, to this date, most elegant way of solving continuous control problems in a reinforcement learning setup is proximal policy optimization \cite{schulman2017proximal}, and we will elaborate on it in the following. Gradient policy methods, such as proximal policy optimization, try to update the policy $\pi_\theta$, such that the expected total future reward $\mathbb{E}\left[\sum_{t=0}^\infty r_t\right]$ is maximized. For the incremental update, it is therefore required to find the gradient of this expression
+The difficulty in optimizing the policy $\pi_\theta$, is to have an agent to discard immediate rewards over future expected rewards. For discrete action spaces, this got well solved by deep Q-learning \cite{mnih2015human}. Different approaches for continuous action spaces like trust region policy optimization \cite{schulman2015trust} are rather complicated. The, to this date, most elegant way of solving continuous control problems in a reinforcement learning setup, is proximal policy optimization \cite{schulman2017proximal}, and we will elaborate on it in the following. Gradient policy methods, such as proximal policy optimization, try to update the policy $\pi_\theta$, such that the expected total future reward $\mathbb{E}\left[\sum_{t=0}^\infty r_t\right]$ is maximized. For the incremental update, it is therefore required to find the gradient of this expression
 \begin{align}
 	\nabla_\theta\mathbb{E}_{a_t\sim\pi_\theta}\left[\sum_{t=0}^\infty r_t\right] = \mathbb{E}_{a_t\sim\pi_\theta}\left[\sum_{t=0}^\infty\psi_t\nabla_\theta\log\pi_\theta(a_t|s_t)\right],
 \end{align}
@@ -32,5 +32,5 @@ Also, for a negative advantage estimate, it assures that the gradient points awa
 	L_t^{\text{CLIP}+\text{VF}+\text{S}} = \mathbb{E}\left[L_t^\text{CLIP}(\theta)-c_1L_t^\text{VF}(\theta)+c_2S\left[\pi_\theta\right](s_t)\right]
 	\label{eq::323_ppo_loss}
 \end{align}
-The critic's loss therein is the squared-error of the value function estimate and the explored values $V_\theta(s_t)-V^\text{target}_t$.
+The critic's loss therein is the squared-error of the value function estimate and the explored values $(V_\theta(s_t)-V^\text{target}_t)^2$.
 TODO add algorithm?
