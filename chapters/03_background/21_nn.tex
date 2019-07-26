@@ -64,10 +64,10 @@ The underlying mathematical operations can therein be expressed as follows
 	\bm{f}_t &= \sigma(\bm{W}_{if}\bm{x}_t+\bm{b}_{if}+\bm{W}_{hf}\bm{h}_{t-1}+\bm{b}_{hf})\\
 	\bm{g}_t &= \tanh(\bm{W}_{ig}\bm{x}_t+\bm{b}_{ig}+\bm{W}_{hg}\bm{h}_{t-1}+\bm{b}_{hg})\\
 	\bm{o}_t &= \sigma(\bm{W}_{io}\bm{x}_t+\bm{b}_{io}+\bm{W}_{ho}\bm{h}_{t-1}+\bm{b}_{ho})\\
-	\bm{c}_t &= \bm{f}_t\circ c_{t-1} + \bm{i}_t\circ\bm{g}_t\\
-	\bm{h}_t &= \bm{o}_t \circ\tanh(\bm{c}_t),
+	\bm{c}_t &= \bm{f}_t\cdot c_{t-1} + \bm{i}_t\cdot\bm{g}_t\\
+	\bm{h}_t &= \bm{o}_t \cdot\tanh(\bm{c}_t),
 \end{align}
-where $\circ$ represents the Hadamard product. The sigmoid function $\sigma$, which ranges from 0 to 1, assures that the input gate $\bm{i}_t$, the forget gate $\bm{f}_t$, and the output gate $\bm{o}_t$ let only pass values of interest into, and out of the cell. Multiple long short-term memory units can then be linked for time series analysis as shown in figure \ref{fig::321_lstm_chain}.
+where $\cdot$ is an element-wise multiplication. The sigmoid function $\sigma$, which ranges from 0 to 1, assures that the input gate $\bm{i}_t$, the forget gate $\bm{f}_t$, and the output gate $\bm{o}_t$ let only pass values of interest into, and out of the cell. Multiple long short-term memory units can then be linked for time series analysis as shown in figure \ref{fig::321_lstm_chain}.
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_background/img/lstm_chain.png}
@@ -82,10 +82,11 @@ The currently most popular way to train a neural network is backpropagation, whi
 \end{align}
 where for the last layer $N$, and all previous layers $l$, we have
 \begin{align}
-	\bm{\delta}_N &= \frac{\partial L}{\partial \bm{x}_N} \circ f_N'(\bm{W}_N\bm{x}_{N-1}) \\
-	\bm{\delta}_l &= \bm{W}^T_{l+1}\bm{\delta}_{t+1} \circ f_{l}'(\bm{W}_l\bm{x}_{l-1}),
+	\bm{\delta}_N &= \frac{\partial L}{\partial \bm{x}_N} \cdot f_N'(\bm{W}_N\bm{x}_{N-1}) \\
+	\bm{\delta}_l &= \bm{W}^T_{l+1}\bm{\delta}_{t+1} \cdot f_{l}'(\bm{W}_l\bm{x}_{l-1}),
 \end{align} % https://sudeepraja.github.io/Neural/
 with $f'$ being the derivative of the corresponding activation function. The update for the next time-step $t+1$ is then performed according to an optimizer specific learning rate $\bm{\alpha}_{\bm{W}^t_l}$ as follows
 \begin{align}
-	\bm{W}_l^{t+1} = \bm{W}_l^t - \bm{\alpha}_{\bm{W}^t_l}\circ\frac{\partial L}{\partial \bm{W}^l}.
+	\bm{W}_l^{t+1} = \bm{W}_l^t - \bm{\alpha}_{\bm{W}^t_l}\cdot\frac{\partial L}{\partial \bm{W}^l},
 \end{align}
+where $\cdot$ is an element-wise multiplication.

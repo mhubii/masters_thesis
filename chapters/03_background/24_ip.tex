@@ -44,7 +44,7 @@ The disparity $d$ that minimizes the sum of absolute differences SAD is taken to
 \end{figure}
 To further refine the disparity map, and especially to assure good results in textureless  regions, we apply a weighted least squares filtering, which is based on the confidence of depth measures. The confidence of depth measures is obtained from the variance within the disparity map $\bm{D}$ (equation \ref{eq::323_variance}, figure \ref{fig::323_confidence_map}).
 \begin{align}
-	 \text{Var}(\bm{D}) = \text{E}\left[\bm{D}^2\right] - \text{E}\left[\bm{D}\right]^2
+	 \text{Var}(\bm{D}) = \mathbb{E}\left[\bm{D}^2\right] - \mathbb{E}\left[\bm{D}\right]^2
 	\label{eq::323_variance}
 \end{align} 
 Therein, the expectation value for $\bm{D}$ is computed by a convolution with the kernel $\bm{K}$ from the following equation
@@ -55,10 +55,10 @@ Therein, the expectation value for $\bm{D}$ is computed by a convolution with th
 	\vdots & \ddots & \vdots \\
 	1 & \dots & 1
 	\end{pmatrix} \\
-	\text{E}\left[\bm{D}\right] &= \bm{K}*\bm{D},
+	\mathbb{E}\left[\bm{D}\right] &= \bm{K}*\bm{D},
 	\label{eq::323_kernel}
 \end{align}
-where $\alpha = \frac{1}{\text{width}\cdot\text{height}}$ is the normalization factor. The expectation value of the disparity map squared $\text{E}\left[\bm{D}^2\right]$ is computed in the same way, except for that all elements are squared prior to summing them up. Given the variance, we can introduce a concept which is named confidence map. The confidence map $\text{Con}(\bm{D})$ is a measure for the certainty of the computed disparity, and is defined to be linearly dependent on the variance as follows
+where $\alpha = \frac{1}{\text{width}\cdot\text{height}}$ is the normalization factor. The expectation value of the disparity map squared $\mathbb{E}\left[\bm{D}^2\right]$ is computed in the same way, except for that all elements are squared prior to summing them up. Given the variance, we can introduce a concept which is named confidence map. The confidence map $\text{Con}(\bm{D})$ is a measure for the certainty of the computed disparity, and is defined to be linearly dependent on the variance as follows
 \begin{align}
 	\text{Con}(\bm{D}) = \max\left(1-r\text{Var}(\bm{D}),0\right),
 \end{align}
@@ -105,15 +105,30 @@ where $\text{WLS}(\bm{U})$ is the weighted least squares filtered version of the
 \\\\
 As already mentioned for figure \ref{fig::323_stereo_camera}, the assumption of a simply translated stereo camera pair is almost never correct. In addition, there exist camera intrinsics that deform the observed image, and so the epipolar lines. Therefore, as a requirement for the algorithm to work properly, it is important to calibrate the robot's cameras. The next chapter - Mono and Stereo Camera Calibration, will explain in detail how this is done.
 \subsubsection{Mono and Stereo Camera Calibration}
-To correct images, as we observe them with a camera, it is required to have a mathematical description of it. A simple one for a camera is the pinhole model, which is shown in figure \ref{fig::323_point_hole_camera}.  
+To correct images, as we observe them with a camera, it is required to have a mathematical description of it. A simple one for a camera is the pinhole model, which is shown in figure \ref{fig::323_pin_hole_camera}. For a pinhole camera model, the image plane lies behind the coordinate frame of the camera, and is turned the other way around, but it is easier to describe the image in a virtual plane, which is located at a distance $f$ along the $z_C$-axis, where $f$ is the focal length.
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=.28]{chapters/03_background/img/pin_hole_camera.png}
+%	\caption{Pinhole camera model}
+	\label{fig::323_pin_hole_camera}
+\end{figure}
+According to the intercept theorem, a point $\bm{X}_c = (X,Y,Z)^T$ is then simply projected to the image plane by the camera matrix $\bm{K}$ with
+\begin{align}
+	\bm{x}_c = \bm{K}\bm{X}_c = \begin{pmatrix}
+	f_x & 0   & c_x \\
+	0   & f_y & c_y \\
+	0   & 0   & 1
+	\end{pmatrix}\bm{X}_c.
+\end{align}
+Therein, $\bm{K}$ contains the intrinsic camera parameters, such as the focal lengths and the principal point. For a true pinhole camera $f_x = f_y =f$, but due to errors, usually two different values are chosen. The principal point lies at the position where a light ray connects perpendicularly to the image plane after passing the pinhole, and therefore just defines an offset. 
 \cite{duane1971close} lense distortion\\
 \cite{zhang2000flexible} extrinsic and intrinsic parameter estimation \\
 \cite{loop1999computing} rectification??\\
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=.28]{chapters/03_background/img/point_hole_camera.png}
-	\caption{}
-	\label{fig::323_point_hole_camera}
+	\includegraphics[scale=.28]{chapters/03_background/img/calibration_process.png}
+	\caption{Calibration pattern as observed from the camera's coordinate system $C$. Within the object's coordinate system, all chessboard corners lie at a zero $z$-position.}
+	\label{fig::323_calibration_process}
 \end{figure}
 \begin{figure}[h]
 	\centering
@@ -132,10 +147,4 @@ To correct images, as we observe them with a camera, it is required to have a ma
 	[.4\linewidth]{\includegraphics[scale=.2]{chapters/03_background/img/gazebo_rectified_right.jpg}}
 	\caption{}
 	\label{fig::323_rectified}
-\end{figure}
-\begin{figure}[h]
-	\centering
-	\includegraphics[scale=.28]{chapters/03_background/img/calibration_process.png}
-	\caption{}
-	\label{fig::323_calibration_process}
 \end{figure}
