@@ -148,7 +148,7 @@ Together, the focal lengths, the principal point, and the distortion coefficient
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_background/img/calibration_process.png}
-	\caption{Calibration pattern as observed from the camera's coordinate system $C$. Within the object's coordinate system, all chessboard corners lie at a zero $z$-position. TODO turn arround translation vector t and change roration to lower coordinate system}
+	\caption{Calibration pattern as observed from the camera's coordinate system $C$. Within the object's coordinate system, all chessboard corners lie at a zero $z$-position.}
 	\label{fig::324_calibration_process}
 \end{figure}
 For the mathematical description, the calibration pattern is taken to be at a fixed position and orientation, while it is assumed that the camera was moved. The position of each corner can then be described by the square's size $a$ as follows
@@ -157,7 +157,7 @@ For the mathematical description, the calibration pattern is taken to be at a fi
 	na & ma & 0 & 1
 	\end{pmatrix}^T,
 \end{align}
-where we now switched to homogeneous coordinates, and $n,m\in\mathbb{N}$. It is then required to find the rotation $\bm{R}$ and translation $\bm{t}$, which transforms the object points to the image plane. They are estimated by solving a perspective-n-point problem \cite{fischler1981random}. Therefore, as shown in figure \ref{fig::324_distortion} (b), a corner detecting algorithm finds the corners $\bm{x}_{c,mn}$ within the image plane. Under the assumption of known intrinsic camera parameters, $\bm{x}_{c,mn}$ are then being undistorted according to equations \ref{eq::324_x_dist} and \ref{eq::324_y_dist}.
+where we now switched to homogeneous coordinates, and $n,m\in\mathbb{N}$. It is then required to find the rotation $\bm{R}$ and translation $\bm{t}$, which transforms the object points to the image plane. They are estimated by solving a perspective-n-point problem \cite{fischler1981random}. Therefore, as shown in figure \ref{fig::324_distortion} (b), a corner detecting algorithm finds the corners $\bm{x}_{c,mn}$ within the image plane. Under the assumption of known intrinsic camera parameters, $\bm{x}_{c,mn}$ are then being undistorted according to equations \ref{eq::324_x_dist} and \ref{eq::324_y_dist}. 
 \begin{figure}[h]
 	\centering
 	\subcaptionbox{}%
@@ -179,14 +179,18 @@ where $\bm{R}$ describes the rotation, and $\bm{t}$ the translation of the camer
 	\bm{R} & \bm{t}
 	\end{pmatrix}^{-1}\bm{x}_{c,mn,u},
 \end{align}
-from which we compute the re-projection mean squared error $||\bm{x}_{mn,u} - \bm{x}_{mn}||_2$. To find the intrinsic parameters, a Levenberg-Marquardt algorithm then optimizes them in an iterative scheme to minimize the re-projection error until convergence \cite{zhang2000flexible}.
-\cite{loop1999computing} rectification??\\
+from which we compute the re-projection mean squared error $||\bm{x}_{mn,u} - \bm{x}_{mn}||_2$. To find the intrinsic parameters, a Levenberg-Marquardt algorithm then optimizes them in an iterative scheme to minimize the re-projection error until convergence \cite{zhang2000flexible}. The stereo camera calibration can then be performed by applying the mono camera calibration to each camera separately, from which the camera intrinsics are obtained. Given the camera intrinsics of both cameras, it is again possible to solve a perspective-n-point problem, which yields the positions and orientations of both cameras with respect to the observed object. This enables us to compute the fundamental matrix $\bm{F}$, which transforms points from the left camera's view $\bm{x}_{c_\text{left}}$, to points $\bm{x}_{c_\text{right}}$, as seen by the right camera via
+\begin{align}
+	\bm{x}_{c_\text{right}}^T\bm{F}\bm{x}_{c_\text{left}} = \bm{0}
+\end{align}
+The mapping enables us to rectify the left and the right image \cite{loop1999computing}, which means that we can compute homography transforms that align epipolar lines within the images (figure \ref{fig::324_rectified}). 
 \begin{figure}[h]
 	\centering
 	\subcaptionbox{}%
 	[.4\linewidth]{\includegraphics[scale=.2]{chapters/03_background/img/gazebo_rectified_left.jpg}}
 	\subcaptionbox{}%
 	[.4\linewidth]{\includegraphics[scale=.2]{chapters/03_background/img/gazebo_rectified_right.jpg}}
-	\caption{Undistorted calibration pattern, as observed by the left camera (a), and by the right camera (b). For comparison, see the distorted calibration pattern in figure \ref{fig::324_distortion}}
+	\caption{Undistorted calibration pattern, as observed by the left camera (a), and by the right camera (b). For comparison, see the distorted calibration pattern in figure \ref{fig::324_distortion}, and note how the horizons within the images align.}
 	\label{fig::324_rectified}
 \end{figure}
+These homography transforms map the images, as we observe them with the cameras, to a shared virtual plane. Therefore, we reached our initial goal, since it enables us to apply the stereo block matching algorithm, which got introduced earlier, to the transformed images.
