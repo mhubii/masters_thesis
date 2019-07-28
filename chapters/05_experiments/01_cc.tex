@@ -32,22 +32,38 @@ Then given the calibration of each single camera, we computed the rectification 
 	\begin{tabular}{lll}
 		Camera & Extrinsic Parameter & \\ 
 		\hline
-		\multirow{2}{*}{Left} & $\bm{R}$ & $\bm{R}_l$ & $\begin{pmatrix}
-		\quad9.93\cdot10^{-1} & -2.65\cdot10^{-3} & \quad1.14\cdot10^{-1} \\ 
-		\quad5.41\cdot10^{-1} & \quad1.00\cdot10^{0} & -2.39\cdot10^{-2} \\
-		-1.14\cdot10^{-1}& \quad2.43\cdot10^{-2} & \quad9.93\cdot10^{-1}
-		\end{pmatrix}$ \\
-		& $\bm{P}$ &
+		&& \\
+		\multirow{5}{*}{Left} & $\bm{R}$              & $\begin{pmatrix}
+		\quad9.93\cdot10^{-1} & -2.65\cdot10^{-3}     & \quad1.14\cdot10^{-1} \\ 
+		\quad5.41\cdot10^{-1} & \quad1.00\cdot10^{0}  & -2.39\cdot10^{-2} \\
+		-1.14\cdot10^{-1}     & \quad2.43\cdot10^{-2} & \quad9.93\cdot10^{-1}
+		\end{pmatrix}$ \\&&\\
+		                      & $\bm{P}$              & $\begin{pmatrix}
+        2.34\cdot10^{2} & 0.00     & 1.88\cdot10^{2} & 0.00 \\ 
+        0.00 & 2.34\cdot10^{2}  & 4.87\cdot10^{1} & 0.00 \\
+        0.00    & 0.00 & 1.00 & 0.00
+        \end{pmatrix}$ \\
+        &&\\
+        \multirow{5}{*}{Right} & $\bm{R}$              & $\begin{pmatrix}
+        \quad9.95\cdot10^{-1} & -2.30\cdot10^{-2}     & \quad9.93\cdot10^{-2} \\ 
+        \quad2.07\cdot10^{-2} & \quad1.00\cdot10^{0}  & \quad2.38\cdot10^{-2} \\
+        -9.98\cdot10^{-2}     & -2.16\cdot10^{-2} & \quad9.95\cdot10^{-1}
+        \end{pmatrix}$ \\&&\\
+        & $\bm{P}$              & $\begin{pmatrix}
+        2.34\cdot10^{2} & 0.00     & 1.88\cdot10^{2} & -1.60\cdot10^1 \\ 
+        0.00 & 2.34\cdot10^{2}  & 4.88\cdot10^{1} & 0.00 \\
+        0.00    & 0.00 & 1.00 & 0.00
+        \end{pmatrix}$ \\
 	\end{tabular}
-	\caption{Rectification transform, and projection matrices, for the left, and the right camera, respectively. These parameters can be found as YAML file on GitHub (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/master/libs/io_module/cam_stereo.yaml}{link}). \label{tab::51_extrinsics}}
+	\caption{Rectification transform $\bm{R}$, and projection matrices $\bm{P}$, for the left, and the right camera, respectively. These parameters can be found as YAML file on GitHub (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/master/libs/io_module/cam_stereo.yaml}{link}). \label{tab::51_extrinsics}}
 \end{table}
+Exemplary rectified images, which rely on the matrices of table \ref{tab::51_extrinsics}, are shown in figure \ref{fig::51_rect}. Since there is a slight rotation of the calibration pattern, it is not obvious that the images got rectified well. Therefore, the same images are shown in figure \ref{fig::51_rect_line}, but slightly rotated such that the calibration pattern aligns horizontally. The blue line therein indicates that in contrast to the original image, straight lines now appear straight across both images, which is crucial for the block matching algorithm in the next section - Depth Map Parameter Tuning.
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=.28]{chapters/05_experiments/img/rect.png}
 	\caption{Rectified and original view of the stereo camera. Due to a slight rotation of the calibration pattern, it does not immediately become clear that the image got rectified correctly, see figure \ref{fig::51_rect_line}. Refer to figure \ref{fig::324_rectified} for the theory.}
 	\label{fig::51_rect}
 \end{figure}
-
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=.28]{chapters/05_experiments/img/rect_line.png}
