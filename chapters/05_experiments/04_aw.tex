@@ -14,9 +14,22 @@
 	\caption{}
 	\label{fig::542_loss}
 \end{figure}
-% plot velocity distribution of data acquisition epochs, evaluate the kl divergence or similar metrics for the difference in behavior
-% compute velocity decision on the whole training data 
-% compute probability distribution on predicted and ground truth behavior
+\begin{figure}
+	\centering
+	\includegraphics[scale=.5]{chapters/05_experiments/04_autonomous_walking/user_and_predicted_velocity_at_epoch_40.pdf}
+	\caption{}
+	\label{fig::542_vel}
+\end{figure}
+\begin{figure}[h]
+	\centering
+	\subcaptionbox{}%
+	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/04_autonomous_walking/user_entropy_at_epoch_40.pdf}}
+	\subcaptionbox{}%
+	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/04_autonomous_walking/predicted_entropy_at_epoch_40.pdf}}
+	\caption{}
+	\label{fig::542_training_dist}
+\end{figure}
+% compute kl divergence for whole set -> argue that this holds true for all 
 \subsection{Performance in Test Environment}
 \begin{figure}[h]
 	\centering
