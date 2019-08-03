@@ -3,7 +3,7 @@
 As described in section \ref{sec::324_ip}, in order for the stereo block matching algorithm to work properly (equation \ref{eq::324_sad}), it is required to calibrate the cameras. We therefore chose to use a chess-board calibration pattern, see figure \ref{fig::51_calib}. The used calibration pattern has width of $W=8$, and a height of $H=6$, where each square has a size of $a=22.5\,\text{mm}$ (equation \ref{eq::324_square_size}). We took a total of $N=60$ images of the calibration pattern for varying orientations and translations with respect to the camera, which results in a total of $W\times H\times N = 2880$ points for the calibration. 
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=.28]{chapters/05_experiments/img/calib.png}
+	\includegraphics[scale=.28]{chapters/05_experiments/01_camera_calibration/calib.png}
 	\caption{Exemplary left and right camera views of the calibration pattern as acquired during the calibration process. The colorful points indicate the detected corners in the image plane. Refer to figure \ref{fig::324_distortion} for the theory.}
 	\label{fig::51_calib}
 \end{figure}
@@ -60,13 +60,13 @@ Then given the calibration of each single camera, we computed the rectification 
 Exemplary rectified images, which rely on the matrices of table \ref{tab::51_extrinsics}, are shown in figure \ref{fig::51_rect}. Since there is a slight rotation of the calibration pattern, it is not obvious that the images got rectified well. Therefore, the same images are shown in figure \ref{fig::51_rect_line}, but slightly rotated such that the calibration pattern aligns horizontally. The blue line therein indicates that in contrast to the original image, straight lines now appear straight across both images, which is crucial for the block matching algorithm in the next section - Depth Map Parameter Tuning.
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=.28]{chapters/05_experiments/img/rect.png}
+	\includegraphics[scale=.28]{chapters/05_experiments/01_camera_calibration/rect.png}
 	\caption{Rectified and original view of the stereo camera. Due to a slight rotation of the calibration pattern, it does not immediately become clear that the image got rectified correctly, see figure \ref{fig::51_rect_line}. Refer to figure \ref{fig::324_rectified} for the theory.}
 	\label{fig::51_rect}
 \end{figure}
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=.28]{chapters/05_experiments/img/rect_line.png}
+	\includegraphics[scale=.28]{chapters/05_experiments/01_camera_calibration/rect_line.png}
 	\caption{Same images as shown in figure \ref{fig::51_rect}, but rotated such that the blue line indicates that straight lines are now indeed straight. Please note that the blue lines do not correspond to the epipolar lines, but to rotated versions of them.}
 	\label{fig::51_rect_line}
 \end{figure}
