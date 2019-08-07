@@ -90,6 +90,7 @@ If the real robot is up and running (section \ref{sec::B1_rr}), you can now star
 	\item The motors may need to be calibrated when the robot runs for a long time. Therefore, lift up the robot, and bring it to the home position via the yarpmotorgui. Then, start a new terminal on pc104 and run the command \newline \inlinecode{}{yarp rpc /wholeBodyDynamics/rpc} \newline In the interface that will open up, type \newline \inlinecode{}{calib all 300}. 
 \end{enumerate}
 \subsection{Start the Cameras}
+\label{sec::B12_sc}
 If the real robot is up and running (section \ref{sec::B1_rr}), you can now start Heicub's cameras. Therefore proceed as described below.
 \begin{enumerate}
 	\item Within a new terminal to pc104 (figure \ref{fig::B1_pc104} (a)), do \newline \inlinecode{}{cd ./local/share/yarp/robots/iCubHeidelberg01/camera}\newline Then, start the camera via \newline \inlinecode{}{yarpdev --from dragonfly2_config_left.ini}\newline This will run the left camera and connect it to the yarp network. Repeat the above steps for the right camera, but replace left by right within the \inlinecode{}{.ini} file.
@@ -111,7 +112,7 @@ Make sure you installed YARP, as described in section \ref{sec::A5_tp}. You can 
 	\item  Check the connection by pinging the icubsrv via \inlinecode{}{ping 10.0.0.1}. If this works, skip this point, otherwise you can create a manual connection.  Therefore, search for \inlinecode{}{Network Connections} among your applications and open it. Then, click \inlinecode{}{Add}. If it is not set already, check the hardware address by running \inlinecode{}{ifconfig}, it should show something similar to \inlinecode{}{HWaddr 9C:EB:E8:B2:AB:27}, choose this as your device. Then go to IPv4 settings and set the IP address to \inlinecode{}{10.0.0.3}, the netmask to \inlinecode{}{24}, and the gateway to \inlinecode{}{10.0.0.255}. Then press save.
 	\item If you connected successfully, open a terminal on your device and run \newline \inlinecode{}{yarp detect --write} \newline If it does not find the running yarpserver, manually configure the connection via the following commands from a terminal \newline \inlinecode{}{yarp conf 10.0.0.1 1000} \newline \inlinecode{}{yarp namespace /iCubHeidelberg} \newline \inlinecode{}{yarp detect}
 \end{enumerate}
-\section{Simulation Startup}
+\section{Simulated Robot Startup}
 \label{sec::B2_ss}
 Make sure you installed Gazebo, YARP, and the Gazebo YARP plugins as described in section \ref{sec::A5_tp}. Also, you need to have the simulation model installed, which is described in section \ref{sec::A4_sm}. When these requirements are satisfied, then proceed as described below.
 \begin{enumerate}
@@ -127,13 +128,13 @@ Make sure you installed the pattern generator library as described in section \r
 The terminal user interface comes with the pattern generator, so there is no additional software that needs to be installed. Proceed as described below.
 	\begin{enumerate}
 		\item Open a new terminal and go to the shell scripts within the pattern generator folder via \newline \inlinecode{}{cd nmpc\_pattern\_generator/sh} \newline On the icubsrv, this folder is located at \inlinecode{}{/home/icub/TODO}. Then, run the keyboard user interface via \newline \inlinecode{}{sh run\_keyboard\_user\_interface.sh}
-	\item The shell script will then ask you to run the robot in real or in simulation, write \inlinecode{}{y} or \inlinecode{}{n} and press enter (figure \ref{fig::B31_keyboard} (a)).
+	\item The shell script will then ask you whether to run the robot in real or in simulation, write \inlinecode{}{y} or \inlinecode{}{n} and press enter (figure \ref{fig::B31_keyboard} (a)).
 	\item The shell script will then ask you for the mode to run in. Write \inlinecode{}{uc} and press enter (figure \ref{fig::B31_keyboard} (a)).
-	\item The user interface will should now show up and explain how to control the robot (figure \ref{fig::B31_keyboard} (b)).
+	\item The user interface should now show up and explain how to control the robot (figure \ref{fig::B31_keyboard} (b)).
 	\begin{figure}[h]
 		\centering
 		\subcaptionbox{Select the mode to run the pattern generator in.}%
-		[.4\linewidth]{\includegraphics[scale=.22]{chapters/07_appendix/img/mode.png}}
+		[.4\linewidth]{\includegraphics[scale=.22]{chapters/07_appendix/img/keyboard_mode.png}}
 		\subcaptionbox{Keyboard user interface.}%
 		[.4\linewidth]{\includegraphics[scale=.22]{chapters/07_appendix/img/keyboard_interface.png}}
 		\caption{Run the keyboard user interface.}
@@ -142,7 +143,61 @@ The terminal user interface comes with the pattern generator, so there is no add
 \end{enumerate}
 \subsection{Control via the Android Joystick App}
 \label{sec::B32_app}
-Make sure you installed the Android joystick app as described in section \ref{sec::A2_aa}.
+Make sure you installed the Android joystick app as described in section \ref{sec::A2_aa}. Proceed as described below.
+\begin{enumerate}
+	\item Open a hotspot from your phone and connect the icubsrv or your laptop to it.
+	\item Open a new terminal and go to the shell scripts within the pattern generator folder via
+	\newline \inlinecode{}{cd nmpc\_pattern\_generator/sh}\newline
+	On the icubsrv, this folder is located at \inlinecode{}{home/icub/TODO}. Then, run the app user interface via
+	\newline \inlinecode{}{sh run\_app\_user\_interface.sh}
+	\item The shell script will then ask you whether to run the robot in real or in simulation, write \inlinecode{}{y} or \inlinecode{}{n} and press enter (figure \ref{fig::B32_app} (a)).
+	\item The user interface should now show up and explain how to control the robot (figure \ref{fig::B32_app} (b)).
+	\begin{figure}[h]
+		\centering
+		\subcaptionbox{Select the mode to run the pattern generator in.}%
+		[.4\linewidth]{\includegraphics[scale=.22]{chapters/07_appendix/img/app_mode.png}}
+		\subcaptionbox{App user interface.}%
+		[.4\linewidth]{\includegraphics[scale=.22]{chapters/07_appendix/img/app_interface.png}}
+		\caption{Run the app user interface.}
+		\label{fig::B32_app}
+	\end{figure}
+	\item Open the Android app on your smartphone. Within the app, choose settings from the navigation drawer (figure \ref{fig::B32_app_settings} (a)). In the settings activity (figure \ref{fig::B32_app_settings} (b)), choose the IP address and the ports as proposed by the app user interface (figure \ref{fig::B32_app} (b)). 
+	\begin{figure}[h]
+		\centering
+		\subcaptionbox{Navigation drawer.}%
+		[.3\linewidth]{\includegraphics[scale=.08]{chapters/07_appendix/img/slider.png}}
+		\subcaptionbox{Settings activity.}%
+		[.3\linewidth]{\includegraphics[scale=.08]{chapters/07_appendix/img/settings.png}}
+		\subcaptionbox{Connect activity.}%
+		[.3\linewidth]{\includegraphics[scale=.107]{chapters/07_appendix/img/connect_settings.png}}
+		\caption{Connect the app to the computer.}
+		\label{fig::B32_app_settings}
+	\end{figure}
+	\item Now go to the connection activity (figure \ref{fig::B32_app_settings} (c)), and press connect. You should now be connected.
+	\item Go to the app user interface on the laptop (figure \ref{fig::B32_app} (b)), and press \inlinecode{}{r} to run the pattern generator.
+	\item Within the navigation drawer, choose from one of two joysticks to control the robot.
+\end{enumerate}
 \section{Start the Behavioral Augmentation Demo}
 \label{sec::B4_ba}
+There is a trained neural network available on heicub01 to run a demonstration of the behavioral augmentation as trained in section \ref{sec::54_aw}. The network will navigate Heicub towards a fire extinguisher, and look around if it does not see one. Make sure the robot and its cameras are running (section \ref{sec::B1_rr}, section \ref{sec::B11_sm}, and section \ref{sec::B12_sc}). Proceed as described below.
+\begin{enumerate}
+	\item Login to heicub01, username is \inlinecode{}{icub}, password it \inlinecode{}{icubheidelberg01}.
+	\item Make sure that YARP is running on heicub01 (figure \ref{fig::B1_cluster} (b)). Therefore, select heicub01 and click \inlinecode{}{Run Selected}.
+	\item On heicub01, open a terminal and do 
+	\newline \inlinecode{}{cd TODO}
+	\newline \inlinecode{}{sh run\_keyboard\_user\_interface.sh}
+	\item The shell script will then ask you whether to run the robot in real or in simulation, write \inlinecode{}{n} and press enter (figure \ref{fig::B31_keyboard} (a)).
+	\item The shell script will then ask you for the mode to run in. Write \inlinecode{}{ba} and press enter.
+	\item The user interface should now show up (figure \ref{fig::B31_keyboard} (b)). Press \inlinecode{}{r} to run the pattern generator. The robot will now be controlled by the trained neural network.
+\end{enumerate}
 \section{Real Robot Shutdown}
+Before you shutdown the robot, make sure it is in a safe position, that is, lift it up. Proceed as described below.
+\begin{enumerate}
+	\item Lift the robot from the floor.
+	\item Close all running applications. \inlinecode{}{Ctrl+C} the yarprobotinterface and the camera interfaces.
+	\item Type \inlinecode{}{sudo poweroff} in a terminal that is connected to pc104.
+	\item Turn off the motors.
+	\item Turn off the CPU of pc104.
+	\item Turn off the power suppliers.
+	\item Just to be sure, press the red button.
+\end{enumerate}
