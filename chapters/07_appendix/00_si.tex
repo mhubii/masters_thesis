@@ -5,7 +5,39 @@ Since all of the software is freely available on GitHub, you can always find a b
 \label{sec::A1_pg}
 The pattern generator can be found on GitHub at the following \href{https://github.com/mhubii/nmpc_pattern_generator}{link}. Proceed as described below.
 \begin{enumerate}
-	\item 
+	\item Make sure all dependencies are installed. The pattern generator only requires the necessary dependencies (section \ref{sec::A51_nd}). For communication with the real robot, one further needs the real robot and simulation dependencies (section \ref{sec::A52_rs}, and the simulation models \ref{sec::A4_sm}). For the deep learning support, it is further required to have the deep learning dependencies installed (section \ref{sec::A53_dl}).
+	\item Clone the pattern generator from GitHub with
+	\newline \inlinecode{}{https://github.com/mhubii/nmpc\_pattern\_generator.git}
+	\item Then do one of the following steps
+	\begin{enumerate}
+		\item To just build the pattern generator, do
+		\newline \inlinecode{}{mkdir build \&\& cd build}
+		\newline \inlinecode{}{cmake ..}
+		\newline \inlinecode{}{make}
+		\item To build the pattern generator with communication to the real robot or the simulation do
+		\newline \inlinecode{}{mkdir build \&\& cd build}
+		\newline \inlinecode{}{cmake -DCMAKE\_BUILD\_WITH\_YARP=ON}
+		\newline \inlinecode{}{make}
+		\item To build the pattern generator with deep learning support do
+		\newline \inlinecode{}{mkdir build \&\& cd build}
+		\newline \inlinecode{}{cmake -DBUILD\_WITH\_LEARNING=ON \\} \newline  \inlinecode{}{-DCMAKE\_PREFIX\_PATH=/absolute/path/to/libtorch ..}
+		\newline \inlinecode{}{make}
+	\end{enumerate}
+	\item This is not necessary, but you can then install or uninstall the pattern generator with
+	\newline \inlinecode{}{make install}
+	\newline \inlinecode{}{make uninstall}
+\end{enumerate}
+The pattern generator comes with some tests and examples. They can be executed as follows
+\begin{enumerate}
+	\item To run the tests do
+	\newline \inlinecode{}{cd build/bin}
+	\newline \inlinecode{}{./pattern\_generator\_tests}
+	\item To run an example do
+	\newline \inlinecode{}{cd build/bin}
+	\newline \inlinecode{}{./nmpc\_pattern\_generator\_example}
+	\item The results may be visualized with
+	\newline \inlinecode{}{cd plot}
+	\newline \inlinecode{}{python plot\_pattern.py}
 \end{enumerate}
 \section{Build the Android Joystick App}
 \label{sec::A2_aa}
@@ -15,8 +47,10 @@ The Joystick app can be found on GitHub at the following \href{https://github.co
 	\newline \inlinecode{}{git clone https://github.com/mhubii/ijoy.git}
 	\item Copy the \inlinecode{}{.apk} file that you cloned from GitHub to your Android smartphone.
 	\item Make sure your device allows installation of apps from unknown sources. Under Android 7:
-	\subitem Go to settings and open lock \inlinecode{}{screen\&security}.
-	\subitem Find entry \inlinecode{}{unkown sources} and enable it.
+	\begin{enumerate}
+		\item Go to settings and open lock \inlinecode{}{screen\&security}.
+		\item Find entry \inlinecode{}{unkown sources} and enable it.
+	\end{enumerate}
 	\item Find the \inlinecode{}{.apk} using the file browser of your choice and execute it (figure \ref{fig::A2_apk} (a) and (b)).
 	\begin{figure}[h]
 		\centering
@@ -75,3 +109,96 @@ The simulation models can be found on GitHub at the following \href{https://gith
 \end{enumerate}
 \section{Build Third Party Software}
 \label{sec::A5_tp}
+The software that was developed as part of this thesis has some third party dependencies, of which not all are necessary but required for some additional features.
+\subsection{Necessary Dependencies}
+\label{sec::A51_nd}
+These dependencies need to be installed.
+\subsubsection{Eigen}
+\begin{enumerate}
+	\item The pattern generator is based on the blazingly fast Eigen library. To install it do
+	\newline \inlinecode{}{sudo apt install libeigen3-dev}
+	\item You may need to create a symbolic link
+	\newline \inlinecode{}{sudo ln -s /usr/include/eigen3/Eigen/ /usr/include/}
+	\newline \inlinecode{}{sudo ln -s /usr/include/eigen3/unsupported/ /usr/include/}
+\end{enumerate}
+\subsubsection{qpOASES}
+To solve the sequential quadratic program, we need to install qpOASES. Please follow the \href{https://projects.coin-or.org/qpOASES/wiki/QpoasesInstallation}{install instructions}, or head on as described below
+\begin{enumerate}
+	\item Download qpOASES
+	\newline \inlinecode{}{wget https://www.coin-or.org/download/source/qpOASES/qpOASES-3.2.1.zip}
+	\newline \inlinecode{}{unzip qpOASES-3.2.1.zip}
+	\newline \inlinecode{}{cd qpOASES-3.2.1}
+	\item Now since we want a shared library, in the \inlinecode{}{CMakeLists.txt} change 
+	\newline \inlinecode{}{ADD\_LIBRARY(qpOASES STATIC \$\{SRC\})} to
+	\newline \inlinecode{}{ADD\_LIBRARY(qpOASES SHARED \$\{SRC\})}
+	\newline Then proceed with
+	\newline \inlinecode{}{mkdir build \&\& cd build}
+	\newline \inlinecode{}{cmake ..}
+	\newline \inlinecode{}{make}
+	\newline \inlinecode{}{sudo make install}
+\end{enumerate}
+\subsubsection{YAML}
+The configurations are read in using the YAML file format. Run the command
+\begin{enumerate}
+	\item \inlinecode{}{sudo apt install libyaml-cpp-dev}
+\end{enumerate}
+\subsection{Real Robot and Simulation Dependencies}
+\label{sec::A52_rs}
+To run the NMPC generator on a real robot or the simulation, we will need to install some more dependencies.
+\subsubsection{Gazebo}
+The simulation environment can be installed according to the \href{http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install}{install instructions}. The main steps are
+\begin{enumerate}
+	\item \inlinecode{}{sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable"\\}
+	\newline \inlinecode{}{"`lsb\_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'}
+	\newline \inlinecode{}{wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -}
+	\newline \inlinecode{}{sudo apt-get update}
+	\newline \inlinecode{}{sudo apt-get install gazebo9}
+	\newline \inlinecode{}{sudo apt-get install libgazebo9-dev}
+\end{enumerate}
+\subsubsection{RBDL}
+The rigid body kinematics are solved with RBDL. To install RBDL, do
+\begin{enumerate}
+	\item \inlinecode{}{hg clone https://bitbucket.org/rbdl/rbdl}
+	\newline \inlinecode{}{cd rbdl}
+	\newline \inlinecode{}{hg checkout dev}
+	\newline \inlinecode{}{mkdir build \&\& cd build}
+	\newline \inlinecode{}{cmake -DCMAKE\_BUILD\_TYPE=Release \\}
+	\newline \inlinecode{}{-DRBDL\_BUILD\_ADDON\_URDFREADER=ON ..}
+\end{enumerate}
+\subsubsection{YARP}
+Additionally, for communicating with the real robot, or the simulation, we need YARP. To install YARP, follow the \href{https://www.yarp.it/install.html}{installation instructions}, or head on as described below
+\begin{enumerate}
+	\item \inlinecode{}{git clone https://github.com/robotology/yarp.git}
+	\newline \inlinecode{}{cd yarp \&\& mkdir build \&\& cd build}
+	\item If you have previously installed Anaconda, YARP may complain here. Go and install OpenCV within your Anaconda distribution
+	\newline \inlinecode{}{# activate your anaconda environment, if you followed the}
+	\newline \inlinecode{}{# instructions before in PyTorch, do conda activate py37\_torch}
+	\newline \inlinecode{}{conda install opencv}
+	\item Then do
+	\newline \inlinecode{}{cmake -DOpenCV\_DIR=\$HOME/anaconda3/envs/py37\_torch/share/OpenCV ..}
+	\newline \inlinecode{}{make}
+	\newline \inlinecode{}{sudo make install}
+\end{enumerate}
+\subsubsection{Gazebo YARP Plugins}
+Plugins for Gazebo are used to clone the behavior of the real robot into the simulation environment. Proceed as below
+\begin{enumerate}
+	\item \inlinecode{}{git clone https://github.com/robotology/gazebo-yarp-plugins.git}
+	\newline \inlinecode{}{cd gazebo-yarp-plugins}
+	\newline \inlinecode{}{mkdir build \&\& cd build}
+	\newline \inlinecode{}{cmake -DCMAKE\_INSTALL\_PREFIX=\$HOME/gazebo-yarp-plugins ..}
+	\newline \inlinecode{}{make}
+	\newline \inlinecode{}{make install}
+	\item Next, you need to tell Gazebo where to find the plugins, therefore add following to the \inlinecode{}{bashrc}
+	\newline \inlinecode{}{export GAZEBO\_PLUGIN\_PATH=\$\{GAZEBO\_PLUGIN\_PATH\}}
+	\newline \inlinecode{}{:\$HOME/gazebo-yarp-plugins/lib}
+\end{enumerate}
+\subsubsection{Gazebo Models}
+The models are used within the simulation environment Gazebo. See section \ref{sec::A4_sm}.
+\subsubsection{NCurses}
+For the visualization of the control pannel, we need to install ncurses, do
+\begin{enumerate}
+	\item \inlinecode{}{sudo apt install libncurses5-dev}
+\end{enumerate}
+\subsection{Deep Learning Dependencies}
+\label{sec::A53_dl}
+To learn Nonlinear Model Predictive Control or simple navigation on top of Nonlinear Model Predictive Control, we will need to install PyTorch. For PyTorch to work in combination with RBDL, we need a source installation. Please checkout this \href{https://gist.github.com/mhubii/1c1049fb5043b8be262259efac4b89d5}{gist} to figure out how to perform a clean setup.
