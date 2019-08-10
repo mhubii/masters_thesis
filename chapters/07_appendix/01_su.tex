@@ -127,7 +127,7 @@ Make sure you installed the pattern generator library as described in section \r
 \label{sec::B31_terminal}
 The terminal user interface comes with the pattern generator, so there is no additional software that needs to be installed. Proceed as described below.
 	\begin{enumerate}
-		\item Open a new terminal and go to the shell scripts within the pattern generator folder via \newline \inlinecode{}{cd nmpc\_pattern\_generator/sh} \newline On the icubsrv, this folder is located at \inlinecode{}{/home/icub/TODO}. Then, run the keyboard user interface via \newline \inlinecode{}{sh run\_keyboard\_user\_interface.sh}
+		\item Open a new terminal and go to the shell scripts within the pattern generator folder via \newline \inlinecode{}{cd nmpc\_pattern\_generator/sh} \newline On the icubsrv, this folder is located at \inlinecode{}{/usr/local/src/robot}. Then, run the keyboard user interface via \newline \inlinecode{}{sh run\_keyboard\_user\_interface.sh}
 	\item The shell script will then ask you whether to run the robot in real or in simulation, write \inlinecode{}{y} or \inlinecode{}{n} and press enter (figure \ref{fig::B31_keyboard} (a)).
 	\item The shell script will then ask you for the mode to run in. Write \inlinecode{}{uc} and press enter (figure \ref{fig::B31_keyboard} (a)).
 	\item The user interface should now show up and explain how to control the robot (figure \ref{fig::B31_keyboard} (b)).
@@ -183,8 +183,8 @@ There is a trained neural network available on heicub01 to run a demonstration o
 \begin{enumerate}
 	\item Login to heicub01, username is \inlinecode{}{icub}, password it \inlinecode{}{icubheidelberg01}.
 	\item Make sure that YARP is running on heicub01 (figure \ref{fig::B1_cluster} (b)). Therefore, select heicub01 and click \inlinecode{}{Run Selected}.
-	\item On heicub01, open a terminal and do 
-	\newline \inlinecode{}{cd TODO}
+	\item On heicub01, open a new terminal and go to the shell scripts within the pattern generator folder via \newline \inlinecode{}{cd /home/icub/Documents/nmpc\_pattern\_generator/sh}
+	\newline Then run the keyboard user interface with
 	\newline \inlinecode{}{sh run\_keyboard\_user\_interface.sh}
 	\item The shell script will then ask you whether to run the robot in real or in simulation, write \inlinecode{}{n} and press enter (figure \ref{fig::B31_keyboard} (a)).
 	\item The shell script will then ask you for the mode to run in. Write \inlinecode{}{ba} and press enter.
