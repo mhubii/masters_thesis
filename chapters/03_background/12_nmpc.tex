@@ -8,7 +8,21 @@ Sequential quadratic programming is a powerful concept to solve nonlinearly cons
 	\text{subject to: } &\bm{h}(\bm{x}) = \bm{0}\\
 	&\bm{g}(\bm{x}) \leq \bm{0},
 \end{align}
-where $f:\,\mathcal{R}^N\rightarrow\mathcal{R}$, $\bm{h}:\,\mathcal{R}^N\rightarrow\mathcal{R}^M$, and $\bm{g}:\,\mathcal{R}^N\rightarrow\mathcal{R}^P$ \cite{boggs1995sequential}. These problems arise in a variety of applications in science and include quadratic problems as special cases. The great strength of sequential quadratic programming is its ability to solve problems with nonlinear constraints, and its basic idea is to model nonlinear programming at an approximate solution $\bm{x}^k$ by a quadratic subproblem, so to find a solution to this subproblem, in order to construct a better approximation $\bm{x}^{k+1}$. Now given an objective function $f(\bm{x})$ represents a sum of squares, the problem at hand turns into a nonlinear least squares problem, and the minimization can be expressed in terms of a Gauß-Newton method \cite{schittkowski1988solving}. 
+where $f:\,\mathcal{R}^N\rightarrow\mathcal{R}$, $\bm{h}:\,\mathcal{R}^N\rightarrow\mathcal{R}^M$, and $\bm{g}:\,\mathcal{R}^N\rightarrow\mathcal{R}^P$ \cite{boggs1995sequential}. These problems arise in a variety of applications in science and include quadratic problems as special cases. The great strength of sequential quadratic programming is its ability to solve problems with nonlinear constraints, and its basic idea is to model nonlinear programming at an approximate solution $\bm{x}_k$ by a quadratic subproblem, so to find a solution to this subproblem, in order to construct a better approximation $\bm{x}_{k+1}$. Now given an objective function $f(\bm{x})$ represents a sum of squares, the problem at hand turns into a nonlinear least squares problem, and the minimization can be expressed in terms of a Gauss-Newton method \cite{schittkowski1988solving}. That is, given an objective function $f(\bm{x}) = \frac{1}{2}\bm{F}(\bm{x})^T\bm{F}(\bm{x})$, where $\bm{F}=\left(f_1,...,f_l\right)^T$, we can apply a quasi Gauss-Newton method as follows
+\begin{align}
+	\nabla^2f(\bm{x})\Delta\bm{x} + \nabla f(\bm{x}) = 0,
+	\label{eq::312_quasi_gn}
+\end{align}
+where the gradient and the Hessian matrix are given as
+\begin{align}
+	\nabla f(\bm{x}) &= \nabla \bm{F}(\bm{x})\bm{F}(\bm{x}) \\
+	\nabla^2 f(\bm{x}) &= \nabla \bm{F}(\bm{x})\nabla\bm{F}(\bm{x})^T + \bm{B}(\bm{x}).
+\end{align}
+Therein, $\bm{B}(\bm{x}) = \sum_1^lf_i(\bm{x})\nabla^2f_i(\bm{x})$. If we are now sufficiently close to an optimal solution $\bm{x}^*$, such that $\bm{F}(\bm{x}^*) = \left(f_1(\bm{x}^*),...,f_l(\bm{x}^*)\right)^T=\bm{0}$, we can neglect $\bm{B}(\bm{x^*})$, which turns equation \ref{eq::312_quasi_gn} into the previously stated Gauss-Newton minimization problem
+\begin{align}
+	\min_{\Delta\bm{x}}\,||\nabla\bm{F}(\bm{x_k})^T\Delta\bm{x}+\bm{F}(\bm{x}_k)||,
+\end{align}
+where a new iterate is obtained by $\bm{x}_{k+1}=\bm{x}_k + \alpha_k\Delta \bm{x}$ with an appropriate step length parameter $\alpha_k$. The presented approach assures quadratic convergence, when starting sufficiently close to an optimal solution. Within the next section, we will understand how to apply this concept to control the zero moment point of a linear inverted pendulum in a balanced manner.
 \subsubsection{Canonical Formulation of Nonlinear Model Predictive Control}
 \cite{kajita2003biped} % original mpc
 \cite{herdt2010online} % herdt
