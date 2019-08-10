@@ -2,10 +2,14 @@
 \label{sec::312_nmpc}
 At the heart of nonlinear model predictive control stands sequential quadratic programming. Before we come to the actual problem formulation, we need to understand how sequential quadratic programming can be used to solve nonlinear optimization problems. We will then come to recognize that if we can find a canonical formulation of our problem, it will become possible to apply sequential quadratic programming to it. The next paragraph - Sequential Quadratic Programming, will therefore shortly introduce the reader to the desired method that will be used to solve the  nonlinear optimization problem, while the subsequent paragraph - Canonical Formulation of Nonlinear Model Predictive Control, will then explain how to fit humanoid walking into this framework.
 \subsubsection{Sequential Quadratic Programming}
-\cite{boggs1995sequential} % sqp
+Sequential quadratic programming is a powerful concept to solve nonlinearly constrained optimization problems. The nonlinear programming problem to be solved is of the form
+\begin{align}
+	\min_{\bm{x}}\, &f(\bm{x})\\
+	\text{subject to: } &\bm{h}(\bm{x}) = \bm{0}\\
+	&\bm{g}(\bm{x}) \leq \bm{0},
+\end{align}
+where $f:\,\mathcal{R}^N\rightarrow\mathcal{R}$, $\bm{h}:\,\mathcal{R}^N\rightarrow\mathcal{R}^M$, and $\bm{g}:\,\mathcal{R}^N\rightarrow\mathcal{R}^P$ \cite{boggs1995sequential}. These problems arise in a variety of applications in science and include quadratic problems as special cases. The great strength of sequential quadratic programming is its ability to solve problems with nonlinear constraints, and its basic idea is to model nonlinear programming at an approximate solution $\bm{x}^k$ by a quadratic subproblem, so to find a solution to this subproblem, in order to construct a better approximation $\bm{x}^{k+1}$. Now given an objective function $f(\bm{x})$ represents a sum of squares, the problem at hand turns into a nonlinear least squares problem, and the minimization can be expressed in terms of a Gauß-Newton method \cite{schittkowski1988solving}. 
 \subsubsection{Canonical Formulation of Nonlinear Model Predictive Control}
-
-
 \cite{kajita2003biped} % original mpc
 \cite{herdt2010online} % herdt
 \cite{herdt2010walking} % walking without thinking
