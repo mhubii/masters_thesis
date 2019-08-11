@@ -21,10 +21,136 @@ where the gradient and the Hessian matrix are given as
 Therein, $\bm{B}(\bm{x}) = \sum_1^lf_i(\bm{x})\nabla^2f_i(\bm{x})$. If we are now sufficiently close to an optimal solution $\bm{x}^*$, such that $\bm{F}(\bm{x}^*) = \left(f_1(\bm{x}^*),...,f_l(\bm{x}^*)\right)^T=\bm{0}$, we can neglect $\bm{B}(\bm{x^*})$, which turns equation \ref{eq::312_quasi_gn} into the previously stated Gauss-Newton minimization problem
 \begin{align}
 	\min_{\Delta\bm{x}}\,||\nabla\bm{F}(\bm{x_k})^T\Delta\bm{x}+\bm{F}(\bm{x}_k)||,
+	\label{eq::321_gn_min}
 \end{align}
 where a new iterate is obtained by $\bm{x}_{k+1}=\bm{x}_k + \alpha_k\Delta \bm{x}$ with an appropriate step length parameter $\alpha_k$. The presented approach assures quadratic convergence, when starting sufficiently close to an optimal solution. Within the next section, we will understand how to apply this concept to control the zero moment point of a linear inverted pendulum in a balanced manner.
 \subsubsection{Canonical Formulation of Nonlinear Model Predictive Control}
-\cite{kajita2003biped} % original mpc
+Not only do we want to keep a humanoid robot dynamically balanced in terms of the zero moment point, which we derived in equations \ref{eq::311_zmp_x} and \ref{eq::311_zmp_y}, but further do we want to assure this for future time steps that are yet ahead. The underlying model predictive control got first introduced in \cite{kajita2003biped}, and is based upon a linear time stepping scheme, which integrates the current jerk of the center of mass iteratively, so to estimate its future position. We will briefly present it in the following paragraph - Linear Time Stepping Scheme.
+\subsubsection{Linear Time Stepping Scheme}
+Suppose that the center of mass' jerk $\dddot{c}_k$ at time step $t_k$ is constant, then given the current acceleration $\ddot{c}_k$, we can obtain the acceleration $\ddot{c}_{k+1}$ at time step $t_{k+1}$ by simple integration. We can do the same for the velocity and position and therefore obtain
+\begin{align}
+	c_{k+1} &= \frac{T^3}{6}\dddot{c}_k+\frac{T^2}{2}\ddot{c}_k+T\dot{c}_k+c_k\\
+	\dot{c}_{k+1} &= \frac{T^2}{2}\dddot{c}_k+T\ddot{c}_k+\dot{c}_k\\
+	\ddot{c}_{k+1} &= T\dddot{c}_{k} + \ddot{c}_k,
+\end{align}
+where $T = t_{k+1}-t_k$. We can rewrite this in compact form by
+\begin{align}
+	&\bm{c}_{k+1} = \bm{A}\bm{c}_k + \bm{B}\dddot{c}_k \\
+	&\bm{c}_{k+1} = \begin{pmatrix}
+	c_{k+1} \\
+	\dot{c}_{k+1} \\
+	\ddot{c}_{k+1}
+	\end{pmatrix},\,\,
+	\bm{A} = \begin{pmatrix}
+	1 & T & \frac{T^2}{2} \\
+	0 & 1 & T \\
+	0 & 0 & 1
+	\end{pmatrix},\,\,
+	\bm{B} = \begin{pmatrix}
+	\frac{T^3}{6} \\
+	\frac{T^2}{2} \\
+	T
+	\end{pmatrix}
+	\label{eq::321_ltss}
+\end{align}
+Now by recursion, one obtains the positions, velocities, and accelerations for $n$ future time steps via
+\begin{align}
+	\bm{c}_{k+n} = \bm{A}^n\bm{c}_k\sum_{i=1}^n \bm{A}^{i-1}\bm{B}\dddot{c}_{k+n-i},
+\end{align}
+where $n\in[1,N]$. Altogether we have
+\begin{align}
+	\bm{A}^n = \begin{pmatrix}
+	1 & nT & n^2\frac{T^2}{2} \\
+	0 & 1 & nT \\
+	0 & 0 & 1
+	\end{pmatrix},\,\,
+	\bm{A}^n\bm{B} = \begin{pmatrix}
+	(1+3n+3n^2)T^3/6 \\
+	(1+2n)T^2/2 \\
+	T
+	\end{pmatrix}.
+\end{align}
+The amount of time $NT$ that we predict into the future, is what we call the preview horizon. If we now concatenate the single entries of $\bm{c}_{k+n}$ for all $n\in[1,N]$ into one expression, we can relate the initial states $\bm{c}_k$ (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/include/pattern_generator/base_generator.h#L140}{link}) to the states on the preview horizon in an even more compact form. With the concatenations (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/include/pattern_generator/base_generator.h#L146}{link})
+\begin{align}
+	\bm{C}_{k+1}=\begin{pmatrix}
+	c_{k+1}\\
+	\vdots\\
+	c_{k+N}
+	\end{pmatrix},\,\,
+	\dot{\bm{C}}_{k+1}=\begin{pmatrix}
+	\dot{c}_{k+1}\\
+	\vdots\\
+	\dot{c}_{k+N}
+	\end{pmatrix},\,\,
+	\ddot{\bm{C}}_{k+1}=\begin{pmatrix}
+	\ddot{c}_{k+1}\\
+	\vdots\\
+	\ddot{c}_{k+N}
+	\end{pmatrix},\,\,
+	\dddot{\bm{C}}_{k}=\begin{pmatrix}
+	\dddot{c}_{k}\\
+	\vdots\\
+	\dddot{c}_{k+N-1}
+	\end{pmatrix},
+\end{align}
+we obtain (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L887}{link})
+\begin{align}
+	\bm{C}_{k+1} &= \bm{P}_{ps} \bm{c}_k + \bm{P}_{pu}\dddot{\bm{C}}_k\\
+	\dot{\bm{C}}_{k+1} &= \bm{P}_{vs} \bm{c}_k + \bm{P}_{vu}\dddot{\bm{C}}_k\\
+	\ddot{\bm{C}}_{k+1} &= \bm{P}_{as} \bm{c}_k + \bm{P}_{au}\dddot{\bm{C}}_k,
+\end{align}
+where the new matrices are given by (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L403}{link})
+\begin{align}
+	\bm{P}_{ps} &= \begin{pmatrix}
+	1 & T & T^2/2 \\
+	\vdots & & \vdots \\
+	1 & nT & n^2T^2/2
+	\end{pmatrix},\,\,
+	\bm{P}_{pu} = \begin{pmatrix}
+	T^3/6 & \dots & 0 \\
+	\vdots & \ddots & \vdots \\
+	(1+3n+3n^2)T^2/6 & \dots & T^3/6
+	\end{pmatrix} \\
+	\bm{P}_{vs} &= \begin{pmatrix}
+	0 & 1 & T \\
+	\vdots & & \vdots \\
+	0 & 1 & nT
+	\end{pmatrix},\,\,
+	\bm{P}_{vu} = \begin{pmatrix}
+	T^2/2 & \dots & 0 \\
+	\vdots & \ddots & \vdots \\
+	(1+2n)/T^2/2 & \dots & T^2/2
+	\end{pmatrix} \\
+	\bm{P}_{as} &= \begin{pmatrix}
+	0 & 0 & 1 \\
+	\vdots  &  & \vdots \\
+	 0 & 0 & 1
+	\end{pmatrix},\,\,
+	\bm{P}_{au}\begin{pmatrix}
+	T & \dots & 0 \\
+	\vdots & \ddots & \vdots \\
+	T & \dots & T
+	\end{pmatrix}.
+\end{align}
+If we now additionally consider the relation of the zero moment point and the center of mass, which we obtained earlier in equations \ref{eq::311_zmp_x} and \ref{eq::311_zmp_y}, we can further relate the current center of mass state to the zero moment point on the preview horizon by (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/include/pattern_generator/base_generator.h#L219}{link})
+\begin{align}
+	\bm{Z}_{k+1} &= \bm{C}_{k+1} - \frac{c_z}{g}\ddot{\bm{C}}_{k+1} \\
+	&= \left(\bm{P}_{ps}-\frac{c_z}{g}\bm{P}_{as}\right)\bm{c}_k + \left(\bm{P}_{pu}-\frac{c_z}{g}\bm{P}_{au}\right)\ddddot{\bm{C}}_k = \bm{P}_{zs} \bm{c}_k + \bm{P}_{zu}\dddot{\bm{C}}_k,
+\end{align}
+where the new matrices are given by (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L420}{link})
+\begin{align}
+	\bm{P}_{zs} &= \begin{pmatrix}
+	1 & T & T^2/2 - c_z/g \\
+	\vdots & & \vdots \\
+	1 & nT & n^2T^2/2 - c_z/g
+	\end{pmatrix} \\ 
+	\bm{P}_{zu} &= \begin{pmatrix}
+	T^3/6 - Tc_z/g & \dots & 0 \\
+	\vdots & \ddots & \vdots \\
+	(1+3n+3n^2)T^3/6 - Tc_z/g & \dots & T^3/6-Tc_z/g
+	\end{pmatrix}.
+\end{align}
+\\
 \cite{herdt2010online} % herdt
 \cite{herdt2010walking} % walking without thinking
 \cite{naveau2016reactive} % nmpc
