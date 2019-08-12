@@ -2,6 +2,7 @@
 \label{sec::312_nmpc}
 At the heart of nonlinear model predictive control stands sequential quadratic programming. Before we come to the actual problem formulation, we need to understand how sequential quadratic programming can be used to solve nonlinear optimization problems. We will then come to recognize that if we can find a canonical formulation of our problem, it will become possible to apply sequential quadratic programming to it. The next paragraph - Sequential Quadratic Programming, will therefore shortly introduce the reader to the desired method that will be used to solve the  nonlinear optimization problem, while the subsequent paragraph - Canonical Formulation of Nonlinear Model Predictive Control, will then explain how to fit humanoid walking into this framework.
 \subsubsection{Sequential Quadratic Programming}
+\label{sec::312_sqp}
 Sequential quadratic programming is a powerful concept to solve nonlinearly constrained optimization problems. The nonlinear programming problem to be solved is of the form
 \begin{align}
 	\min_{\bm{x}}\, &f(\bm{x})\\
@@ -150,7 +151,16 @@ where the new matrices are given by (\href{https://github.com/mhubii/nmpc_patter
 	(1+3n+3n^2)T^3/6 - Tc_z/g & \dots & T^3/6-Tc_z/g
 	\end{pmatrix}.
 \end{align}
-\\
-\cite{herdt2010online} % herdt
+The expressions for the preview horizon now allow us to formulate an objective function that takes the robot's dynamic balance for future time steps into account, which in turn results in actions being taken that already take future predictions of the system's dynamics into account. The cost function will be described in the next section - The Objective Function.
+\subsubsection{The Objective Function}
+To create an objective function, as the one already outlined in section \ref{sec::312_sqp}, we put together squared $L^2$-norm objectives, which account for a desired reference center of mass velocity $\dot{\bm{C}}_{k+1}^\text{ref}$, a balanced foot step placement $\textbf{F}_{k+1}$, and a smooth motion $\dddot{\bm{C}}_{k+1}$. The objective function itself is similar to the one first introduced in \cite{herdt2010online}, but additionally takes the center of mass' rotation around the z-axis into account, and it can be written down as follows
+\begin{align}
+	\min_{\bm{U}_k} &\frac{\alpha}{2}||\dot{\bm{C}}^x_{k+1} - \dot{\bm{C}}_{k+1}^{x,\text{ref}}||_2^2 + \frac{\alpha}{2}||\dot{\bm{C}}^y_{k+1} - \dot{\bm{C}}_{k+1}^{y,\text{ref}}||_2^2 + \frac{\alpha}{2}||\dot{\bm{C}}^\theta_{k+1} - \dot{\bm{C}}_{k+1}^{\theta,\text{ref}}||_2^2 \\
+	&\frac{\beta}{2}||\bm{Z}^x_{k+1}-\bm{F}^x_{k+1}||^2_2 + \frac{\beta}{2}||\bm{Z}^y_{k+1}-\bm{F}^y_{k+1}||^2_2 \\
+	&\frac{\gamma}{2}||\dddot{\bm{C}}_{k+1}^x||^2_2 + \frac{\gamma}{2}||\dddot{\bm{C}}_{k+1}^y||^2_2	
+\end{align}
+introduce fkp1 and the optimization variable, introduce canonical formulation and explain how terms that are not involved in the optimization can be neglected. how do the left and the right foot described in here?
 \cite{herdt2010walking} % walking without thinking
-\cite{naveau2016reactive} % nmpc
+\subsubsection{The Constraints}
+\cite{naveau2016reactive} % nmpc for constraint stuff
+\subsubsection{}
