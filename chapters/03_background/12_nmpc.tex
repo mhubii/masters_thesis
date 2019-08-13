@@ -5,7 +5,8 @@ At the heart of nonlinear model predictive control stands sequential quadratic p
 \label{sec::312_sqp}
 Sequential quadratic programming is a powerful concept to solve nonlinearly constrained optimization problems. The nonlinear programming problem to be solved is of the form
 \begin{align}
-	\min_{\bm{x}}\, &f(\bm{x})\\
+	\min_{\bm{x}}\, &f(\bm{x})
+	\label{eq::312_objective}\\
 	\text{subject to: } &\bm{h}(\bm{x}) = \bm{0}\\
 	&\bm{g}(\bm{x}) \leq \bm{0},
 \end{align}
@@ -22,7 +23,7 @@ where the gradient and the Hessian matrix are given as
 Therein, $\bm{B}(\bm{x}) = \sum_1^lf_i(\bm{x})\nabla^2f_i(\bm{x})$. If we are now sufficiently close to an optimal solution $\bm{x}^*$, such that $\bm{F}(\bm{x}^*) = \left(f_1(\bm{x}^*),...,f_l(\bm{x}^*)\right)^T=\bm{0}$, we can neglect $\bm{B}(\bm{x^*})$, which turns equation \ref{eq::312_quasi_gn} into the previously stated Gauss-Newton minimization problem
 \begin{align}
 	\min_{\Delta\bm{x}}\,||\nabla\bm{F}(\bm{x_k})^T\Delta\bm{x}+\bm{F}(\bm{x}_k)||,
-	\label{eq::321_gn_min}
+	\label{eq::312_gn_min}
 \end{align}
 where a new iterate is obtained by $\bm{x}_{k+1}=\bm{x}_k + \alpha_k\Delta \bm{x}$ with an appropriate step length parameter $\alpha_k$. The presented approach assures quadratic convergence, when starting sufficiently close to an optimal solution. Within the next section, we will understand how to apply this concept to control the zero moment point of a linear inverted pendulum in a balanced manner.
 \subsubsection{Canonical Formulation of Nonlinear Model Predictive Control}
@@ -52,7 +53,7 @@ where $T = t_{k+1}-t_k$. We can rewrite this in compact form by
 	\frac{T^2}{2} \\
 	T
 	\end{pmatrix}
-	\label{eq::321_ltss}
+	\label{eq::312_ltss}
 \end{align}
 Now by recursion, one obtains the positions, velocities, and accelerations for $n$ future time steps via
 \begin{align}
@@ -96,9 +97,12 @@ The amount of time $NT$ that we predict into the future, is what we call the pre
 \end{align}
 we obtain (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L887}{link})
 \begin{align}
-	\bm{C}_{k+1} &= \bm{P}_{ps} \bm{c}_k + \bm{P}_{pu}\dddot{\bm{C}}_k\\
-	\dot{\bm{C}}_{k+1} &= \bm{P}_{vs} \bm{c}_k + \bm{P}_{vu}\dddot{\bm{C}}_k\\
+	\bm{C}_{k+1} &= \bm{P}_{ps} \bm{c}_k + \bm{P}_{pu}\dddot{\bm{C}}_k
+	\label{eq::312_ckp1}\\
+	\dot{\bm{C}}_{k+1} &= \bm{P}_{vs} \bm{c}_k + \bm{P}_{vu}\dddot{\bm{C}}_k
+	\label{eq::312_dckp1}\\
 	\ddot{\bm{C}}_{k+1} &= \bm{P}_{as} \bm{c}_k + \bm{P}_{au}\dddot{\bm{C}}_k,
+	\label{eq::312_ddckp1}
 \end{align}
 where the new matrices are given by (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L403}{link})
 \begin{align}
@@ -137,7 +141,7 @@ If we now additionally consider the relation of the zero moment point and the ce
 \begin{align}
 	\bm{Z}_{k+1} &= \bm{C}_{k+1} - \frac{c_z}{g}\ddot{\bm{C}}_{k+1} \\
 	&= \left(\bm{P}_{ps}-\frac{c_z}{g}\bm{P}_{as}\right)\bm{c}_k + \left(\bm{P}_{pu}-\frac{c_z}{g}\bm{P}_{au}\right)\ddddot{\bm{C}}_k = \bm{P}_{zs} \bm{c}_k + \bm{P}_{zu}\dddot{\bm{C}}_k,
-	\label{eq::321_zmp}
+	\label{eq::312_zmp}
 \end{align}
 where the new matrices are given by (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L420}{link})
 \begin{align}
@@ -159,13 +163,13 @@ To create an objective function, as the one already outlined in section \ref{sec
 	\min_{\bm{U}_k} &\frac{\alpha}{2}||\dot{\bm{C}}^x_{k+1} - \dot{\bm{C}}_{k+1}^{x,\text{ref}}||_2^2 + \frac{\alpha}{2}||\dot{\bm{C}}^y_{k+1} - \dot{\bm{C}}_{k+1}^{y,\text{ref}}||_2^2 
 	\label{eq::312_dcxy}\\
 	&\frac{\alpha}{2}||\bm{E}_L\dot{\bm{F}}^{\theta,L}_{k+1} - \dot{\bm{C}}_{k+1}^{\theta,\text{ref}}||_2^2 + 	\frac{\alpha}{2}||\bm{E}_R\dot{\bm{F}}^{\theta,R}_{k+1} - \dot{\bm{C}}_{k+1}^{\theta,\text{ref}}||_2^2 
-	\label{eq::321_dftheta} \\
+	\label{eq::312_dftheta} \\
 	&\frac{\beta}{2}||\bm{Z}^x_{k+1}-\bm{F}^x_{k+1}||^2_2 + \frac{\beta}{2}||\bm{Z}^y_{k+1}-\bm{F}^y_{k+1}||^2_2 
-	\label{eq::321_fxy}\\
+	\label{eq::312_fxy}\\
 	&\frac{\gamma}{2}||\dddot{\bm{C}}_{k+1}^x||^2_2 + \frac{\gamma}{2}||\dddot{\bm{C}}_{k+1}^y||^2_2	
-	\label{eq::321_dddcxy}
+	\label{eq::312_dddcxy}
 \end{align}
-Before we address the foot placement therein in more detail, we shortly want to highlight that the reference velocities are the commands, which enter the control loop from figure \ref{fig::31_pg}. We set them to be constant over the whole preview horizon and rotate them to the world frame  by considering the robot's current orientation (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L324}{link}). When we consider that the foot cannot move once it is in contact with the ground, it becomes clear that the foot step placement must be very discrete in time. The number of steps $N_f$ that we plan for in advance is simply given by $NT/T_\text{step}$, where we just divide the duration of the preview horizon $NT$ by the time it takes to perform a step $T_\text{step}$. But as already shown in equation \ref{eq::321_zmp}, and used in equation \ref{eq::321_fxy}, we require balance on a finer timescale. We therefore project the foot placement $\bm{F}_k$ onto the temporal resolution of the center of mass' control variable by introducing the matrices $\bm{v}_{k+1}$, $\bm{V}_{k+1}$, and the current foot position $f_k$, which yields
+Before we address the foot placement therein in more detail, we shortly want to highlight that the reference velocities are the commands, which enter the control loop from figure \ref{fig::31_pg}. We set them to be constant over the whole preview horizon and rotate them to the world frame  by considering the robot's current orientation (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L324}{link}). When we consider that the foot cannot move once it is in contact with the ground, it becomes clear that the foot step placement must be very discrete in time. The number of steps $N_f$ that we plan for in advance is simply given by $NT/T_\text{step}$, where we just divide the duration of the preview horizon $NT$ by the time it takes to perform a step $T_\text{step}$. But as already shown in equation \ref{eq::312_zmp}, and used in equation \ref{eq::312_fxy}, we require balance on a finer timescale. We therefore project the foot placement $\bm{F}_k$ onto the temporal resolution of the center of mass' control variable by introducing the matrices $\bm{v}_{k+1}$, $\bm{V}_{k+1}$, and the current foot position $f_k$, which yields
 \begin{align}
 	\bm{F}_{k+1} = \bm{v}_{k+1}f_k + \bm{V}_{k+1}\bm{F}_k,
 \end{align}
@@ -229,24 +233,57 @@ As the robot moves, the matrices change, in that the entries of $v_{k+1}$ are be
 	0 & 0 & 1
 	\end{array}\right)
 \end{align}
-Now to ensure the rotation of the center of mass, we introduce equation \ref{eq::321_dftheta} to the objective function. The matrices $\bm{E}_{L/R}$ therein ensure that only the foot which is currently not touching the ground is rotated, the rotational velocity of the center of mass itself is then obtained by averaging over the left and the right foot. Hence $\bm{E}_{L/R}$ take the form (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L1281}{link})
+Now to ensure the rotation of the center of mass, we introduce equation \ref{eq::312_dftheta} to the objective function. The matrices $\bm{E}_{L/R}$ therein ensure that only the foot, which is currently not touching the ground, is rotated, the rotational velocity of the center of mass itself is then obtained by averaging over the left and the right foot. Hence $\bm{E}_{L/R}$ take the form (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L1281}{link})
 \begin{align}
 	\bm{E}_L = \begin{pmatrix}
-	1 & 0 & \dots & 0 \\
-	0 & \ddots & 0 & \dots & 0 \\
-	\end{pmatrix}
+	1&&&&&&&& \\
+	&\ddots&&&&&&& \\
+	&&1&&&&&& \\
+	&&&0&&&&& \\
+	&&&&\ddots&&&& \\
+	&&&&&0&&& \\
+	&&&&&&1&& \\
+	&&&&&&&\ddots& \\
+	&&&&&&&&1 \\
+	\end{pmatrix},\,\,
+	\bm{E}_R = \bm{1} - \bm{E}_L
 \end{align}
-The control variable $\bm{U}_k$ at time step $k$ then takes the following form
+The diagonal entries therein just take the same form as a single column of $\bm{V}_{k+1}$, all other entries are zero. If we now take equations \ref{eq::312_dcxy}-\ref{eq::312_dddcxy}, and replace $\dot{\bm{C}}_{k+1}^{x/y}$, as well as $\dot{\bm{F}}_{k+1}^{\theta,L/R}$, by equation \ref{eq::312_dckp1}, and insert equation \ref{eq::312_zmp} into the zero moment point on the preview horizon, we obtain following relation (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/nmpc_generator.cpp#L145}{link})
 \begin{align}
-	\bm{U}_k = \begin{pmatrix}
+	\min_{\bm{U}_k} &\frac{1}{2}\bm{U_k}^T\bm{Q}_k\bm{U}_k + \bm{p}_k^T\bm{U}_k \\
+	& \bm{U}_k = \begin{pmatrix}
 	\dddot{\bm{C}}^x_k & \bm{F}_k^x & \dddot{\bm{C}}_k^y & \bm{F}_k^y & \dddot{\bm{F}}_k^{\theta, L} & \dddot{\bm{F}}_k^{\theta, R} 
 	\end{pmatrix}^T
+	\label{eq::312_canqp} \\
+	&\bm{Q}_k = \begin{pmatrix}
+	\bm{Q}_k^{x} & \bm{0} & \bm{0} & \bm{0} \\
+	\bm{0} & \bm{Q}_k^{y} & \bm{0} & \bm{0} \\
+	\bm{0} & \bm{0} & \bm{Q}_k^L & \bm{0} \\ 
+	\bm{0} & \bm{0} & \bm{0} & \bm{Q}_k^R
+	\end{pmatrix}\\
+	& \bm{Q}_k^x = \bm{Q}_k^y = \begin{pmatrix}
+		\alpha\bm{P}_{vu}^T\bm{P}_{vu}+\beta\bm{P}_{zu}^T\bm{P}_{zu}+\gamma\bm{1} & -\beta\bm{P}_{zu}^T\bm{V}_{k+1} \\
+		-\beta\bm{V}_{k+1}^T\bm{P}_{zu} & \beta\bm{V}_{k+1}^T\bm{V}_{k+1}
+	\end{pmatrix}\\
+	& \bm{Q}_k^{L/R} = \begin{pmatrix}
+		\alpha\bm{P}_{vu}^T\bm{E}_{L/R}^T\bm{E}_{L/R}\bm{P}_{vu}
+	\end{pmatrix}\\
+	&\bm{p}_k = \begin{pmatrix}
+		\bm{p}_k^x \\
+		\bm{p}_k^y \\
+		\bm{p}_k^{L} \\
+		\bm{p}_k^{R}
+	\end{pmatrix} \\
+	& \bm{p}_k^{x/y} = \begin{pmatrix}
+		\alpha\bm{P}_{vu}^T(\bm{P}_{vs}\bm{c}_k^{x/y}-\dot{\bm{C}}_{k+1}^{x/y,\text{ref}}) + \beta\bm{P}_{zu}^T(\bm{P}_{zs}\bm{c}_k^{x/y}-\bm{v}_{k+1}f_k^{x/y})\\
+		-\beta\bm{V}_{k+1}^T(\bm{P}_{zs}\bm{c}_k^{x/y}-\bm{v}_{k+1}f_k^{x/y})
+	\end{pmatrix} \\
+	& \bm{p}_k^{L/R} = \begin{pmatrix}
+		\alpha\bm{P}_{vu}^T\bm{E}_{L/R}^T(\bm{E}_{L/R}\bm{P}_{vs}\bm{f}_k^{q,L/R}-\dot{\bm{C}}_{k+1}^{L/R,\text{ref}})
+	\end{pmatrix}
 \end{align}
-
-
-
-introduce fkp1 and the optimization variable, introduce canonical formulation and explain how terms that are not involved in the optimization can be neglected. how do the left and the right foot described in here with the foot selection?
-\cite{herdt2010walking} % walking without thinking
+where we evaluated all squared $L^2$-norms via $||\bm{a}-\bm{b}||^2_2 = (\bm{a}-\bm{b})^T(\bm{a}-\bm{b})$, and ordered the terms correspondingly. All terms that do not depend on the control variable $\bm{U}_k$ got discarded. Equation \ref{eq::312_canqp} now represents the canonical formulation of the minimization problem we were looking for in equation \ref{eq::312_objective}. The formulation itself minimizes our objective of keeping the zero moment point close to the center of the feet, but it does not assure that it never leaves the support polygon. Also does it not consider the kinematic feasibility of the solution. We will therefore have to introduce constraints on the free parameters of the optimal control problem in the next section - The Constraints.
 \subsubsection{The Constraints}
+\cite{herdt2010walking} % walking without thinking
 \cite{naveau2016reactive} % nmpc for constraint stuff
 \subsubsection{}
