@@ -248,13 +248,13 @@ Now to ensure the rotation of the center of mass, we introduce equation \ref{eq:
 	\end{pmatrix},\,\,
 	\bm{E}_R = \bm{1} - \bm{E}_L
 \end{align}
-The diagonal entries therein just take the same form as a single column of $\bm{V}_{k+1}$, all other entries are zero. If we now take equations \ref{eq::312_dcxy}-\ref{eq::312_dddcxy}, and replace $\dot{\bm{C}}_{k+1}^{x/y}$, as well as $\dot{\bm{F}}_{k+1}^{\theta,L/R}$, by equation \ref{eq::312_dckp1}, and insert equation \ref{eq::312_zmp} into the zero moment point on the preview horizon, we obtain following relation (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/nmpc_generator.cpp#L145}{link})
+The diagonal entries therein just take the same form as a single column of $\bm{V}_{k+1}$, all other entries are zero. If we now take equations \ref{eq::312_dcxy}-\ref{eq::312_dddcxy}, and replace $\dot{\bm{C}}_{k+1}^{x/y}$, as well as $\dot{\bm{F}}_{k+1}^{\theta,L/R}$, by equation \ref{eq::312_dckp1}, and insert equation \ref{eq::312_zmp} into the zero moment point on the preview horizon $\bm{Z}_{k+1}$, we obtain following relation (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/nmpc_generator.cpp#L145}{link})
 \begin{align}
-	\min_{\bm{U}_k} &\frac{1}{2}\bm{U_k}^T\bm{Q}_k\bm{U}_k + \bm{p}_k^T\bm{U}_k \\
+	\min_{\bm{U}_k} &\frac{1}{2}\bm{U_k}^T\bm{Q}_k\bm{U}_k + \bm{p}_k^T\bm{U}_k
+	\label{eq::312_canqp} \\
 	& \bm{U}_k = \begin{pmatrix}
 	\dddot{\bm{C}}^x_k & \bm{F}_k^x & \dddot{\bm{C}}_k^y & \bm{F}_k^y & \dddot{\bm{F}}_k^{\theta, L} & \dddot{\bm{F}}_k^{\theta, R} 
-	\end{pmatrix}^T
-	\label{eq::312_canqp} \\
+	\end{pmatrix}^T \\
 	&\bm{Q}_k = \begin{pmatrix}
 	\bm{Q}_k^{x} & \bm{0} & \bm{0} & \bm{0} \\
 	\bm{0} & \bm{Q}_k^{y} & \bm{0} & \bm{0} \\
