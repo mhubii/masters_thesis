@@ -137,6 +137,7 @@ If we now additionally consider the relation of the zero moment point and the ce
 \begin{align}
 	\bm{Z}_{k+1} &= \bm{C}_{k+1} - \frac{c_z}{g}\ddot{\bm{C}}_{k+1} \\
 	&= \left(\bm{P}_{ps}-\frac{c_z}{g}\bm{P}_{as}\right)\bm{c}_k + \left(\bm{P}_{pu}-\frac{c_z}{g}\bm{P}_{au}\right)\ddddot{\bm{C}}_k = \bm{P}_{zs} \bm{c}_k + \bm{P}_{zu}\dddot{\bm{C}}_k,
+	\label{eq::321_zmp}
 \end{align}
 where the new matrices are given by (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L420}{link})
 \begin{align}
@@ -153,13 +154,98 @@ where the new matrices are given by (\href{https://github.com/mhubii/nmpc_patter
 \end{align}
 The expressions for the preview horizon now allow us to formulate an objective function that takes the robot's dynamic balance for future time steps into account, which in turn results in actions being taken that already take future predictions of the system's dynamics into account. The cost function will be described in the next section - The Objective Function.
 \subsubsection{The Objective Function}
-To create an objective function, as the one already outlined in section \ref{sec::312_sqp}, we put together squared $L^2$-norm objectives, which account for a desired reference center of mass velocity $\dot{\bm{C}}_{k+1}^\text{ref}$, a balanced foot step placement $\textbf{F}_{k+1}$, and a smooth motion $\dddot{\bm{C}}_{k+1}$. The objective function itself is similar to the one first introduced in \cite{herdt2010online}, but additionally takes the center of mass' rotation around the z-axis into account, and it can be written down as follows
+To create an objective function, as the one already outlined in section \ref{sec::312_sqp}, we put together squared $L^2$-norm objectives, which account for a desired reference center of mass velocity $\dot{\bm{C}}_{k+1}^\text{ref}$, a balanced foot step placement $\textbf{F}_{k+1}$ close to the zero moment point $\bm{Z}_{k+1}$, and a smooth motion for which the center of mass jerk $\dddot{\bm{C}}_{k+1}$ enters as a regularization. The objective function itself is similar to the one first introduced in \cite{herdt2010online}, but additionally takes the center of mass' rotation around the z-axis into account, and it can be written down as follows
 \begin{align}
-	\min_{\bm{U}_k} &\frac{\alpha}{2}||\dot{\bm{C}}^x_{k+1} - \dot{\bm{C}}_{k+1}^{x,\text{ref}}||_2^2 + \frac{\alpha}{2}||\dot{\bm{C}}^y_{k+1} - \dot{\bm{C}}_{k+1}^{y,\text{ref}}||_2^2 + \frac{\alpha}{2}||\dot{\bm{C}}^\theta_{k+1} - \dot{\bm{C}}_{k+1}^{\theta,\text{ref}}||_2^2 \\
-	&\frac{\beta}{2}||\bm{Z}^x_{k+1}-\bm{F}^x_{k+1}||^2_2 + \frac{\beta}{2}||\bm{Z}^y_{k+1}-\bm{F}^y_{k+1}||^2_2 \\
+	\min_{\bm{U}_k} &\frac{\alpha}{2}||\dot{\bm{C}}^x_{k+1} - \dot{\bm{C}}_{k+1}^{x,\text{ref}}||_2^2 + \frac{\alpha}{2}||\dot{\bm{C}}^y_{k+1} - \dot{\bm{C}}_{k+1}^{y,\text{ref}}||_2^2 
+	\label{eq::312_dcxy}\\
+	&\frac{\alpha}{2}||\bm{E}_L\dot{\bm{F}}^{\theta,L}_{k+1} - \dot{\bm{C}}_{k+1}^{\theta,\text{ref}}||_2^2 + 	\frac{\alpha}{2}||\bm{E}_R\dot{\bm{F}}^{\theta,R}_{k+1} - \dot{\bm{C}}_{k+1}^{\theta,\text{ref}}||_2^2 
+	\label{eq::321_dftheta} \\
+	&\frac{\beta}{2}||\bm{Z}^x_{k+1}-\bm{F}^x_{k+1}||^2_2 + \frac{\beta}{2}||\bm{Z}^y_{k+1}-\bm{F}^y_{k+1}||^2_2 
+	\label{eq::321_fxy}\\
 	&\frac{\gamma}{2}||\dddot{\bm{C}}_{k+1}^x||^2_2 + \frac{\gamma}{2}||\dddot{\bm{C}}_{k+1}^y||^2_2	
+	\label{eq::321_dddcxy}
 \end{align}
-introduce fkp1 and the optimization variable, introduce canonical formulation and explain how terms that are not involved in the optimization can be neglected. how do the left and the right foot described in here?
+Before we address the foot placement therein in more detail, we shortly want to highlight that the reference velocities are the commands, which enter the control loop from figure \ref{fig::31_pg}. We set them to be constant over the whole preview horizon and rotate them to the world frame  by considering the robot's current orientation (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L324}{link}). When we consider that the foot cannot move once it is in contact with the ground, it becomes clear that the foot step placement must be very discrete in time. The number of steps $N_f$ that we plan for in advance is simply given by $NT/T_\text{step}$, where we just divide the duration of the preview horizon $NT$ by the time it takes to perform a step $T_\text{step}$. But as already shown in equation \ref{eq::321_zmp}, and used in equation \ref{eq::321_fxy}, we require balance on a finer timescale. We therefore project the foot placement $\bm{F}_k$ onto the temporal resolution of the center of mass' control variable by introducing the matrices $\bm{v}_{k+1}$, $\bm{V}_{k+1}$, and the current foot position $f_k$, which yields
+\begin{align}
+	\bm{F}_{k+1} = \bm{v}_{k+1}f_k + \bm{V}_{k+1}\bm{F}_k,
+\end{align}
+where $\bm{v}_{k+1}$ is a $N\times1$ matrix, and $\bm{V}_{k+1}$ is a $N\times N_f$ matrix, and they are for example for $N_f = 3$ given by
+\begin{align}
+	\bm{v}_{k+1} = \begin{pmatrix}
+	1 \\ 
+	\vdots \\
+	1 \\
+	0 \\
+	\vdots \\
+	0 \\
+	0 \\
+	\vdots \\
+	0
+	\end{pmatrix},\,\, 
+	\bm{V}_{k+1} = \begin{pmatrix}
+	0 & 0 & 0\\
+	\vdots & \vdots & \vdots \\
+	0 & 0 & 0 \\
+	0 & 1 & 0 \\
+	\vdots & \vdots & \vdots \\
+	0 & 1 & 0 \\
+	0 & 0 & 1 \\
+	\vdots & \vdots & \vdots \\
+	0 & 0 & 1
+	\end{pmatrix}
+\end{align}
+As the robot moves, the matrices change, in that the entries of $v_{k+1}$ are being shifted upwards by one index for every time step $T$, while the new entries at the bottom are set to be zero. All entries of $V_{k+1}$ are also shifted upwards, while the bottom right entry is set to one, but further are all entries of $V_{k+1}$ are being shifted to the left once all entries of $\bm{v}_{k+1}$ are zero (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L740}{link}). If all entries of $\bm{v}_{k+1}$ are zero, then $\bm{v}_{k+1}$ is replaced by the second column of $\bm{V}_{k+1}$. For example for $N_f = 2$ and $N=6$  we have
+\begin{align}
+	\left(
+	\begin{array}{c|c}
+	\bm{v}_{k+1} & \bm{V}_{k+1}
+	\end{array} 
+	\right) =
+	\left(
+	\begin{array}{c|cc}
+	1 & 0 & 0 \\
+	0 & 1 & 0 \\
+	0 & 1 & 0 \\ 
+	0 & 1 & 0 \\
+	0 & 0 & 1 \\
+	0 & 0 & 1
+	\end{array}\right) \rightarrow
+	\left(
+	\begin{array}{c|cc}
+	1 & 0 & 0 \\
+	1 & 0 & 0 \\
+	1 & 0 & 0 \\ 
+	0 & 1 & 0 \\
+	0 & 1 & 0 \\
+	0 & 1 & 0
+	\end{array}\right) \rightarrow
+	\left(
+	\begin{array}{c|cc}
+	1 & 0 & 0 \\
+	1 & 0 & 0 \\
+	0 & 1 & 0 \\ 
+	0 & 1 & 0 \\
+	0 & 1 & 0 \\
+	0 & 0 & 1
+	\end{array}\right)
+\end{align}
+Now to ensure the rotation of the center of mass, we introduce equation \ref{eq::321_dftheta} to the objective function. The matrices $\bm{E}_{L/R}$ therein ensure that only the foot which is currently not touching the ground is rotated, the rotational velocity of the center of mass itself is then obtained by averaging over the left and the right foot. Hence $\bm{E}_{L/R}$ take the form (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L1281}{link})
+\begin{align}
+	\bm{E}_L = \begin{pmatrix}
+	1 & 0 & \dots & 0 \\
+	0 & \ddots & 0 & \dots & 0 \\
+	\end{pmatrix}
+\end{align}
+The control variable $\bm{U}_k$ at time step $k$ then takes the following form
+\begin{align}
+	\bm{U}_k = \begin{pmatrix}
+	\dddot{\bm{C}}^x_k & \bm{F}_k^x & \dddot{\bm{C}}_k^y & \bm{F}_k^y & \dddot{\bm{F}}_k^{\theta, L} & \dddot{\bm{F}}_k^{\theta, R} 
+	\end{pmatrix}^T
+\end{align}
+
+
+
+introduce fkp1 and the optimization variable, introduce canonical formulation and explain how terms that are not involved in the optimization can be neglected. how do the left and the right foot described in here with the foot selection?
 \cite{herdt2010walking} % walking without thinking
 \subsubsection{The Constraints}
 \cite{naveau2016reactive} % nmpc for constraint stuff
