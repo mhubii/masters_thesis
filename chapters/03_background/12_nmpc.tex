@@ -284,6 +284,10 @@ The diagonal entries therein just take the same form as a single column of $\bm{
 \end{align}
 where we evaluated all squared $L^2$-norms via $||\bm{a}-\bm{b}||^2_2 = (\bm{a}-\bm{b})^T(\bm{a}-\bm{b})$, and ordered the terms correspondingly. All terms that do not depend on the control variable $\bm{U}_k$ got discarded. Equation \ref{eq::312_canqp} now represents the canonical formulation of the minimization problem we were looking for in equation \ref{eq::312_objective}. The formulation itself minimizes our objective of keeping the zero moment point close to the center of the feet, but it does not assure that it never leaves the support polygon. Also does it not consider the kinematic feasibility of the solution. We will therefore have to introduce constraints on the free parameters of the optimal control problem in the next section - The Constraints.
 \subsubsection{The Constraints}
+The constraints we are going to deal with first, ensure dynamic balance in that they constrain the zero moment point to the support polygon of the feet. Secondly, we will explain the feasibility constraints, which force the feet positioning to a convex hull that describes kinematically feasible motions. Finally, the nonlinear constraints which allow obstacle avoidance are introduced.
+\paragraph{Balance Constraints} 
+\paragraph{Feasibility Constraints}
+\paragraph{Obstacle Constraints}
 \cite{herdt2010walking} % walking without thinking
 \cite{naveau2016reactive} % nmpc for constraint stuff
-\subsubsection{}
+\subsubsection{The Gauss-Newton Formulation}
