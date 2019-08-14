@@ -169,9 +169,10 @@ To create an objective function, as the one already outlined in section \ref{sec
 	&\frac{\gamma}{2}||\dddot{\bm{C}}_{k+1}^x||^2_2 + \frac{\gamma}{2}||\dddot{\bm{C}}_{k+1}^y||^2_2	
 	\label{eq::312_dddcxy}
 \end{align}
-Before we address the foot placement therein in more detail, we shortly want to highlight that the reference velocities are the commands, which enter the control loop from figure \ref{fig::31_pg}. We set them to be constant over the whole preview horizon and rotate them to the world frame  by considering the robot's current orientation (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L324}{link}). When we consider that the foot cannot move once it is in contact with the ground, it becomes clear that the foot step placement must be very discrete in time. The number of steps $N_f$ that we plan for in advance is simply given by $NT/T_\text{step}$, where we just divide the duration of the preview horizon $NT$ by the time it takes to perform a step $T_\text{step}$. But as already shown in equation \ref{eq::312_zmp}, and used in equation \ref{eq::312_fxy}, we require balance on a finer timescale. We therefore project the foot placement $\bm{F}_k\in\mathbb{R}^{N_f\times1}$ onto the temporal resolution of the center of mass' control variable by introducing the matrices $\bm{v}_{k+1}$, $\bm{V}_{k+1}$, and the current foot position $f_k$, which yields
+Before we address the foot placement therein in more detail, we shortly want to highlight that the reference velocities are the commands, which enter the control loop from figure \ref{fig::31_pg}. We set them to be constant over the whole preview horizon and rotate them to the world frame  by considering the robot's current orientation (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L324}{link}). When we consider that the foot cannot move once it is in contact with the ground, it becomes clear that the foot step placement must be very discrete in time. The number of steps $N_f$ that we plan for in advance is simply given by $NT/T_\text{step}$, where we just divide the duration of the preview horizon $NT$ by the time it takes to perform a step $T_\text{step}$. But as already shown in equation \ref{eq::312_zmp}, and used in equation \ref{eq::312_fxy}, we require balance on a finer timescale. We therefore project the foot placement $\tilde{\bm{F}}_k\in\mathbb{R}^{N_f\times1}$ onto the temporal resolution of the center of mass' control variable by introducing the matrices $\bm{v}_{k+1}$, $\bm{V}_{k+1}$, and the current foot position $f_k$, which yields
 \begin{align}
-	\bm{F}_{k+1} = \bm{v}_{k+1}f_k + \bm{V}_{k+1}\bm{F}_k,
+	\bm{F}_{k+1} = \bm{v}_{k+1}f_k + \bm{V}_{k+1}\tilde{\bm{F}}_k,
+	\label{eq:312_feet}
 \end{align}
 where $\bm{v}_{k+1}$ is a $N\times1$ matrix, and $\bm{V}_{k+1}$ is a $N\times N_f$ matrix, and they are for example for $N_f = 3$ given by
 \begin{align}
@@ -253,7 +254,7 @@ The diagonal entries therein just take the same form as a single column of $\bm{
 	\min_{\bm{U}_k} &\frac{1}{2}\bm{U_k}^T\bm{Q}_k\bm{U}_k + \bm{p}_k^T\bm{U}_k
 	\label{eq::312_canqp} \\
 	& \bm{U}_k = \begin{pmatrix}
-	\dddot{\bm{C}}^x_k & \bm{F}_k^x & \dddot{\bm{C}}_k^y & \bm{F}_k^y & \dddot{\bm{F}}_k^{\theta, L} & \dddot{\bm{F}}_k^{\theta, R} 
+	\dddot{\bm{C}}^x_k & \tilde{\bm{F}}_k^x & \dddot{\bm{C}}_k^y & \tilde{\bm{F}}_k^y & \dddot{\bm{F}}_k^{\theta, L} & \dddot{\bm{F}}_k^{\theta, R} 
 	\end{pmatrix}^T \\
 	&\bm{Q}_k = \begin{pmatrix}
 	\bm{Q}_k^{x} & \bm{0} & \bm{0} & \bm{0} \\
@@ -293,7 +294,56 @@ To ensure that the zero moment point stays within the support polygon (figure \r
 	\caption{The foot's support polygon, which is described by the position vectors $\bm{p}_i$.}
 	\label{fig::312_foot_hull}
 \end{figure}
+A point $\bm{x}$ lies beneath the line that connects the edges if
+\begin{align}
+	\bm{A}_k^L\bm{x} \leq \bm{B}_k^L,
+	\label{eq::312_lin}
+\end{align}
+where the linear equations are defined by  $\bm{A}_k^L=\begin{pmatrix}
+\bm{A}_k^{L,x}\,\bm{A}_k^{L,y}\end{pmatrix}\in\mathbb{R}^{N_{\text{edges}}\times2}$, and $\bm{B}_k^L\in\mathbb{R}^{N_{\text{edges}}\times1}$
+\begin{align}
+	\bm{A}_k^{L,x}[i] &= p^{L,y}_i-p^{L,y}_{i+1} \\
+	\bm{A}_k^{L,y}[i] &= p^{L,x}_{i+1}-p^{L,x}_i \\
+	\bm{B}_k^L[i] &= (p^{L,y}_i-p^{L,y}_{i+1})p^{L,x}_{i+1} + (p^{L,x}_{i+1}-p^{L,x}_i)p^{L,y}_{i+1}
+\end{align}
+Since we require the zero moment point to lie inside the support polygon, $\bm{x}$ in equation \ref{eq::312_lin} is replaced by $\bm{R}_z(f_k^\theta)(\bm{z}_k-\bm{f}_k)$, with $\bm{z}_k=\begin{pmatrix}
+z_k^x & z_k^y
+\end{pmatrix}^T$, and $\bm{f}_k=\begin{pmatrix}
+f_k^x & f_k^y
+\end{pmatrix}^T$. This expression describes the zero moment point with respect to the foot frame, where $\bm{R}_z(f_k^\theta) = \begin{pmatrix}
+\quad\cos f_k^\theta & \sin f_k^\theta \\
+-\sin f_k^\theta& \cos f_k^\theta
+\end{pmatrix}$ is an inverse rotation around the z-axis that adds non-linearities to the constraints. We can now extend the formalism to the whole preview horizon by utilizing equations \ref{eq::312_zmp} and \ref{eq:312_feet}. This leads to (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L946}{link})
+\begin{align}
+	&\bm{D}_{k+1}(\bm{F}_{k+1}^{\theta})\begin{pmatrix}
+		\bm{Z}_{k+1}^x - \bm{F}_{k+1}^x \\
+		\bm{Z}_{k+1}^y - \bm{F}_{k+1}^y
+	\end{pmatrix} \leq \bm{B}_{k+1} \\
+	&\bm{D}_{k+1}(\bm{F}_{k+1}^{\theta})\begin{pmatrix}
+		\bm{P}_{zs} \bm{c}_k^x + \bm{P}_{zu}\dddot{\bm{C}}_k^x - \bm{v}_{k+1}f_k^x-\bm{V}_{k+1}\tilde{\bm{F}}_{k+1}^x \\
+		\bm{P}_{zs} \bm{c}_k^y + \bm{P}_{zu}\dddot{\bm{C}}_k^y - \bm{v}_{k+1}f_k^y-\bm{V}_{k+1}\tilde{\bm{F}}_{k+1}^y
+	\end{pmatrix} \leq \bm{B}_{k+1}
+	\label{eq::312_cop_hull}
+\end{align}
+where $\bm{D}_{k+1}$ depends on $\bm{F}_{k+1}^{\theta} = \bm{P}_{ps}f_k^\theta + \bm{P}_{pu}\bm{F}_{k+1}^\theta$, and holds all the linear equations on the whole preview horizon $\bm{D}_{k+1} = \begin{pmatrix}
+	\bm{A}_{k+1}^{L,x}&                  &0                 &\bm{A}_{k+1}^{L,y}&      &0 \\
+	                  &\ddots            &                  &                  &\ddots& \\
+	0                 &                  &\bm{A}_{k+N}^{L,x}&0                 &      &\bm{A}_{k+N}^{L,y}
+\end{pmatrix}$, and $\bm{B}_{k+1}=\begin{pmatrix}
+	\bm{B}_{k+1}^L & \dots & \bm{B}_{k+N}^L
+\end{pmatrix}^T$. Whether the left foot's or the right foot's convex hull is chosen depends on the support foot at the respective preview interval $k$. Equation \ref{eq::312_cop_hull} can now be expressed in terms of the free variables $\bm{U}_k$ by
+\begin{align}
+	\bm{D}_{k+1}\begin{pmatrix}
+		\bm{P}_{zu} & -\bm{V}_{k+1} & \bm{0} & \bm{0} & \bm{0} & \bm{0}\\
+		\bm{0} & \bm{0} & \bm{P}_{zu} & -\bm{V}_{k+1} & \bm{0} & \bm{0}
+	\end{pmatrix}\bm{U}_k \leq \bm{B}_{k+1} + \bm{D}_{k+1}\begin{pmatrix}
+		-\bm{P}_{zs}\bm{c}_k^x + \bm{v}_{k+1}f_k^x\\
+		-\bm{P}_{zs}\bm{c}_k^y + \bm{v}_{k+1}f_k^y
+	\end{pmatrix}
+\end{align}
+The above derivation balance constraints deliver a nice framework, which can be used to express the feasibility constraints as well.
 \paragraph{Feasibility Constraints}
+The feasibility constraints constrain the foot positioning to areas that the robot of interest can actually reach.  
 \paragraph{Obstacle Constraints}
 \cite{herdt2010walking} % walking without thinking
 \cite{naveau2016reactive} % nmpc for constraint stuff
