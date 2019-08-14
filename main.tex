@@ -4,16 +4,16 @@
 %% You need at least KomaScript v3.0.0,
 %% e.g. available in Texlive 2009
 \documentclass  [
-  paper    = a4,
-  BCOR     = 10mm,
-  twoside,
-  fontsize = 12pt,
-  toc      = bibnumbered,
-  toc      = listofnumbered,
-  numbers  = noendperiod,
-  headings = normal,
-  listof   = leveldown,
-  version  = 3.03
+paper    = a4,
+BCOR     = 10mm,
+twoside,
+fontsize = 12pt,
+toc      = bibnumbered,
+toc      = listofnumbered,
+numbers  = noendperiod,
+headings = normal,
+listof   = leveldown,
+version  = 3.03
 ]                                       {scrreprt}
 
 % used pagages
@@ -42,75 +42,74 @@
 \definecolor{darkblue}{rgb}{0.0,0.0,0.4}
 \definecolor{darkgreen}{rgb}{0.0,0.4,0.0}
 \hypersetup{
-    colorlinks,
-    linkcolor=black,
-    citecolor=darkgreen,
-    urlcolor=darkblue
+	colorlinks,
+	linkcolor=black,
+	citecolor=darkgreen,
+	urlcolor=darkblue
 }
 
 \begin{document}
-  %% title pages similar to providet template instead of maketitle
-  \include{chapters/00_title/titlepages-ger} % select either german
-  \include{chapters/00_title/titlepages-eng} % or english title page
-  \include{chapters/00_title/abstracts}
-
-  \tableofcontents
-  
-  %% chapters
-  \chapter{Introduction}
-  %\input{chapters/01_introduction/00_in}
-  % humanoids (icub, others), problem statement, research aim and objectives
-    
-  \chapter{State of the Art}
-  \label{sec::2_sota}
-  % contributions
-    
-  \chapter{Background}
-  \input{chapters/03_background/00_in}   % introduction to background
-  \input{chapters/03_background/10_hw}   % short overview of humanoid walking
-  \input{chapters/03_background/11_zmp}  % zero moment point
-  \input{chapters/03_background/12_nmpc} % nonlinear model predictive control
-  \input{chapters/03_background/13_ip}   % interpolation
-  \input{chapters/03_background/14_ki}   % kinematics
-  
-  \input{chapters/03_background/20_ml}   % short overview of machine learning
-  \input{chapters/03_background/21_nn}   % short introduction to neural networks
-  \input{chapters/03_background/22_bc}   % behavioral cloning
-  \input{chapters/03_background/23_rl}   % reinforcement learning
-  \input{chapters/03_background/24_ip}   % image processing
-   
-  \chapter{Methods}
-  \section{Software}
-  %\input{chapters/04_methods/01_eig}     % eigen
-  %\input{chapters/04_methods/02_qp}      % qpoases
-  %\input{chapters/04_methods/03_rbdl}    % rbdl
-  %\input{chapters/04_methods/04_yarp}    % yarp
-  %\input{chapters/04_methods/05_pyt}     % pytorch
-  %\input{chapters/04_methods/06_cv}      % opencv
-  
-  \section{Implementation}  
-   
-  \chapter{Experiments}
-  
-  \section{Camera Calibration}
-  \section{Depth Map Extraction}
-  \section{User Controlled Walking}
-  \section{Autonomous Walking}
-  \section{Reinforcement Learning}
-
-  \chapter{Conclusion}
-  \input{chapters/06_conclusion/00_contributions}
-  \input{chapters/06_conclusion/01_future_work}
-
-  \part{Appendix}
-  \begin{appendix}
-  	\input{chapters/07_appendix/00_si}
-  	\input{chapters/07_appendix/01_su}
-    \chapter{Lists}
-    \listoffigures
-    \listoftables
-    \bibliographystyle{unsrt}
-    \bibliography{chapters/07_appendix/references}
-    \include{chapters/07_appendix/deposition}
-  \end{appendix}
+	%% title pages similar to providet template instead of maketitle
+	\include{chapters/00_title/titlepages-ger} % select either german
+	\include{chapters/00_title/titlepages-eng} % or english title page
+	\include{chapters/00_title/abstracts}
+	
+	\tableofcontents
+	
+	%% chapters
+	\chapter{Introduction}
+	% humanoids (icub, others), problem statement, research aim and objectives
+	
+	\chapter{State of the Art}
+	\label{sec::2_sota}
+	% contributions
+	
+	\chapter{Background}
+	\input{chapters/03_background/00_in}   % introduction to background
+	\input{chapters/03_background/10_hw}   % short overview of humanoid walking
+	\input{chapters/03_background/11_zmp}  % zero moment point
+	\input{chapters/03_background/12_nmpc} % nonlinear model predictive control
+	\input{chapters/03_background/13_ip}   % interpolation
+	\input{chapters/03_background/14_ki}   % kinematics
+	
+	\input{chapters/03_background/20_ml}   % short overview of machine learning
+	\input{chapters/03_background/21_nn}   % short introduction to neural networks
+	\input{chapters/03_background/22_bc}   % behavioral cloning
+	\input{chapters/03_background/23_rl}   % reinforcement learning
+	\input{chapters/03_background/24_ip}   % image processing
+	
+	\chapter{Methods}
+	\section{Software}
+	%\input{chapters/04_methods/01_eig}     % eigen
+	%\input{chapters/04_methods/02_qp}      % qpoases
+	%\input{chapters/04_methods/03_rbdl}    % rbdl
+	%\input{chapters/04_methods/04_yarp}    % yarp
+	%\input{chapters/04_methods/05_pyt}     % pytorch
+	%\input{chapters/04_methods/06_cv}      % opencv
+	
+	\section{Implementation}  
+	
+	\chapter{Experiments}
+	\input{chapters/05_experiments/00_in}
+	\input{chapters/05_experiments/01_cc}
+	\input{chapters/05_experiments/02_dm}
+	\input{chapters/05_experiments/03_uc}
+	\input{chapters/05_experiments/04_aw}
+	%\input{chapters/05_experiments/05_rl}
+	
+	\chapter{Conclusion}
+	\input{chapters/06_conclusion/00_contributions}
+	\input{chapters/06_conclusion/01_future_work}
+	
+	\part{Appendix}
+	\begin{appendix}
+		\input{chapters/07_appendix/00_si}
+		\input{chapters/07_appendix/01_su}
+		\chapter{Lists}
+		\listoffigures
+		\listoftables
+		\bibliographystyle{unsrt}
+		\bibliography{chapters/07_appendix/references}
+		\include{chapters/07_appendix/deposition}
+	\end{appendix}
 \end{document}
