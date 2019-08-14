@@ -1,10 +1,17 @@
 \section{Autonomous Walking}
 \label{sec::54_aw}
 \subsection{Data Acquisition}
+\label{sec::541_da}
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=.4]{chapters/05_experiments/04_autonomous_walking/dataset_diversity.png}
+	\caption{}
+	\label{fig::542_dataset}
+\end{figure}
 \subsection{Network Architecture and Training}
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=.35]{chapters/05_experiments/04_autonomous_walking/unet.png}
+	\includegraphics[scale=.5]{chapters/05_experiments/04_autonomous_walking/unet.png}
 	\caption{}
 	\label{fig::542_unet}
 \end{figure}
@@ -81,6 +88,10 @@
 	\caption{}
 	\label{fig::53_aw_additional}
 \end{figure}
-
-
-
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=.6]{chapters/05_experiments/04_autonomous_walking/entropy_against_balance.pdf}
+	\caption{meanaw 3.67, meanuc 3.41, stdaw 0.56, stduc 0.69}
+	\label{fig::542_entropy_balance}
+\end{figure}
+\subsection{Proximal Policy Optimization}

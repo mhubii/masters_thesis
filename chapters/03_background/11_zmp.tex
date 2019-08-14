@@ -53,9 +53,10 @@ where the transfer of the moment $\bm{M}$ may for example be induced by friction
 \end{align}
 Since our goal is to have a robot that does not fall, we want to achieve that the acceleration along the z-axis becomes zero, hence $\ddot{c}_z=0$. Given this assumption, we can infer from eq. \ref{eq::311_pendulum_force} that $S_z=mg$, as well as $S_x = \ddot{c}_xm$, and $S_y = \ddot{c}_ym$. Furthermore, our foot shall not lift off the floor, and therefore we have $r_z=0$. If we take these assumptions and plug them into the first to rows of eq. \ref{eq::311_momentum_transfer}, we find
 \begin{align}
-	r_x &= c_x - c_z\frac{\ddot{c}_x}{g}\\
+	r_x &= c_x - c_z\frac{\ddot{c}_x}{g}
+	\label{eq::311_zmp_x}\\
 	r_y &= c_y - c_z\frac{\ddot{c}_y}{g}
-	\label{eq::311_zmp}
+	\label{eq::311_zmp_y}
 \end{align}
 Therein, $r_x$, and $r_y$ are the x-, and y-coordinates of the zero moment point, given the assumption of a linear inverted pendulum. We can see that the position if dependent on the height of the point mass, which is in turn dependent on the robot. The specific values can be set in the configurations file (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/bc79a6d4f9bcfd3794146355af44429f5b7a9fe0/libs/pattern_generator/configs.yaml#L27}{link}).
 \\\\
