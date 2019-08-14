@@ -29,6 +29,14 @@
 % my packages
 \usepackage{bm}
 \usepackage{subcaption}
+\usepackage{multirow}
+\usepackage{animate}           % for animated gifs
+\usepackage{listings}          % for code
+
+% my commands
+\definecolor{lightgray}{gray}{0.9}
+\newcommand{\inlinecode}[2]{\colorbox{lightgray}{\lstinline[language=#1]$#2$}}
+
 
 % links
 \definecolor{darkblue}{rgb}{0.0,0.0,0.4}
@@ -91,11 +99,13 @@
   \section{Reinforcement Learning}
 
   \chapter{Conclusion}
+  \input{chapters/06_conclusion/00_contributions}
+  \input{chapters/06_conclusion/01_future_work}
 
   \part{Appendix}
   \begin{appendix}
-    \chapter{Heicub Startup Procedure}
-    \chapter{Software Installation}
+  	\input{chapters/07_appendix/00_si}
+  	\input{chapters/07_appendix/01_su}
     \chapter{Lists}
     \listoffigures
     \listoftables
