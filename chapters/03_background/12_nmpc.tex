@@ -362,13 +362,43 @@ The feasibility constraints constrain the foot positioning to areas that the rob
 \bm{S}_1f_k^x \\ \bm{S}_1f_k^x \\ \bm{0} \\ \bm{0} 
 \end{pmatrix},
 \end{align}
-where $\bm{A}_{k+1}^{x/y}\begin{pmatrix}
+where $\bm{A}_{k+1}^{x/y}=\begin{pmatrix}
 	\bm{A}^{L/R,x/y}\bm{R}_z(f_{k}^\theta)& & \bm{0} \\
 	&\ddots &\\
 	\bm{0} &           &\bm{A}^{R/L,x/y}\bm{R}_z(f_{k+N_fN}^\theta)
-\end{pmatrix}\in\mathbb{R}^{N_\text{edges}N\times N_f}$ has alternating linear inequalities $\bm{A}^{L/R,x/y}$ that correspond on the support foot, and so does $\bm{B_{k+1}}\in\mathbb{R}^{N_\text{edges}N\times1}$. 
+\end{pmatrix}\in\mathbb{R}^{N_\text{edges}N\times N_f}$ has alternating linear inequalities $\bm{A}^{L/R,x/y}\rightarrow\bm{A}^{R/L,x/y}$ that correspond on the support foot, and so does $\bm{B_{k+1}}\in\mathbb{R}^{N_\text{edges}N\times1}$. 
 \paragraph{Relative Constraints}
+By considering the maximum and minimum angle by which the feet are relatively oriented towards each other, we take hardware limits into account. Furthermore, the restriction of the maximally allowed relative angular velocity decreases that variation of acceleration before the foot landing \cite{naveau2016reactive}. The constraints can be formulated as follows (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/base_generator.cpp#L1244}{link})
+\begin{align}
+	-\bm{\theta}_\text{max}\leq\bm{F}_{k+1}^{L,\theta} - \bm{F}_{k+1}^{R,\theta} &\leq \bm{\theta}_\text{max} \\
+	-\dot{\bm{\theta}}_\text{max}\leq\dot{\bm{F}}_{k+1}^{L,\theta} - \dot{\bm{F}}_{k+1}^{R,\theta} &\leq \dot{\bm{\theta}}_\text{max},
+\end{align}
+which can be expressed in terms of the free variables with equations \ref{eq::312_ckp1} and \ref{eq::312_dckp1} to find
+\begin{align}
+	-\bm{\theta}_\text{max}-\bm{P}_{ps}(f_k^L-f_k^R)\leq \begin{pmatrix}
+	\bm{0} & \bm{0} &\bm{0} &\bm{0} & \bm{P}_{pu} & -\bm{P}_{pu}
+	\end{pmatrix}\bm{U}_k \leq \bm{\theta}_\text{max}-\bm{P}_{ps}(f_k^L-f_k^R) \\
+		-\dot{\bm{\theta}}_\text{max}-\bm{P}_{vs}(f_k^L-f_k^R)\leq \begin{pmatrix}
+	\bm{0} & \bm{0} &\bm{0} &\bm{0} & \bm{P}_{vu} & -\bm{P}_{vu}
+	\end{pmatrix}\bm{U}_k \leq \dot{\bm{\theta}}_\text{max}-\bm{P}_{vs}(f_k^L-f_k^R).
+\end{align}
 \paragraph{Obstacle Constraints}
-\cite{herdt2010walking} % walking without thinking
-\cite{naveau2016reactive} % nmpc for constraint stuff
+In contrast to similar methods like \cite{herdt2010walking}, we also include the avoidance of convex obstacles by requesting that the feet's positions must lie outside of circles $C = \{(p^x, p^y)\in\mathbb{R}^2 \,|\, (p^x-x_0)^2+(p^y-y_0)^2\leq R^2\}$, which define the obstacles, where $x_0$, and $y_0$ define the obstacle's center in world coordinates. This can be formulated by the free variables by (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/base_generator.cpp#L1271}{link})
+\begin{align}
+	&(f_k^x-x_0)^2 + (f_k^y-y_0)^2 \geq (R + m)^2\\
+	&\bm{U}_k^T\begin{pmatrix}
+	\bm{0} & \textbf{I}_{N_f} & \bm{0}& \textbf{I}_{N_f} & \bm{0} & \bm{0}
+	\end{pmatrix}\bm{U}_k + \\ &\begin{pmatrix}
+	\bm{0} & \begin{pmatrix}
+	-2x_0 & \dots & -2x_0
+	\end{pmatrix} & \bm{0} & \begin{pmatrix}
+	-2y_0 & \dots & -2y_0
+	\end{pmatrix} & \bm{0} & \bm{0}
+	\end{pmatrix} \geq \begin{pmatrix}
+	(R + m)^2 \\
+	\vdots \\
+	(R + m)^2
+	\end{pmatrix},
+\end{align}
+which expresses lower bounds for the free variables. Given the constraints, of which some are nonlinear, we can apply a Gauss-Newton method to find the optimal solution. This also implies that we have to linearize all of the constraints that were presented within the previous paragraphs. The linearization is described in the next paragraph - The Gauss-Newton Formulation.
 \subsubsection{The Gauss-Newton Formulation}
