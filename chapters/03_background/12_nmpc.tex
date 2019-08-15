@@ -285,7 +285,7 @@ The diagonal entries therein just take the same form as a single column of $\bm{
 \end{align}
 where we evaluated all squared $L^2$-norms via $||\bm{a}-\bm{b}||^2_2 = (\bm{a}-\bm{b})^T(\bm{a}-\bm{b})$, and ordered the terms correspondingly. All terms that do not depend on the control variable $\bm{U}_k$ got discarded. Equation \ref{eq::312_canqp} now represents the canonical formulation of the minimization problem we were looking for in equation \ref{eq::312_objective}. The formulation itself minimizes our objective of keeping the zero moment point close to the center of the feet, but it does not assure that it never leaves the support polygon. Also does it not consider the kinematic feasibility of the solution. We will therefore have to introduce constraints on the free parameters of the optimal control problem in the next section - The Constraints.
 \subsubsection{The Constraints}
-The constraints we are going to deal with first, ensure dynamic balance in that they constrain the zero moment point to the support polygon of the feet. Secondly, we will explain the feasibility constraints, which force the feet positioning to a convex hull that describes kinematically feasible motions. Finally, the nonlinear constraints which allow obstacle avoidance are introduced.
+The constraints we are going to deal with first, ensure dynamic balance in that they constrain the zero moment point to the support polygon of the feet. Secondly, we will explain the feasibility constraints, which force the feet positioning to a convex hull that describes kinematically feasible motions. Finally, the constraints which restrict the feet's relative velocity, and the feet's relative orientation, as wall as the ones, which allow obstacle avoidance, are introduced.
 \paragraph{Balance Constraints} 
 To ensure that the zero moment point stays within the support polygon (figure \ref{fig::312_foot_hull}), we set up a system of linear equations, of which each describes a line that connects the polygon's edges $\bm{p}_i$ (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L844}{link}). 
 \begin{figure}[h]
@@ -296,15 +296,15 @@ To ensure that the zero moment point stays within the support polygon (figure \r
 \end{figure}
 A point $\bm{x}$ lies beneath the line that connects the edges if
 \begin{align}
-	\bm{A}_k^L\bm{x} \leq \bm{B}_k^L,
+	\bm{A}^{L/R}\bm{x} \leq \bm{B}^{L/R},
 	\label{eq::312_lin}
 \end{align}
-where the linear equations are defined by  $\bm{A}_k^L=\begin{pmatrix}
-\bm{A}_k^{L,x}\,\bm{A}_k^{L,y}\end{pmatrix}\in\mathbb{R}^{N_{\text{edges}}\times2}$, and $\bm{B}_k^L\in\mathbb{R}^{N_{\text{edges}}\times1}$
+where the linear equations are defined by  $\bm{A}^{L/R}=\begin{pmatrix}
+\bm{A}^{L/R,x}\,\bm{A}^{L/R,y}\end{pmatrix}\in\mathbb{R}^{N_{\text{edges}}\times2}$, and $\bm{B}^{L/R}\in\mathbb{R}^{N_{\text{edges}}\times1}$
 \begin{align}
-	\bm{A}_k^{L,x}[i] &= p^{L,y}_i-p^{L,y}_{i+1} \\
-	\bm{A}_k^{L,y}[i] &= p^{L,x}_{i+1}-p^{L,x}_i \\
-	\bm{B}_k^L[i] &= (p^{L,y}_i-p^{L,y}_{i+1})p^{L,x}_{i+1} + (p^{L,x}_{i+1}-p^{L,x}_i)p^{L,y}_{i+1}
+	\bm{A}^{L/R,x}[i] &= p^{L/R,y}_i-p^{L/R,y}_{i+1} \\
+	\bm{A}^{L/R,y}[i] &= p^{L/R,x}_{i+1}-p^{L/R,x}_i \\
+	\bm{B}^{L/R}[i] &= (p^{L/R,y}_i-p^{L/R,y}_{i+1})p^{L/R,x}_{i+1} + (p^{L/R,x}_{i+1}-p^{L/R,x}_i)p^{L/R,y}_{i+1}
 \end{align}
 Since we require the zero moment point to lie inside the support polygon, $\bm{x}$ in equation \ref{eq::312_lin} is replaced by $\bm{R}_z(f_k^\theta)(\bm{z}_k-\bm{f}_k)$, with $\bm{z}_k=\begin{pmatrix}
 z_k^x & z_k^y
@@ -325,25 +325,49 @@ f_k^x & f_k^y
 	\end{pmatrix} \leq \bm{B}_{k+1}
 	\label{eq::312_cop_hull}
 \end{align}
-where $\bm{D}_{k+1}$ depends on $\bm{F}_{k+1}^{\theta} = \bm{P}_{ps}f_k^\theta + \bm{P}_{pu}\bm{F}_{k+1}^\theta$, and holds all the linear equations on the whole preview horizon $\bm{D}_{k+1} = \begin{pmatrix}
-	\bm{A}_{k+1}^{L,x}&                  &0                 &\bm{A}_{k+1}^{L,y}&      &0 \\
+where $\bm{D}_{k+1}\in\mathbb{R}^{N_\text{edges}N\times2N}$ depends on $\bm{F}_{k+1}^{\theta} = \bm{P}_{ps}f_k^\theta + \bm{P}_{pu}\bm{F}_{k+1}^\theta$, and holds all the linear equations on the whole preview horizon \begin{align}
+\bm{D}_{k+1} = \begin{pmatrix}
+	\bm{A}^{L/R,x}\bm{R}_z(f_{k+1}^\theta)&                  &\bm{0}                 &\bm{A}^{L/R,y}\bm{R}_z(f_{k+1}^\theta)&      &\bm{0} \\
 	                  &\ddots            &                  &                  &\ddots& \\
-	0                 &                  &\bm{A}_{k+N}^{L,x}&0                 &      &\bm{A}_{k+N}^{L,y}
-\end{pmatrix}$, and $\bm{B}_{k+1}=\begin{pmatrix}
-	\bm{B}_{k+1}^L & \dots & \bm{B}_{k+N}^L
-\end{pmatrix}^T$. Whether the left foot's or the right foot's convex hull is chosen depends on the support foot at the respective preview interval $k$. Equation \ref{eq::312_cop_hull} can now be expressed in terms of the free variables $\bm{U}_k$ by
+	\bm{0}                 &                  &\bm{A}^{L/R,x}\bm{R}_z(f_{k+N}^\theta)&\bm{0}                 &      &\bm{A}^{L/R,y}\bm{R}_z(f_{k+N}^\theta)
+\end{pmatrix},
+\end{align}
+and $\bm{B}_{k+1}=\begin{pmatrix} \bm{B}^{L/R} & \dots & \bm{B}^{L/R}\end{pmatrix}^T$. Whether the left foot's or the right foot's convex hull is chosen depends on the support foot at the respective preview interval $k$. Equation \ref{eq::312_cop_hull} can now be expressed in terms of the free variables $\bm{U}_k$ by
 \begin{align}
 	\bm{D}_{k+1}\begin{pmatrix}
 		\bm{P}_{zu} & -\bm{V}_{k+1} & \bm{0} & \bm{0} & \bm{0} & \bm{0}\\
 		\bm{0} & \bm{0} & \bm{P}_{zu} & -\bm{V}_{k+1} & \bm{0} & \bm{0}
-	\end{pmatrix}\bm{U}_k \leq \bm{B}_{k+1} + \bm{D}_{k+1}\begin{pmatrix}
+	\end{pmatrix}\bm{U}_k \leq \begin{pmatrix}
+	\bm{B}_{k+1}\\\bm{0}\\\bm{0}\end{pmatrix} + \begin{pmatrix}\bm{D}_{k+1}\\\bm{0}\\\bm{0}\end{pmatrix}\begin{pmatrix}
 		-\bm{P}_{zs}\bm{c}_k^x + \bm{v}_{k+1}f_k^x\\
-		-\bm{P}_{zs}\bm{c}_k^y + \bm{v}_{k+1}f_k^y
+		-\bm{P}_{zs}\bm{c}_k^y + \bm{v}_{k+1}f_k^y\\\bm{0}\\\bm{0}
 	\end{pmatrix}
 \end{align}
 The above derivation balance constraints deliver a nice framework, which can be used to express the feasibility constraints as well.
 \paragraph{Feasibility Constraints}
-The feasibility constraints constrain the foot positioning to areas that the robot of interest can actually reach.  
+The feasibility constraints constrain the foot positioning to areas that the robot of interest can actually reach. We can therefore just reuse the concept of equation \ref{eq::312_lin}, and replace $\bm{x}$ therein by the the difference of the next foot position $\tilde{\bm{F}}_{k}\in\mathcal{R}^{N_f\times1}$, and the previous one $\tilde{\bm{F}}_{k-1} = \bm{S}_0\tilde{\bm{F}}_{k} + \bm{S}_1f_k$, where $\bm{S}_0 = \begin{pmatrix}0 & 0 \\ \textbf{I}_{N_f-1} & 0
+\end{pmatrix}\in\mathcal{R}^{N_f\times N_f}$ simply shifts $\tilde{\bm{F}}_{k}$ down by one row, and $\bm{S}_1 = \begin{pmatrix}
+1 \\ 0 \\ \vdots \\ 0
+\end{pmatrix}\in\mathcal{R}^{N_f\times1}$. Altogether we have (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/base_generator.cpp#L1061}{link})
+\begin{align}
+\begin{pmatrix}
+\bm{A}_{k+1}^{x}&\bm{A}_{k+1}^{y}\end{pmatrix} 
+\begin{pmatrix}
+\tilde{\bm{F}}^x_{k} - \bm{S}_0\tilde{\bm{F}}^x_{k} - \bm{S}_1f^x_k\\
+\tilde{\bm{F}}^y_{k} - \bm{S}_0\tilde{\bm{F}}^y_{k} - \bm{S}_1f^y_k
+\end{pmatrix} &\leq \bm{B}_{k+1} \\
+\begin{pmatrix}
+\bm{0} & \bm{A}_{k+1}^{x}(\textbf{I}_{N_f}-\bm{S}_0) & \bm{0} & \bm{A}_{k+1}^{y}(\textbf{I}_{N_f}-\bm{S}_0) & \bm{0} & \bm{0}
+\end{pmatrix}\bm{U}_k &\leq \begin{pmatrix}\bm{B}_{k+1}\\\bm{0}\\\bm{0}\end{pmatrix}+\begin{pmatrix}
+\bm{S}_1f_k^x \\ \bm{S}_1f_k^x \\ \bm{0} \\ \bm{0} 
+\end{pmatrix},
+\end{align}
+where $\bm{A}_{k+1}^{x/y}\begin{pmatrix}
+	\bm{A}^{L/R,x/y}\bm{R}_z(f_{k}^\theta)& & \bm{0} \\
+	&\ddots &\\
+	\bm{0} &           &\bm{A}^{R/L,x/y}\bm{R}_z(f_{k+N_fN}^\theta)
+\end{pmatrix}\in\mathbb{R}^{N_\text{edges}N\times N_f}$ has alternating linear inequalities $\bm{A}^{L/R,x/y}$ that correspond on the support foot, and so does $\bm{B_{k+1}}\in\mathbb{R}^{N_\text{edges}N\times1}$. 
+\paragraph{Relative Constraints}
 \paragraph{Obstacle Constraints}
 \cite{herdt2010walking} % walking without thinking
 \cite{naveau2016reactive} % nmpc for constraint stuff
