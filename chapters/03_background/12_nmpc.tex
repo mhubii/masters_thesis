@@ -22,10 +22,10 @@ where the gradient and the Hessian matrix are given as
 \end{align}
 Therein, $\bm{B}(\bm{x}) = \sum_1^lf_i(\bm{x})\nabla^2f_i(\bm{x})$. If we are now sufficiently close to an optimal solution $\bm{x}^*$, such that $\bm{F}(\bm{x}^*) = \left(f_1(\bm{x}^*),...,f_l(\bm{x}^*)\right)^T=\bm{0}$, we can neglect $\bm{B}(\bm{x^*})$, which turns equation \ref{eq::312_quasi_gn} into the previously stated Gauss-Newton minimization problem
 \begin{align}
-	\min_{\Delta\bm{x}}\,||\nabla\bm{F}(\bm{x_k})^T\Delta\bm{x}+\bm{F}(\bm{x}_k)||,
+	\min_{\Delta\bm{x}}\,||\nabla\bm{F}(\bm{x_k})^T\Delta\bm{x}+\bm{F}(\bm{x}_k)||^2_2,
 	\label{eq::312_gn_min}
 \end{align}
-where a new iterate is obtained by $\bm{x}_{k+1}=\bm{x}_k + \alpha_k\Delta \bm{x}$ with an appropriate step length parameter $\alpha_k$. The presented approach assures quadratic convergence, when starting sufficiently close to an optimal solution. Within the next section, we will understand how to apply this concept to control the zero moment point of a linear inverted pendulum in a balanced manner.
+where a new iterate is obtained by $\bm{x}_{k+1}=\bm{x}_k + \alpha_k\Delta \bm{x}$ with an appropriate step length parameter $\alpha_k$. This is because equation \ref{eq::312_quasi_gn} defines the normal equations of equation \ref{eq::312_gn_min}. The presented approach assures quadratic convergence, when starting sufficiently close to an optimal solution. Within the next section, we will understand how to apply this concept to control the zero moment point of a linear inverted pendulum in a balanced manner.
 \subsubsection{Canonical Formulation of Nonlinear Model Predictive Control}
 Not only do we want to keep a humanoid robot dynamically balanced in terms of the zero moment point, which we derived in equations \ref{eq::311_zmp_x} and \ref{eq::311_zmp_y}, but further do we want to assure this for future time steps that are yet ahead. The underlying model predictive control got first introduced in \cite{kajita2003biped}, and is based upon a linear time stepping scheme, which integrates the current jerk of the center of mass iteratively, so to estimate its future position. We will briefly present it in the following paragraph - Linear Time Stepping Scheme.
 \subsubsection{Linear Time Stepping Scheme}
@@ -254,7 +254,12 @@ The diagonal entries therein just take the same form as a single column of $\bm{
 	\min_{\bm{U}_k} &\frac{1}{2}\bm{U_k}^T\bm{Q}_k\bm{U}_k + \bm{p}_k^T\bm{U}_k
 	\label{eq::312_canqp} \\
 	& \bm{U}_k = \begin{pmatrix}
-	\dddot{\bm{C}}^x_k & \tilde{\bm{F}}_k^x & \dddot{\bm{C}}_k^y & \tilde{\bm{F}}_k^y & \dddot{\bm{F}}_k^{\theta, L} & \dddot{\bm{F}}_k^{\theta, R} 
+	\bm{U}^{xy}_k & \bm{U}^\theta_k
+	\end{pmatrix}^T\\	
+	&\bm{U}^{xy}_k = \begin{pmatrix}
+	\dddot{\bm{C}}^x_k & \tilde{\bm{F}}_k^x & \dddot{\bm{C}}_k^y & \tilde{\bm{F}}_k^y
+	\end{pmatrix}^T\\
+	&\bm{U}^\theta_k = \begin{pmatrix} \dddot{\bm{F}}_k^{\theta, L} & \dddot{\bm{F}}_k^{\theta, R} 
 	\end{pmatrix}^T \\
 	&\bm{Q}_k = \begin{pmatrix}
 	\bm{Q}_k^{x} & \bm{0} & \bm{0} & \bm{0} \\
@@ -335,13 +340,13 @@ where $\bm{D}_{k+1}\in\mathbb{R}^{N_\text{edges}N\times2N}$ depends on $\bm{F}_{
 and $\bm{B}_{k+1}=\begin{pmatrix} \bm{B}^{L/R} & \dots & \bm{B}^{L/R}\end{pmatrix}^T$. Whether the left foot's or the right foot's convex hull is chosen depends on the support foot at the respective preview interval $k$. Equation \ref{eq::312_cop_hull} can now be expressed in terms of the free variables $\bm{U}_k$ by
 \begin{align}
 	\bm{D}_{k+1}\begin{pmatrix}
-		\bm{P}_{zu} & -\bm{V}_{k+1} & \bm{0} & \bm{0} & \bm{0} & \bm{0}\\
-		\bm{0} & \bm{0} & \bm{P}_{zu} & -\bm{V}_{k+1} & \bm{0} & \bm{0}
-	\end{pmatrix}\bm{U}_k \leq \begin{pmatrix}
-	\bm{B}_{k+1}\\\bm{0}\\\bm{0}\end{pmatrix} + \begin{pmatrix}\bm{D}_{k+1}\\\bm{0}\\\bm{0}\end{pmatrix}\begin{pmatrix}
+		\bm{P}_{zu} & -\bm{V}_{k+1} & \bm{0} & \bm{0}\\
+		\bm{0} & \bm{0} & \bm{P}_{zu} & -\bm{V}_{k+1}
+	\end{pmatrix}\bm{U}_k^{xy} \leq \bm{B}_{k+1} + \bm{D}_{k+1}\begin{pmatrix}
 		-\bm{P}_{zs}\bm{c}_k^x + \bm{v}_{k+1}f_k^x\\
-		-\bm{P}_{zs}\bm{c}_k^y + \bm{v}_{k+1}f_k^y\\\bm{0}\\\bm{0}
-	\end{pmatrix}
+		-\bm{P}_{zs}\bm{c}_k^y + \bm{v}_{k+1}f_k^y
+	\end{pmatrix} \\
+	A_{\text{zmp},k}(\bm{U}_k^\theta)\bm{U}_k^{xy} \leq \overline{\bm{U}_{\text{zmp},k}}
 \end{align}
 The above derivation balance constraints deliver a nice framework, which can be used to express the feasibility constraints as well.
 \paragraph{Feasibility Constraints}
@@ -357,9 +362,9 @@ The feasibility constraints constrain the foot positioning to areas that the rob
 \tilde{\bm{F}}^y_{k} - \bm{S}_0\tilde{\bm{F}}^y_{k} - \bm{S}_1f^y_k
 \end{pmatrix} &\leq \bm{B}_{k+1} \\
 \begin{pmatrix}
-\bm{0} & \bm{A}_{k+1}^{x}(\textbf{I}_{N_f}-\bm{S}_0) & \bm{0} & \bm{A}_{k+1}^{y}(\textbf{I}_{N_f}-\bm{S}_0) & \bm{0} & \bm{0}
-\end{pmatrix}\bm{U}_k &\leq \begin{pmatrix}\bm{B}_{k+1}\\\bm{0}\\\bm{0}\end{pmatrix}+\begin{pmatrix}
-\bm{S}_1f_k^x \\ \bm{S}_1f_k^x \\ \bm{0} \\ \bm{0} 
+\bm{0} & \bm{A}_{k+1}^{x}(\textbf{I}_{N_f}-\bm{S}_0) & \bm{0} & \bm{A}_{k+1}^{y}(\textbf{I}_{N_f}-\bm{S}_0)
+\end{pmatrix}\bm{U}_k^{xy} &\leq \bm{B}_{k+1}+\begin{pmatrix}
+\bm{S}_1f_k^x \\ \bm{S}_1f_k^x 
 \end{pmatrix},
 \end{align}
 where $\bm{A}_{k+1}^{x/y}=\begin{pmatrix}
@@ -376,25 +381,25 @@ By considering the maximum and minimum angle by which the feet are relatively or
 which can be expressed in terms of the free variables with equations \ref{eq::312_ckp1} and \ref{eq::312_dckp1} to find
 \begin{align}
 	-\bm{\theta}_\text{max}-\bm{P}_{ps}(f_k^L-f_k^R)\leq \begin{pmatrix}
-	\bm{0} & \bm{0} &\bm{0} &\bm{0} & \bm{P}_{pu} & -\bm{P}_{pu}
-	\end{pmatrix}\bm{U}_k \leq \bm{\theta}_\text{max}-\bm{P}_{ps}(f_k^L-f_k^R) \\
+	\bm{P}_{pu} & -\bm{P}_{pu}
+	\end{pmatrix}\bm{U}_k^\theta \leq \bm{\theta}_\text{max}-\bm{P}_{ps}(f_k^L-f_k^R) \\
 		-\dot{\bm{\theta}}_\text{max}-\bm{P}_{vs}(f_k^L-f_k^R)\leq \begin{pmatrix}
-	\bm{0} & \bm{0} &\bm{0} &\bm{0} & \bm{P}_{vu} & -\bm{P}_{vu}
-	\end{pmatrix}\bm{U}_k \leq \dot{\bm{\theta}}_\text{max}-\bm{P}_{vs}(f_k^L-f_k^R).
+	\bm{P}_{vu} & -\bm{P}_{vu}
+	\end{pmatrix}\bm{U}_k^\theta \leq \dot{\bm{\theta}}_\text{max}-\bm{P}_{vs}(f_k^L-f_k^R).
 \end{align}
 \paragraph{Obstacle Constraints}
 In contrast to similar methods like \cite{herdt2010walking}, we also include the avoidance of convex obstacles by requesting that the feet's positions must lie outside of circles $C = \{(p^x, p^y)\in\mathbb{R}^2 \,|\, (p^x-x_0)^2+(p^y-y_0)^2\leq R^2\}$, which define the obstacles, where $x_0$, and $y_0$ define the obstacle's center in world coordinates. This can be formulated by the free variables by (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/base_generator.cpp#L1271}{link})
 \begin{align}
 	&(f_k^x-x_0)^2 + (f_k^y-y_0)^2 \geq (R + m)^2\\
-	&\bm{U}_k^T\begin{pmatrix}
-	\bm{0} & \textbf{I}_{N_f} & \bm{0}& \textbf{I}_{N_f} & \bm{0} & \bm{0}
-	\end{pmatrix}\bm{U}_k + \\ &\begin{pmatrix}
+	&\bm{U}_k^{xy,T}\begin{pmatrix}
+	\bm{0} & \textbf{I}_{N_f} & \bm{0}& \textbf{I}_{N_f}
+	\end{pmatrix}\bm{U}_k^{xy} - \\&\begin{pmatrix}
 	\bm{0} & \begin{pmatrix}
-	-2x_0 & \dots & -2x_0
+	2x_0 & \dots & 2x_0
 	\end{pmatrix} & \bm{0} & \begin{pmatrix}
-	-2y_0 & \dots & -2y_0
-	\end{pmatrix} & \bm{0} & \bm{0}
-	\end{pmatrix} \geq \begin{pmatrix}
+	2y_0 & \dots & 2y_0
+	\end{pmatrix}
+	\end{pmatrix} \bm{U}_k^{xy}\geq \begin{pmatrix}
 	(R + m)^2 \\
 	\vdots \\
 	(R + m)^2
