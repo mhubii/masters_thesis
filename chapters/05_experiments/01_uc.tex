@@ -44,24 +44,57 @@ To ensure a smooth motion at all times, and to benchmark the interpolation, we p
 \end{figure}
  The benchmarked pattern generator then enabled us to run it on the real robot, which we did in a test environment that will be presented in the next section - Performance in Test Environment.
 \subsection{Performance in Test Environment}
+\label{sec::512_pt}
+For the execution on Heicub, we chose a parameter setting with which we could ensure balanced motion for all velocity commands. This could be achieved by choosing the parameters, which are listed in the YAML configurations file at the provided \href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/pattern_generator/configs.yaml#L1}{link}. The most important ones therein are further shown in table \ref{tab::512_params}.
+\begin{table}
+	\centering
+	\begin{tabular}{lclc}
+		Parameter&Value&Parameter&Value\\
+		\hline
+		$T_{\text{Step}}$ & $3.20\,\text{s}$ & $N$ & $16\,\text{\#}$ \\
+		$T_{\text{Double Support}}$ & $1.60\,\text{s}$ & $\alpha$ & $1.0\,\text{a.u.}$ \\
+		$T_{\text{Command Period}}$  & $0.01\,\text{s}$& $\beta$ & $100\,\text{a.u.}$ \\
+		$T_{\text{Preview}}$ & $0.40\,\text{s}$ & $\gamma$ & $0.01\,\text{a.u.}$
+	\end{tabular}
+	\caption{Parameters which used to work best on Heicub.}
+	\label{tab::512_params}
+\end{table}
+Now given these parameters, we designed an environment for Heicub to walk in. A human user had to control the robot in four different scenarios. In each of the scenarios, Heicub started from a reference position, in order to reach a fire extinguisher at a distant location. By design, the setup allows for benchmarking of dynamic balance in all four different scenarios. As will be shown in section \ref{sec::52_aw}, we require a neural network to execute the same tasks, and therefore we can compare the performances of a human user with that of an autonomous agent. For the dynamic balance evaluation, we extracted the desired ZMP from the nonlinear model predictive controller, and measured the true ZMP, in accordance to equations \ref{eq::311_double_zmp_x} and \ref{eq::311_double_zmp_y}, by recording the ankles' force torque sensor readouts. We further kept track of the velocity commands to the pattern generator for all tasks to extract the user's behavior. The first task was simply to go two meters straight forward (figure \ref{fig::512_uc_straight}).
 \begin{figure}[h]
 	\centering
-	\subcaptionbox{Straight Walk - Dynamic Balance}%
+	\subcaptionbox{Dynamic balance.}%
 	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/01_user_controlled_walking/02_test_environment/straight_walk_01_zmp.pdf}}
-	\subcaptionbox{Straight Walk - Behavior}%
+	\subcaptionbox{Behavior.}%
 	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/01_user_controlled_walking/02_test_environment/straight_walk_01_entropy.pdf}}
-	\subcaptionbox{Curved Walk - Dynamic Balance}%
+	\caption{Straight walk.}
+	\label{fig::512_uc_straight}
+\end{figure} 
+The behavior therein is visualized by a histogram of all velocity commands over the course of the task (figure \ref{fig::512_uc_straight} (b)). For the bin size we chose $0.01\,\text{m}/\text{s}$ and $0.01\,\text{rad}/\text{s}$, respectively. 
+\begin{figure}[h]
+	\centering
+	\subcaptionbox{Dynamic balance.}%
 	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/01_user_controlled_walking/02_test_environment/curved_walk_01_zmp.pdf}}
-	\subcaptionbox{Curved Walk - Behavior}%
+	\subcaptionbox{Behavior.}%
 	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/01_user_controlled_walking/02_test_environment/curved_walk_01_entropy.pdf}}
-	\subcaptionbox{Obstacle Avoidance - Dynamic Balance}%
+	\caption{Curved walk.}
+	\label{fig::512_uc_curved}
+\end{figure} 
+The second task was to reach the fire extinguisher, which was located to the left of the robot. In order to reach it, it was therefore required to perform a curved walk (figure \ref{fig::512_uc_curved}). The third task (figure \ref{fig::512_uc_obstacle}) involved the avoidance of an obstacle, namely a chair. For the fourth task (figure \ref{fig::512_uc_sight}), the robot started with its back pointing towards the fire extinguisher.
+\begin{figure}[h]
+	\centering
+	\subcaptionbox{Dynamic balance.}%
 	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/01_user_controlled_walking/02_test_environment/obstacle_walk_02_zmp.pdf}}
-	\subcaptionbox{Obstacle Avoidance - Behavior}%
+	\subcaptionbox{Behavior.}%
 	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/01_user_controlled_walking/02_test_environment/obstacle_walk_02_entropy.pdf}}
-	\subcaptionbox{Environment Scanning - Dynamic Balance}%
+	\caption{Obstacle avoidance.}
+	\label{fig::512_uc_obstacle}
+\end{figure} 
+\begin{figure}[h]
+	\centering
+	\subcaptionbox{Dynamic balance.}%
 	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/01_user_controlled_walking/02_test_environment/out_of_sight_walk_01_zmp.pdf}}
-	\subcaptionbox{Environment Scanning - Behavior}%
+	\subcaptionbox{Behavior.}%
 	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/01_user_controlled_walking/02_test_environment/out_of_sight_walk_01_entropy.pdf}}
-	\caption{}
-	\label{fig::512_uc_basic}
+	\caption{Environment scanning.}
+	\label{fig::512_uc_sight}
 \end{figure} 
