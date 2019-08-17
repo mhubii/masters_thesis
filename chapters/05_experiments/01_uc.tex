@@ -1,0 +1,25 @@
+\section{User Controlled Walking}
+\label{sec::51_uc}
+As the fundamental building block for the comparison to autonomous walking, we now need to investigate on user controlled walking. This enables us, in contrast to the control by a neural network, to find the best parameters for the pattern generation in a well controllable environment. These parameters will then be kept constant throughout the rest of this thesis, in order to allow for a good comparison between user controlled walking and autonomously controlled walking. Furthermore, we will rely on them to gather data for the behavioral cloning approach in section \ref{sec::523_da}.
+\subsection{Performance in Test Environment}
+\begin{figure}[h]
+	\centering
+	\subcaptionbox{Straight Walk - Dynamic Balance}%
+	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/01_user_controlled_walking/straight_walk_01_zmp.pdf}}
+	\subcaptionbox{Straight Walk - Behavior}%
+	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/01_user_controlled_walking/straight_walk_01_entropy.pdf}}
+	\subcaptionbox{Curved Walk - Dynamic Balance}%
+	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/01_user_controlled_walking/curved_walk_01_zmp.pdf}}
+	\subcaptionbox{Curved Walk - Behavior}%
+	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/01_user_controlled_walking/curved_walk_01_entropy.pdf}}
+	\subcaptionbox{Obstacle Avoidance - Dynamic Balance}%
+	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/01_user_controlled_walking/obstacle_walk_02_zmp.pdf}}
+	\subcaptionbox{Obstacle Avoidance - Behavior}%
+	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/01_user_controlled_walking/obstacle_walk_02_entropy.pdf}}
+	\subcaptionbox{Environment Scanning - Dynamic Balance}%
+	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/01_user_controlled_walking/out_of_sight_walk_01_zmp.pdf}}
+	\subcaptionbox{Environment Scanning - Behavior}%
+	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/01_user_controlled_walking/out_of_sight_walk_01_entropy.pdf}}
+	\caption{}
+	\label{fig::511_uc_basic}
+\end{figure} 
