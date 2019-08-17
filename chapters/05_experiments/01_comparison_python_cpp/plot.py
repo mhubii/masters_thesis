@@ -77,6 +77,12 @@ def plot_3d(loc):
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
+    if (loc.find('straight') is not -1):
+        plt.title('Straight Trajectories')
+    elif (loc.find('diagonal') is not -1):
+        plt.title('Diagonal Trajectories')
+    elif (loc.find('turn') is not -1):
+        plt.title('Curved Trajectories')
     ax.plot(com_x, com_y, com_z, label='CoM')
     ax.plot(left_x, left_y, left_z, label='Left Foot')
     ax.plot(right_x, right_y, right_z, label='Right Foot')
@@ -118,6 +124,7 @@ def plot_with_obstacle(loc):
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
+    ax.set_title('Obstacle Avoidance')
     ax.plot(com_x, com_y, label='CoM')
     ax.plot(left_x, left_y, label='Left Foot')
     ax.plot(right_x, right_y, label='Right Foot')
