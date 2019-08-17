@@ -188,7 +188,7 @@ from which we compute the re-projection error $\Delta x = ||\bm{x}_{wh,u} - \bm{
 \begin{align}
 	\bm{x}_{c_\text{right}}^T\bm{F}\bm{x}_{c_\text{left}} = \bm{0}
 \end{align}
-The mapping enables us to rectify the left and the right image \cite{loop1999computing}, which means that we can compute homography transforms that align epipolar lines within the images (figure \ref{fig::324_rectified}). 
+The mapping enables us to rectify the left and the right image \cite{loop1999computing}, using the rectification transforms $\bm{R}_i$, which means that we can compute homography transforms that align epipolar lines within the images (figure \ref{fig::324_rectified}), which where previously defined by the fundamental matrix. 
 \begin{figure}[h]
 	\centering
 	\subcaptionbox{}%
@@ -198,4 +198,4 @@ The mapping enables us to rectify the left and the right image \cite{loop1999com
 	\caption{Undistorted calibration pattern, as observed by the left camera (a), and by the right camera (b). For comparison, see the distorted calibration pattern in figure \ref{fig::324_distortion}, and note how the horizons within the images align.}
 	\label{fig::324_rectified}
 \end{figure}
-These homography transforms map the images, as we observe them with the cameras, to a shared virtual plane. Therefore, we reached our initial goal, since it enables us to apply the stereo block matching algorithm, which got introduced earlier, to the transformed images.
+These homography transforms map the images, as we observe them with the cameras, to a shared virtual plane, which is defined by the newly obtained projection matrices $\bm{P}_i$. Therefore, we reached our initial goal, since it enables us to apply the stereo block matching algorithm, which got introduced earlier, to the transformed images.

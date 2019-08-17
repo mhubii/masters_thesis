@@ -7,7 +7,7 @@ As described in section \ref{sec::324_ip}, in order for the stereo block matchin
 	\caption{Exemplary left and right camera views of the calibration pattern as acquired during the calibration process. The colorful points indicate the detected corners in the image plane. Refer to figure \ref{fig::324_distortion} for the theory.}
 	\label{fig::51_calib}
 \end{figure}
-As the resulting mean squared re-projection error $\Delta \bar{x} = 1/(WHN)\sum_0^{WHN} \Delta x$ (equation \ref{eq::324_reprojection}), we obtained $\Delta \bar{x}_l = 0.26\, \text{pixel}$, and $\Delta \bar{x}_r = 0.25\,\text{pixel}$, for the left, and the right camera, respectively. According to equations \ref{eq::324_focal_intrinsics}, \ref{eq::324_x_dist}, and \ref{eq::324_y_dist}, we therefore determined the camera intrinsic parameters as listed in table \ref{tab::51_intrinsics}.
+oAs the resulting mean squared re-projection error $\Delta \bar{x} = 1/(WHN)\sum_0^{WHN} \Delta x$ (equation \ref{eq::324_reprojection}), we obtained $\Delta \bar{x}_l = 0.26\, \text{pixel}$, and $\Delta \bar{x}_r = 0.25\,\text{pixel}$, for the left, and the right camera, respectively. According to equations \ref{eq::324_focal_intrinsics}, \ref{eq::324_x_dist}, and \ref{eq::324_y_dist}, we therefore determined the camera intrinsic parameters as listed in table \ref{tab::51_intrinsics}.
 \begin{table}
 	\centering
 	\begin{tabular}{lll}
@@ -25,7 +25,6 @@ As the resulting mean squared re-projection error $\Delta \bar{x} = 1/(WHN)\sum_
 	\end{tabular}
 	\caption{Intrinsic parameters of single cameras. These parameters can be found as YAML file on GitHub (\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/libs/io_module}{link}).\label{tab::51_intrinsics}}
 \end{table}
-TODO name rectification transform in background
 Then given the calibration of each single camera, we computed the rectification transforms $\bm{R}$, and the projection matrices $\bm{P}$ in the rectified coordinate system for each camera \ref{tab::51_extrinsics}.
 \begin{table}
 	\centering

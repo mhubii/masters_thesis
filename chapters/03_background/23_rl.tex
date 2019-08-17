@@ -32,5 +32,16 @@ Also, for a negative advantage estimate, it assures that the gradient points awa
 	L_t^{\text{CLIP}+\text{VF}+\text{S}} = \mathbb{E}\left[L_t^\text{CLIP}(\theta)-c_1L_t^\text{VF}(\theta)+c_2S\left[\pi_\theta\right](s_t)\right]
 	\label{eq::323_ppo_loss}
 \end{align}
-The critic's loss therein is the squared-error of the value function estimate and the explored values $(V_\theta(s_t)-V^\text{target}_t)^2$.
-TODO add algorithm?
+The critic's loss therein is the squared-error of the value function estimate and the explored values $(V_\theta(s_t)-V^\text{target}_t)^2$. The algorithm then runs as follows
+\begin{algorithm}
+	\SetAlgoLined
+	\For{iteration = 1,2,...}{
+		\For{runs=1,2,...}{
+			Run policy $\pi_{\theta_\text{old}}$ in environment for $T$ timesteps\\
+			Compute advantage estimates $\hat{A}^\text{GAE}_1$,...,$\hat{A}^\text{GAE}_T$
+		}
+		Optimize surrogate $L$ wrt $\theta$, with $K$ epochs and minibatch size $M\leq NT$\\
+		$\theta_\text{old}\leftarrow\theta$
+	}
+	\caption{PPO, Actor-Critic Style}
+\end{algorithm}
