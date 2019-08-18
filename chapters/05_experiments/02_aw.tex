@@ -139,9 +139,13 @@ After training, we generated velocity histograms, as we already did in section \
 	\caption{Normalized velocity histograms over the validation split.}
 	\label{fig::523_training_dist}
 \end{figure}
-By pure sight, it can already be seen that the network performs well on the validation split, and the Kullback-Leibler divergence $D_\text{KL}$, which measures the distance of probability distributions, enforces this observation further. For the distribution of linear velocities along the x-axis $v_x$, we computed the Kullback-Leibler divergence to be $D^x_\text{KL}=0.33\,\text{a.u.}$, and for the angular velocity about the z-axis $\omega_z$, we obtained $D^z_\text{KL}=0.06\,\text{a.u.}$. Now the beauty within the task at hand lies in the fact that we were not solely dependent on a validation split for performance evaluations, but instead that we simply could run Heicub in a previously unseen test environment. It is the same test environment, which we already introduced in section \ref{sec::51_uc}, and we will evaluate the trained neural network's behavior within it in the next section - Perfomance in Test Environment.
+By pure sight, it can already be seen that the network performs well on the validation split, and the Kullback-Leibler divergence $D_\text{KL}$, which measures the distance of probability distributions, enforces this observation further. The Kullback-Leibler divergence for two discrete probability distributions $p(v)$ and $q(v)$, is computed as follows
+\begin{align}
+	D_\text{KL} = \sum_{v\in \bm{V}}p(v)\log\frac{p(v)}{q(v)},
+\end{align}
+where for our case, $p(v)$ is the ground truth velocity distribution, and $q(v)$ is the predicted velocity distribution. For the distribution of linear velocities along the x-axis $v_x$, we computed the Kullback-Leibler divergence to be $D^x_\text{KL}=0.33\,\text{a.u.}$, and for the angular velocity about the z-axis $\omega_z$, we obtained $D^z_\text{KL}=0.06\,\text{a.u.}$. Now the beauty within the task at hand lies in the fact that we were not solely dependent on a validation split for performance evaluations, but instead that we simply could run Heicub in a previously unseen test environment. It is the same test environment, which we already introduced in section \ref{sec::51_uc}, and we will evaluate the trained neural network's behavior within it in the next section - Perfomance in Test Environment.
 \subsection{Performance in Test Environment}
-For the performance benchmarking, we 
+For the performance benchmarking, we relied on the well defined experimental setup from section \ref{sec::51_uc}. Once more the tasks were to move straight towards a fire extinguisher, to turn and to move towards it, to avoid an obstacle on the way, and to find the fire extinguisher. In order to ensure reproducibility, we let Heicub solve each of these tasks twice, as we did for the user controlled case. The setup is shown in figure \ref{fig::524_aw_gif_basic}, which shows Heicub's movement over the course of each task along with its sight of the scene.
 \begin{figure}[h]
 	\centering
 	\subcaptionbox{Straight walk - \href{https://drive.google.com/file/d/1X-RQ9yVLJ9McgeXVoDQhI1uvMJA5o08y/view?usp=sharing}{link}.}%
@@ -155,6 +159,7 @@ For the performance benchmarking, we
 	\caption{Heicub's behavior in the test environment for benchmarking tasks.}
 	\label{fig::524_aw_gif_basic}
 \end{figure} 
+While Heicub did manage to solve the straight walk, the curved walk, and the environment scanning, it had trouble to go towards the fire extinguisher, once it avoided the obstacle. Again, we tracked the zero moment point from the pattern generator, as well as the true zero moment point from the force torque readouts. The results of these measurements are shown in figure \ref{fig::524_aw_basic}. It can clearly be seen that the neural network's behavior for within the test environment is much noisier that it was for the validation split in figure \ref{fig::523_training_dist}. This especially holds true for the angular velocity distributions. 
 \begin{figure}[h]
 	\centering
 	\subcaptionbox{Straight walk - dynamic balance.}%
