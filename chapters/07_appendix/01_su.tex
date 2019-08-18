@@ -5,14 +5,14 @@ In this chapter, we will briefly document how to run the software that was devel
 \label{sec::B1_rr}
 \begin{enumerate}
 	\item Turn on the icubsrv (figure \ref{fig::B1_icubsrv}), username is \inlinecode{bash}{icub}, password is \inlinecode{bash}{icub}.
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
 		\includegraphics[scale=.04]{chapters/07_appendix/img/icubsrv.jpg}
 		\caption{The icubsrv is the Dell laptop. Below it the switch.}
 		\label{fig::B1_icubsrv}
 	\end{figure}
 	\item Turn on the power suppliers (figure \ref{fig::B1_ps}), and keep the red button pressed (figure \ref{fig::B1_red} (a)). The suppliers should initially provide 13V and 0V, if not, do no proceed.
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
 		\subcaptionbox{Turn on these buttons.}%
 		[.4\linewidth]{\includegraphics[scale=.04]{chapters/07_appendix/img/power_supply.jpg}}
@@ -22,7 +22,7 @@ In this chapter, we will briefly document how to run the software that was devel
 		\label{fig::B1_ps}
 	\end{figure}
 	\item Turn on the pc104 (figure \ref{fig::B1_cpu_motor} (a)). At this step you may want to wait up to 5 minutes, to give the board computer enough time to start.
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
 		\subcaptionbox{Turn on the CPU of pc104.}%
 		[.4\linewidth]{\includegraphics[scale=.04]{chapters/07_appendix/img/switch_cpu.jpg}}
@@ -32,7 +32,7 @@ In this chapter, we will briefly document how to run the software that was devel
 		\label{fig::B1_cpu_motor}
 	\end{figure}
 	\item On the icubsrv, connect via ssh to pc104. Therefore, click on the highlighted symbol within figure \ref{fig::B1_pc104} (a). If it fails to connect, turn off the CPU, and go back to the previous step.
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
 		\subcaptionbox{Run ssh to connect to pc104.}%
 		[.4\linewidth]{\includegraphics[scale=.326]{chapters/07_appendix/img/task_bar.png}}
@@ -44,7 +44,7 @@ In this chapter, we will briefly document how to run the software that was devel
 	\item Run the cluster manager from a new terminal on the icubsrv, therefore do \newline \inlinecode{}{cd /usr/local/src/robot/icub-main/build-pc104/bin}
 	\newline \inlinecode{}{python icub-cluster.py}
 	\item Within the cluster manager, run the yarp name server, and then yarp on all other devices (figure \ref{fig::B1_cluster} (a), then (b)).
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
 		\subcaptionbox{Run the yarp nameserver.}%
 		[.4\linewidth]{\includegraphics[scale=.3]{chapters/07_appendix/img/ran_yarp.png}}
@@ -60,14 +60,14 @@ In this chapter, we will briefly document how to run the software that was devel
 If the real robot is up and running (section \ref{sec::B1_rr}), you can now start Heicub's motors. Therefore proceed as described below.
 \begin{enumerate}
 	\item Turn on the motors (figure \ref{fig::B1_cpu_motor} (b)). The power suppliers should now show 13V and 40V. Wait until the blue lights at Heicub stopped blinking (figure \ref{fig::B1_blue}).
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
 		\includegraphics[scale=.04]{chapters/07_appendix/img/icub_motor_lights.jpg}
 		\caption{Blue motor lights.}
 		\label{fig::B1_blue}
 	\end{figure}	
 	\item Release the safety button (figure \ref{fig::B1_red} (b)).
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
 		\subcaptionbox{Pressed safety button.}%
 		[.4\linewidth]{\includegraphics[scale=.04]{chapters/07_appendix/img/safety_pushed.jpg}}
@@ -78,7 +78,7 @@ If the real robot is up and running (section \ref{sec::B1_rr}), you can now star
 	\end{figure}
 	\item Within your terminal to pc104 (figure \ref{fig::B1_pc104} (b)) run the command \newline \inlinecode{}{yarprobotinterface} \newline This will run all the motor drivers and connect them to the yarp network.
 	\item If no errors occured, we can now run the yarpmotorgui to play around with the motors. This step is not necessary. To run the yarpmotorgui, open a new terminal on the icubsrv, and run the command \newline \inlinecode{}{yarpmotorgui} (figure \ref{fig::B11_gui} (a)) \newline Then, press \inlinecode{}{OK}. The motors can now be manipulated from within the GUI (figure \ref{fig::B11_gui} (b)), e.g. by clicking on the house, which will bring all motors to the home position.
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
 		\subcaptionbox{Run the yarpmotorgui.}%
 		[.4\linewidth]{\includegraphics[scale=.22]{chapters/07_appendix/img/yarpmotorgui_ok.png}}
@@ -95,7 +95,7 @@ If the real robot is up and running (section \ref{sec::B1_rr}), you can now star
 \begin{enumerate}
 	\item Within a new terminal to pc104 (figure \ref{fig::B1_pc104} (a)), do \newline \inlinecode{}{cd ./local/share/yarp/robots/iCubHeidelberg01/camera}\newline Then, start the camera via \newline \inlinecode{}{yarpdev --from dragonfly2_config_left.ini}\newline This will run the left camera and connect it to the yarp network. Repeat the above steps for the right camera, but replace left by right within the \inlinecode{}{.ini} file.
 	\item If no errors occured, we can now run a yarpview to see what Heicub sees. This step is not necessary. To run a yarpview, open a new terminal on the icubsrv, and run the command \newline \inlinecode{}{yarpview} (figure \ref{fig::B12_yarpview} (a)) \newline Then, connect a camera to the yarpview. Therefore, open a new terminal on the icubsrv and run the command \newline \inlinecode{}{yarp connect /icub/cam/left /yarpview/img:i} (figure \ref{fig::B12_yarpview} (b)) \newline You should now see an image.
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
 		\subcaptionbox{Run a yarpview.}%
 		[.4\linewidth]{\includegraphics[scale=.22]{chapters/07_appendix/img/yarpview.png}}
@@ -131,7 +131,7 @@ The terminal user interface comes with the pattern generator, so there is no add
 	\item The shell script will then ask you whether to run the robot in real or in simulation, write \inlinecode{}{y} or \inlinecode{}{n} and press enter (figure \ref{fig::B31_keyboard} (a)).
 	\item The shell script will then ask you for the mode to run in. Write \inlinecode{}{uc} and press enter (figure \ref{fig::B31_keyboard} (a)).
 	\item The user interface should now show up and explain how to control the robot (figure \ref{fig::B31_keyboard} (b)).
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
 		\subcaptionbox{Select the mode to run the pattern generator in.}%
 		[.4\linewidth]{\includegraphics[scale=.22]{chapters/07_appendix/img/keyboard_mode.png}}
@@ -152,7 +152,7 @@ Make sure you installed the Android joystick app as described in section \ref{se
 	\newline \inlinecode{}{sh run\_app\_user\_interface.sh}
 	\item The shell script will then ask you whether to run the robot in real or in simulation, write \inlinecode{}{y} or \inlinecode{}{n} and press enter (figure \ref{fig::B32_app} (a)).
 	\item The user interface should now show up and explain how to control the robot (figure \ref{fig::B32_app} (b)).
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
 		\subcaptionbox{Select the mode to run the pattern generator in.}%
 		[.4\linewidth]{\includegraphics[scale=.22]{chapters/07_appendix/img/app_mode.png}}
@@ -162,7 +162,7 @@ Make sure you installed the Android joystick app as described in section \ref{se
 		\label{fig::B32_app}
 	\end{figure}
 	\item Open the Android app on your smartphone. Within the app, choose settings from the navigation drawer (figure \ref{fig::B32_app_settings} (a)). In the settings activity (figure \ref{fig::B32_app_settings} (b)), choose the IP address and the ports as proposed by the app user interface (figure \ref{fig::B32_app} (b)). 
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\centering
 		\subcaptionbox{Navigation drawer.}%
 		[.3\linewidth]{\includegraphics[scale=.08]{chapters/07_appendix/img/slider.png}}

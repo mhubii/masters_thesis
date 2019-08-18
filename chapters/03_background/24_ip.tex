@@ -7,7 +7,7 @@ As already pointed out, the depth map is generated from stereo camera images by 
 	\bm{E} = \bm{S}_x*\bm{G}
 	\label{eq::324_sobel_conv}
 \end{align}
-\begin{figure}[h]
+\begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_background/img/image_preprocessing.png}
 	\caption{Image preprocessing to obtain edge filtered images. The images were taken within the simulation environment Gazebo (\href{http://gazebosim.org/}{link}), and show a space exploration vehicle, for which, with the friendly support of NASA, we generated a Gazebo version (\href{https://github.com/mhubii/gazebo_models}{link}).}
@@ -24,7 +24,7 @@ When having a look at the Sobel kernel $\bm{S}_x$ (equation \ref{eq::324_sobel})
 	\label{eq::324_sobel}
 \end{align}
 To understand the block matching algorithm, we first need to figure out the transformation that images undergo for a change in perspective, which is caused by the two different positions of the cameras within the stereo camera pair. For an ideal setup, we have two identical cameras, and they are neither rotated relatively to each other, nor is there any other translation, but a shift along the x-axis (figure. \ref{fig::324_stereo_camera}). This may of course not always be true, and there are methods to correct for uncertainties, which we will present in the following paragraph, but omit for simplicity right now. The principle goal, for the inference of depth information from two images, is to find points in the right image that correspond to points in the left image. By triangulation, the displacement or disparity of a point in the right image, relative to its corresponding point in the left image, can then be used to extract the depth. The farther a point $\bm{X}$ lies away from the cameras, the smaller its displacement will be. In figure \ref{fig::324_stereo_camera}, we can see that a point $\bm{X}$, which is seen by the left camera, could in principle lie anywhere on the epipolar line at $\bm{x}'$, as seen from the right camera, if there is no depth information available. 
-\begin{figure}[h]
+\begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_background/img/stereo_camera.png}
 	\caption{The stereo setup with a left and a right camera.}
@@ -36,7 +36,7 @@ It results that, to find correspondences, one only has to search along the epipo
 	\label{eq::324_sad}
 \end{align}
 The disparity $d$ that minimizes the sum of absolute differences SAD is taken to serve as the best correspondence and is therefore used in the disparity map.  Here we can already see that due to the uniqueness of the edge filtered the images $\bm{E}$, it is easier to find correspondences there, rather than in the grayscale or RGB images.
-\begin{figure}[h]
+\begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_background/img/left_disparity_map.png}
 	\caption{Generation of the left disparity map by the block matching algorithm.}
@@ -63,7 +63,7 @@ where $\alpha = \frac{1}{\text{width}\cdot\text{height}}$ is the normalization f
 	\text{Con}(\bm{D}) = \max\left(1-r\text{Var}(\bm{D}),0\right),
 \end{align}
 where $r$ is a roll-off factor that defines the change of confidence with growing variance. The resulting disparity confidence is shown in figure \ref{fig::324_confidence_map}, and is used to outweigh outlying disparity values from the final weighted least squares disparity map. 
-\begin{figure}[h]
+\begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_background/img/confidence_map.png}
 	\caption{Generation of the confidence map from the variance within the disparity map.}
@@ -98,7 +98,7 @@ where $c_{x,y}$ are single pixels of the consistency weighted disparity map. The
 	\label{eq::324_wls_final}
 \end{align}
 where $\text{WLS}(\bm{U})$ is the weighted least squares filtered version of the left right consistency $\bm{L}$.
-\begin{figure}[h]
+\begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_background/img/weighted_least_squares_disparity.png}
 	\caption{Generation of the confidence weighted least squares disparity from the disparity map, and the left right consistency.}
@@ -108,7 +108,7 @@ where $\text{WLS}(\bm{U})$ is the weighted least squares filtered version of the
 As already mentioned for figure \ref{fig::324_stereo_camera}, the assumption of a simply translated stereo camera pair is almost never correct. In addition, there exist camera intrinsics that deform the observed image, and so the epipolar lines. Therefore, as a requirement for the algorithm to work properly, it is important to calibrate the robot's cameras. The next chapter - Mono and Stereo Camera Calibration, will explain in detail how this is done.
 \subsubsection{Mono and Stereo Camera Calibration}
 To correct images, as we observe them with a camera, it is required to have a mathematical description of it. A simple one for a camera is the pinhole model, which is shown in figure \ref{fig::324_pin_hole_camera}. For a pinhole camera model, the image plane lies behind the coordinate frame of the camera, and is turned the other way around, but it is easier to describe the image in a virtual plane, which is located at a distance $f$ along the $z_c$-axis, where $f$ is the focal length.
-\begin{figure}[h]
+\begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_background/img/pin_hole_camera.png}
 	\caption{Pinhole camera model.}
@@ -148,7 +148,7 @@ where
 	\nonumber
 \end{align}
 Together, the focal lengths, the principal point, and the distortion coefficients make up the unknowns within our camera model. Goal of the mono camera calibration is now to find these coefficients from images of a well known calibration pattern. Therefore, images of the calibration pattern are taken from different perspectives (figure \ref{fig::324_calibration_process}). 
-\begin{figure}[h]
+\begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_background/img/calibration_process.png}
 	\caption{Calibration pattern as observed from the camera's coordinate system $C$. Within the object's coordinate system, all chessboard corners lie at a zero $z$-position.}
@@ -162,7 +162,7 @@ For the mathematical description, the calibration pattern is taken to be at a fi
 	\label{eq::324_square_size}
 \end{align}
 where we now switched to homogeneous coordinates, and $w\in[0,W],h\in[0,H]$ are whole numbers, corresponding to the width and the height of the pattern. It is then required to find the rotation $\bm{R}$ and translation $\bm{t}$, which transforms the object points to the image plane. They are estimated by solving a perspective-n-point problem \cite{fischler1981random}. Therefore, as shown in figure \ref{fig::324_distortion} (b), a corner detecting algorithm finds the corners $\bm{x}_{c,wh}$ within the image plane. Under the assumption of known intrinsic camera parameters, $\bm{x}_{c,wh}$ are then being undistorted according to equations \ref{eq::324_x_dist} and \ref{eq::324_y_dist}. 
-\begin{figure}[h]
+\begin{figure}[h!]
 	\centering
 	\subcaptionbox{}%
 	[.4\linewidth]{\includegraphics[scale=.2]{chapters/03_background/img/gazebo_calib_left.jpg}}
@@ -189,7 +189,7 @@ from which we compute the re-projection error $\Delta x = ||\bm{x}_{wh,u} - \bm{
 	\bm{x}_{c_\text{right}}^T\bm{F}\bm{x}_{c_\text{left}} = \bm{0}
 \end{align}
 The mapping enables us to rectify the left and the right image \cite{loop1999computing}, using the rectification transforms $\bm{R}_i$, which means that we can compute homography transforms that align epipolar lines within the images (figure \ref{fig::324_rectified}), which where previously defined by the fundamental matrix. 
-\begin{figure}[h]
+\begin{figure}[h!]
 	\centering
 	\subcaptionbox{}%
 	[.4\linewidth]{\includegraphics[scale=.2]{chapters/03_background/img/gazebo_rectified_left.jpg}}

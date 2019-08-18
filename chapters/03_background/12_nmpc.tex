@@ -293,7 +293,7 @@ where we evaluated all squared $L^2$-norms via $||\bm{a}-\bm{b}||^2_2 = (\bm{a}-
 The constraints we are going to deal with first, ensure dynamic balance in that they constrain the zero moment point to the support polygon of the feet. Secondly, we will explain the feasibility constraints, which force the feet positioning to a convex hull that describes kinematically feasible motions. Finally, the constraints which restrict the feet's relative velocity, and the feet's relative orientation, as wall as the ones, which allow obstacle avoidance, are introduced.
 \paragraph{Balance Constraints} 
 To ensure that the zero moment point stays within the support polygon (figure \ref{fig::312_foot_hull}), we set up a system of linear equations, of which each describes a line that connects the polygon's edges $\bm{p}_i$ (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L844}{link}). 
-\begin{figure}[h]
+\begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.5]{chapters/03_background/img/foot_convex_hull.png}
 	\caption{The foot's support polygon, which is described by the position vectors $\bm{p}_i$.}
