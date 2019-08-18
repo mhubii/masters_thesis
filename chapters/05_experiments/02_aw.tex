@@ -106,51 +106,53 @@ In combination with the confidence weighted least squares filtering, we can obse
 	\caption{Confidence weighted least squares disparity for changing energy weightings $\sigma$ and $\lambda$. Please refer to equations \ref{eq::324_weight} and \ref{eq::324_energy_function} for the theory.}
 	\label{fig::522_sigma_lambda}
 \end{figure}
-\subsection{Data Acquisition}
+\subsection{Data Acquisition and Training}
 \label{sec::523_da}
-
+As already pointed out, the task we wanted our neural network to solve was to find a fire extinguisher within a room and then to move towards it. For us to apply behavioral cloning to the task, it was necessary to act according to this policy first, and then to train a neural network on the acquired data. For the data, it is essential to sample homogeneously over the task's distribution. We therefore recorded velocity commands and the corresponding images for 66 distinct epochs. Each of the epochs was designed to reflect different scenarios, among them obstacle avoidance, interaction with humans, walking towards the fire extinguisher, and searching for the fire extinguisher when it was not possible to directly see it. As a result of the observations that we gained from the user controlled walking in section \ref{sec::51_uc}, we restricted the user's policy to only use linear velocities along the x-axis, and angular velocities about the z-axis, since linear velocities along the y-axis revealed to pose an inefficient way of moving the robot. Exemplary samples of the recorded dataset are presented in figure \ref{fig::523_dataset}.
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=.4]{chapters/05_experiments/02_autonomous_walking/dataset_diversity.png}
-	\caption{}
+	\caption{Samples of the recorded dataset. The dataset shows a very diverse number of situation for the neural network to learn from.}
 	\label{fig::523_dataset}
 \end{figure}
-\subsection{Network Training}
+It contains 134401 samples in total, which were recorded at a rate of 5 frames per second, and therefore they account for roughly 7.5 hours of data. For each sample, we stored the left camera's RGB view, as well as the confidence weighted least squares disparity map. This lead to a total of 268802 recorded images at a resolution of $240\times320$ pixels, which together make up for $4.7\,\text{GB}$ of data. As a preprocessing step, we cropped regions of the recorded images that do not contain useful information. These regions are firstly caused by deformations that are introduced at the rectification step, as can for example be seen in figure \ref{fig::522_wls_rgb}, and secondly by the depth map's extraction, which results in unknown regions at the image's boarders (figure \ref{fig::522_disp}). The exemplary samples from the dataset (figure \ref{fig::523_dataset}), are already preprocessed, and we can observe how only useful information is kept, in order not to confuse the neural network. To reduce the required amount of GPU memory, we further downscaled the preprocessed images to a size of $60\times80$ pixels, a size at which most of the information is still being kept, and stacked the RBD images with the confidence weighted least squares disparity map to obtain RBGD images. For the training of the neural network, we split the acquired dataset into a train, and a validation set. The training set held a randomly sampled fraction of $90\%$ of all recorded images, while the validation split held the other $10\%$. We only trained the neural network on the training set, and stored the weights that performed best on the validation split, in order to avoid overfitting. Since it has shown very good convergence on our dataset, we chose to use a UNet \cite{ronneberger2015u} as the network architecture, which can be seen in figure \ref{fig::523_unet}.
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=.5]{chapters/05_experiments/02_autonomous_walking/unet.png}
-	\caption{}
-	\label{fig::524_unet}
+	\caption{UNet-LSTM network architecture.}
+	\label{fig::523_unet}
 \end{figure}
+The UNet promotes image abstraction capabilities of an auto-encoder that is caused by its bottleneck design, and furthermore shows faster convergence due to its residual connections, which allow the gradient flow to reach deeper layers earlier. Each image that is being forwarded, goes through a number of convolutional layers with rectifying linear unit activation functions, and is subsequently downscaled by max-pooling operations. We repeated this process for two times. Once the most downscaled layer is reached, the weights are being upscaled by simple interpolations again, which simply results in the same resolution that the layers had during the downscaling process. The skip connections then concatenate the shallow with the deep layers to a new layer at each scale, which is then being forwarded further through a number of convolutional layer with rectifying linear units. The nature of the robot's motion, which inherently causes the cameras to periodically move from the left to the right, required us to equip the network architecture by a temporal understanding. We therefore extended the UNet architecture to a novel UNet-LSTM structure. The developed architecture takes up a sequence of consecutive RGBD images, and forwards them through the UNet until it reaches a fully connected regression layer that shall output velocity values in the end. Each image therein creates a signal, from which the LSTM is supposed to only keep the most relevant information. This design helped the network to understand that a fire extinguisher to the left of the image may only be caused by the cameras that are temporally displaced to the right. The final fully connected layer then returns what we use for the loss function, and therefore a velocity. In contrast to the preceding layers, the last fully connected layer uses a hyperbolic tangent function, which restricts the output to a range of $[-1,1]$, which is then being scaled by the velocity that the pattern generator maximally allows. The architecture can be found at the provided \href{https://github.com/mhubii/nmpc_pattern_generator/blob/master/libs/learning/python/unet_model.py}{link}. Due to memory limitations, we trained the network on a sequence length of 5 RGBD images, and a batch size of 32. For the loss, we chose a mean squared error with respect to the most recent velocity command. We used the Adam optimization \cite{kingma2014adam} at a learning $0.001$, and trained for 100 epochs on a TODO, to which we were granted access to. This took us around 48 hours. The loss history is shown in figure \ref{fig::523_loss}, which reveals a good convergence after around 40 epochs.
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=.6]{chapters/05_experiments/02_autonomous_walking/05_07_19_loss_history.pdf}
-	\caption{}
-	\label{fig::524_loss}
+	\includegraphics[scale=.4]{chapters/05_experiments/02_autonomous_walking/05_07_19_loss_history.pdf}
+	\caption{Mean squared error training loss history.}
+	\label{fig::523_loss}
 \end{figure}
+After training, we generated velocity histograms, as we already did in section \ref{sec::51_uc}, but this time over the whole validation split for both, the ground truth and the predicted behavior, as shown in figure \ref{fig::523_training_dist}. To generate the predictions on the validation split took $4\,\text{ms}$ for each of the 13341 images on average.
 \begin{figure}[h]
 	\centering
-	\subcaptionbox{}%
+	\subcaptionbox{Ground truth velocity commands.}%
 	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/02_autonomous_walking/user_entropy.pdf}}
-	\subcaptionbox{}%
+	\subcaptionbox{Predicted velocity commands.}%
 	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/02_autonomous_walking/predicted_entropy_kldivx_0_33_kldivz_0_06_imgs_13441_duration_4_ms.pdf}}
-	\caption{KL divergence x 0.33, KL divergence z 0.06, validation split on 13441 imgs, average duration 4 ms}
-	\label{fig::524_training_dist}
+	\caption{Normalized velocity histograms over the validation split.}
+	\label{fig::523_training_dist}
 \end{figure}
-% compute kl divergence for whole set -> argue that this holds true for all 
+By pure sight, it can already be seen that the network performs well on the validation split, and the Kullback-Leibler divergence $D_\text{KL}$, which measures the distance of probability distributions, enforces this observation further. For the distribution of linear velocities along the x-axis $v_x$, we computed the Kullback-Leibler divergence to be $D^x_\text{KL}=0.33\,\text{a.u.}$, and for the angular velocity about the z-axis $\omega_z$, we obtained $D^z_\text{KL}=0.06\,\text{a.u.}$.
 \subsection{Performance in Test Environment}
 \begin{figure}[h]
 	\centering
-	\subcaptionbox{Straight Walk}%
+	\subcaptionbox{Straight Walk \href{https://drive.google.com/file/d/1X-RQ9yVLJ9McgeXVoDQhI1uvMJA5o08y/view?usp=sharing}{link}}%
 	[.4\linewidth]{\animategraphics[height=1.2in,loop,autoplay]{20}{chapters/05_experiments/02_autonomous_walking/straight_walk_01/frame-}{001}{033}}
-	\subcaptionbox{Curved Walk}%
+	\subcaptionbox{Curved Walk \href{https://drive.google.com/file/d/1TpT7PUw8cWaUvy1toccXsNO_lQQFlFIS/view?usp=sharing}{link}}%
 	[.4\linewidth]{\animategraphics[height=1.2in,loop,autoplay]{20}{chapters/05_experiments/02_autonomous_walking/curved_walk_02/frame-}{001}{039}}
-	\subcaptionbox{Obstacle Avoidance}%
+	\subcaptionbox{Obstacle Avoidance \href{https://drive.google.com/file/d/1DlO8Rd6AiBPrHKbTIgI12d2ySaTvMJ3S/view?usp=sharing}{link}}%
 	[.4\linewidth]{\animategraphics[height=1.2in,loop,autoplay]{20}{chapters/05_experiments/02_autonomous_walking/obstacle_walk_02/frame-}{001}{017}}
-	\subcaptionbox{Environment Scanning}%
+	\subcaptionbox{Environment Scanning \href{https://drive.google.com/file/d/1QmtltYTwoXMzHoUA8knA2FEpMsaud0QD/view?usp=sharing}{link}}%
 	[.4\linewidth]{\animategraphics[height=1.2in,loop,autoplay]{20}{chapters/05_experiments/02_autonomous_walking/out_of_sight_walk_01/frame-}{001}{075}}
 	\caption{}
-	\label{fig::525_aw_gif_basic}
+	\label{fig::524_aw_gif_basic}
 \end{figure} 
 \begin{figure}[h]
 	\centering
@@ -171,16 +173,16 @@ In combination with the confidence weighted least squares filtering, we can obse
 	\subcaptionbox{Environment Scanning - Behavior}%
 	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/02_autonomous_walking/out_of_sight_walk_01_entropy.pdf}}
 	\caption{}
-	\label{fig::525_aw_basic}
+	\label{fig::524_aw_basic}
 \end{figure} 
 \begin{figure}[h]
 	\centering
-	\subcaptionbox{Dynamic Environment}%
+	\subcaptionbox{Dynamic Environment \href{https://drive.google.com/file/d/1zm-9apobNmsXAcLXB5e9lGqIU7NMHzVl/view?usp=sharing}{link}}%
 	[.4\linewidth]{\animategraphics[height=1.2in,loop,autoplay]{20}{chapters/05_experiments/02_autonomous_walking/dynamic_walk_01/frame-}{001}{031}}
-	\subcaptionbox{Semantic Understanding}%
+	\subcaptionbox{Semantic Understanding \href{https://drive.google.com/file/d/1VQIEChA61GDxm-rLf8pfOxCgXeJhuFG9/view?usp=sharing}{link}}%
 	[.4\linewidth]{\animategraphics[height=1.2in,loop,autoplay]{20}{chapters/05_experiments/02_autonomous_walking/semantic_walk_01/frame-}{001}{046}}
 	\caption{}
-\label{fig::525_aw_gif_additional}
+\label{fig::524_aw_gif_additional}
 \end{figure} 
 \begin{figure}[h]
 	\centering
@@ -193,12 +195,12 @@ In combination with the confidence weighted least squares filtering, we can obse
 	\subcaptionbox{Semantic Understanding - Behavior}%
 	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/02_autonomous_walking/semantic_walk_01_entropy.pdf}}
 	\caption{}
-	\label{fig::525_aw_additional}
+	\label{fig::524_aw_additional}
 \end{figure}
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=.6]{chapters/05_experiments/02_autonomous_walking/entropy_against_balance.pdf}
+	\includegraphics[scale=.5]{chapters/05_experiments/02_autonomous_walking/entropy_against_balance.pdf}
 	\caption{meanaw 3.67, meanuc 3.41, stdaw 0.56, stduc 0.69}
-	\label{fig::525_entropy_balance}
+	\label{fig::524_entropy_balance}
 \end{figure}
 \subsection{Proximal Policy Optimization}
