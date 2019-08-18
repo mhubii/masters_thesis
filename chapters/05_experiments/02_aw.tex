@@ -217,7 +217,7 @@ The average mean distance with the standard deviation for user controlled walkin
 	\caption{Heicub's behavior in the test environment for additional tasks.}
 \label{fig::524_aw_gif_additional}
 \end{figure} 
-Especially in the behavior plot of figure \ref{fig::524_aw_additional_semantic}, we can see that the robot successfully managed to walk backwards to avoid a collision with the human. 
+Especially in the behavior plot of figure \ref{fig::524_aw_additional_semantic}, we can see that the robot successfully managed to walk backwards to avoid a collision with the human. Given the successful results of our first approach to train a neural network on autonomous navigation, we then continued to evaluate the proximal policy optimization algorithm, which got described in section \ref{sec::323_rl}.
 \begin{figure}[h!]
 	\centering
 	\subcaptionbox{Dynamic balance.}%
@@ -236,5 +236,28 @@ Especially in the behavior plot of figure \ref{fig::524_aw_additional_semantic},
 	\caption{Autonomously controlled for demonstration of semantic understanding.}
 	\label{fig::524_aw_additional_semantic}
 \end{figure}
-
 \subsection{Proximal Policy Optimization}
+Since there is to this date no feasible way of training an agent on autonomous navigation in real time with reinforcement learning, we decided to implement a benchmarking environment that is shown in figure \ref{fig::525_ppo_env}.
+\begin{figure}[h!]
+	\centering
+	\subcaptionbox{Agent at epoch 30.}%
+	[.45\linewidth]{\includegraphics[scale=.3]{chapters/05_experiments/02_autonomous_walking/epoch_30/frame-80.jpg}}	
+	\subcaptionbox{Agent in test mode.}%
+	[.45\linewidth]{\includegraphics[scale=.3]{chapters/05_experiments/02_autonomous_walking/test_mode/frame-40.jpg}}
+	\caption{Artificial agent in proximal policy optimization test environment.}	
+	\label{fig::525_ppo_env}
+\end{figure} 
+The agent's goal within this setup is to move towards the red dot, while keeping a maximum distance of $10\,\text{a.u.}$ towards it. The environment's state is simply described by a concatenation of the agent's position $\bm{a} = \begin{pmatrix}
+a_x & a_y
+\end{pmatrix}^T$ with that of the goal $\bm{g} = \begin{pmatrix}
+g_x & g_y
+\end{pmatrix}^T$. The reward $r_t$, at time step $t$, is designed to encourage motion towards the goal, by taking the difference of the previous and the current goal distance $r_t = ||\bm{a}_{t-1}-\bm{g}_{t-1}||_2 - ||\bm{a}_{t}-\bm{g}_{t}||_2$. Furthermore, a reward of ten was gained for successful completion, while a reward of negative ten was granted for whenever the agent left the maximally allowed distance towards the goal. In each of the cases, the environment was reset, and the goal got spawned at a random location. For both, the agent and the critic network, we used a fully connected neural network with 2 hidden layers of size 16, and 32, respectively. The output layer provided 2 units, which reflect our agent's degrees of freedom in the environment. For the hidden units, we again relied on rectifying linear units as our activation function, while we used a hyperbolic tangent for the output. We were able to produce the best results with a gradient clipping at $\epsilon=0.2$ (see equation \ref{eq::323_clip}), and the cost function hyper-parameters $c_1 = 0.5$ and $c_2 = 0.1/r_t$, which can be found in equation \ref{eq::323_ppo_loss}. We ran the environment for $10000$ steps per epoch, and updated the networks every $4096$ actions, with a minibatch size of $M=512$ for $8$ proximal policy optimization epochs (see algorithm \ref{alg::325_ac}). The Adam optimizer then lead to convergence at a learning rate of $0.01$ after about thirty epochs (see figure \ref{fig::525_ppo_hist}). A main reason for the fast convergence was caused by the chosen entropy hyperparameter $c_2$, which encouraged exploration on low rewards, and damped exploration on high rewards.  TODO find true std dev hist, not only the exp of logprob, as it maybe
+\begin{figure}[h!]
+	\centering
+	\subcaptionbox{Reward history.}%
+	[.45\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/02_autonomous_walking/ppo_reward_history.pdf}}	
+	\subcaptionbox{Standard deviation history.}%
+	[.45\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/02_autonomous_walking/ppo_std_history.pdf}}
+	\caption{Proximal policy optimization in test environment over 50 epochs.}	
+	\label{fig::525_ppo_hist}
+\end{figure}

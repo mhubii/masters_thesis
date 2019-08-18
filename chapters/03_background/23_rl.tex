@@ -19,6 +19,7 @@ where $\psi_t$ can take many forms. Since the gradient is just an estimate, as i
 where $\delta^V_{t,l} = r_t + \gamma V(s_{t+1}) - V(s_t)$ is the temporal difference \cite{sutton1998introduction}, and $V$ the value function, which is given by a critic network. The critic's goal then is to have the gradient estimate steer the acting policy network towards actions that maximize the reward. A huge problem therein is that the policy may diverge and that policies may be discarded on the basis of a gradient estimate with a high variance. This is prohibited in proximal policy optimization by clipping the general advantage estimate, and therefore the gradient, under the following objective
 \begin{align}
 	L^\text{CLIP} = \min(\rho_t(\theta)\hat{A}_t, \text{clip}(\rho_t(\theta), 1-\epsilon, 1+\epsilon)\hat{A}_t),
+	\label{eq::323_clip}
 \end{align}
 where $\rho_t(\theta) = \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_\text{old}}(a_t|s_t)}$ is the probability ratio of the old and the new policy. The loss is shown in figure \ref{fig::323_ppo}, and it assures for a positive advantage estimate that the gradient does not diverge towards actions that are way more likely under the new policy, than they have been for the old policy.
 \begin{figure}[h!]
@@ -44,4 +45,5 @@ The critic's loss therein is the squared-error of the value function estimate an
 		$\theta_\text{old}\leftarrow\theta$
 	}
 	\caption{PPO, Actor-Critic Style}
+	\label{alg::325_ac}
 \end{algorithm}
