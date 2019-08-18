@@ -1,0 +1,50 @@
+model:
+	n_in 4 pos goal
+	fc 4 16 relu
+	fc 16 32 relu
+	fc 32 2 tanh
+
+optimizer:
+	adam lr 1e-2
+	
+
+train:
+	n_iter 10000
+	n_steps 4096
+	n_epochs 50
+	mini_batch_size 512
+	ppo_epochs 8
+
+	beta 0.1/avg_reward
+
+	reward won 10
+	reward lost -10
+	max dist 10
+	max_step 0.1
+
+test:
+	
+
+	won:
+	309
+	311
+	313
+	314
+	308
+	310
+	311
+	312
+	303
+	314
+	
+	lost:
+	0
+	0
+	0
+	0
+	0
+	0
+	0
+	0
+	0
+	0
