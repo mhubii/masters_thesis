@@ -129,7 +129,7 @@ The UNet promotes image abstraction capabilities of an auto-encoder that is caus
 	\caption{Mean squared error training loss history.}
 	\label{fig::523_loss}
 \end{figure}
-After training, we generated velocity histograms, as we already did in section \ref{sec::51_uc}, but this time over the whole validation split for both, the ground truth and the predicted behavior, as shown in figure \ref{fig::523_training_dist}. To generate the predictions on the validation split took $4\,\text{ms}$ for each of the 13341 images on average.
+After training, we generated velocity histograms, as we already did in section \ref{sec::51_uc}, but this time over the whole validation split for both, the ground truth and the predicted behavior, as shown in figure \ref{fig::523_training_dist}. To generate the predictions on the validation split took $4\,\text{ms}$ with a GeForce GTX 1050 for each of the 13341 images on average.
 \begin{figure}[h]
 	\centering
 	\subcaptionbox{Ground truth velocity commands.}%
@@ -139,68 +139,70 @@ After training, we generated velocity histograms, as we already did in section \
 	\caption{Normalized velocity histograms over the validation split.}
 	\label{fig::523_training_dist}
 \end{figure}
-By pure sight, it can already be seen that the network performs well on the validation split, and the Kullback-Leibler divergence $D_\text{KL}$, which measures the distance of probability distributions, enforces this observation further. For the distribution of linear velocities along the x-axis $v_x$, we computed the Kullback-Leibler divergence to be $D^x_\text{KL}=0.33\,\text{a.u.}$, and for the angular velocity about the z-axis $\omega_z$, we obtained $D^z_\text{KL}=0.06\,\text{a.u.}$.
+By pure sight, it can already be seen that the network performs well on the validation split, and the Kullback-Leibler divergence $D_\text{KL}$, which measures the distance of probability distributions, enforces this observation further. For the distribution of linear velocities along the x-axis $v_x$, we computed the Kullback-Leibler divergence to be $D^x_\text{KL}=0.33\,\text{a.u.}$, and for the angular velocity about the z-axis $\omega_z$, we obtained $D^z_\text{KL}=0.06\,\text{a.u.}$. Now the beauty within the task at hand lies in the fact that we were not solely dependent on a validation split for performance evaluations, but instead that we simply could run Heicub in a previously unseen test environment. It is the same test environment, which we already introduced in section \ref{sec::51_uc}, and we will evaluate the trained neural network's behavior within it in the next section - Perfomance in Test Environment.
 \subsection{Performance in Test Environment}
+For the performance benchmarking, we 
 \begin{figure}[h]
 	\centering
-	\subcaptionbox{Straight Walk \href{https://drive.google.com/file/d/1X-RQ9yVLJ9McgeXVoDQhI1uvMJA5o08y/view?usp=sharing}{link}}%
+	\subcaptionbox{Straight walk - \href{https://drive.google.com/file/d/1X-RQ9yVLJ9McgeXVoDQhI1uvMJA5o08y/view?usp=sharing}{link}.}%
 	[.4\linewidth]{\animategraphics[height=1.2in,loop,autoplay]{20}{chapters/05_experiments/02_autonomous_walking/straight_walk_01/frame-}{001}{033}}
-	\subcaptionbox{Curved Walk \href{https://drive.google.com/file/d/1TpT7PUw8cWaUvy1toccXsNO_lQQFlFIS/view?usp=sharing}{link}}%
+	\subcaptionbox{Curved walk - \href{https://drive.google.com/file/d/1TpT7PUw8cWaUvy1toccXsNO_lQQFlFIS/view?usp=sharing}{link}.}%
 	[.4\linewidth]{\animategraphics[height=1.2in,loop,autoplay]{20}{chapters/05_experiments/02_autonomous_walking/curved_walk_02/frame-}{001}{039}}
-	\subcaptionbox{Obstacle Avoidance \href{https://drive.google.com/file/d/1DlO8Rd6AiBPrHKbTIgI12d2ySaTvMJ3S/view?usp=sharing}{link}}%
+	\subcaptionbox{Obstacle avoidance - \href{https://drive.google.com/file/d/1DlO8Rd6AiBPrHKbTIgI12d2ySaTvMJ3S/view?usp=sharing}{link}.}%
 	[.4\linewidth]{\animategraphics[height=1.2in,loop,autoplay]{20}{chapters/05_experiments/02_autonomous_walking/obstacle_walk_02/frame-}{001}{017}}
-	\subcaptionbox{Environment Scanning \href{https://drive.google.com/file/d/1QmtltYTwoXMzHoUA8knA2FEpMsaud0QD/view?usp=sharing}{link}}%
+	\subcaptionbox{Environment scanning - \href{https://drive.google.com/file/d/1QmtltYTwoXMzHoUA8knA2FEpMsaud0QD/view?usp=sharing}{link}.}%
 	[.4\linewidth]{\animategraphics[height=1.2in,loop,autoplay]{20}{chapters/05_experiments/02_autonomous_walking/out_of_sight_walk_01/frame-}{001}{075}}
-	\caption{}
+	\caption{Heicub's behavior in the test environment for benchmarking tasks.}
 	\label{fig::524_aw_gif_basic}
 \end{figure} 
 \begin{figure}[h]
 	\centering
-	\subcaptionbox{Straight Walk - Dynamic Balance}%
+	\subcaptionbox{Straight walk - dynamic balance.}%
 	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/02_autonomous_walking/straight_walk_01_zmp.pdf}}
-	\subcaptionbox{Straight Walk - Behavior}%
+	\subcaptionbox{Straight walk - behavior.}%
 	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/02_autonomous_walking/straight_walk_01_entropy.pdf}}
-	\subcaptionbox{Curved Walk - Dynamic Balance}%
+	\subcaptionbox{Curved walk - dynamic balance.}%
 	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/02_autonomous_walking/curved_walk_01_zmp.pdf}}
-	\subcaptionbox{Curved Walk - Behavior}%
+	\subcaptionbox{Curved walk - behavior.}%
 	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/02_autonomous_walking/curved_walk_01_entropy.pdf}}
-	\subcaptionbox{Obstacle Avoidance - Dynamic Balance}%
+	\subcaptionbox{Obstacle avoidance - dynamic balance.}%
 	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/02_autonomous_walking/obstacle_walk_02_zmp.pdf}}
-	\subcaptionbox{Obstacle Avoidance - Behavior}%
+	\subcaptionbox{Obstacle avoidance - behavior.}%
 	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/02_autonomous_walking/obstacle_walk_02_entropy.pdf}}
-	\subcaptionbox{Environment Scanning - Dynamic Balance}%
+	\subcaptionbox{Environment scanning - dynamic balance.}%
 	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/02_autonomous_walking/out_of_sight_walk_01_zmp.pdf}}
-	\subcaptionbox{Environment Scanning - Behavior}%
+	\subcaptionbox{Environment scanning - behavior.}%
 	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/02_autonomous_walking/out_of_sight_walk_01_entropy.pdf}}
-	\caption{}
+	\caption{Heicub's performance under the control of the presented neural network for benchmarking tasks.}
 	\label{fig::524_aw_basic}
 \end{figure} 
 \begin{figure}[h]
 	\centering
-	\subcaptionbox{Dynamic Environment \href{https://drive.google.com/file/d/1zm-9apobNmsXAcLXB5e9lGqIU7NMHzVl/view?usp=sharing}{link}}%
+	\subcaptionbox{Dynamic environment - \href{https://drive.google.com/file/d/1zm-9apobNmsXAcLXB5e9lGqIU7NMHzVl/view?usp=sharing}{link}.}%
 	[.4\linewidth]{\animategraphics[height=1.2in,loop,autoplay]{20}{chapters/05_experiments/02_autonomous_walking/dynamic_walk_01/frame-}{001}{031}}
-	\subcaptionbox{Semantic Understanding \href{https://drive.google.com/file/d/1VQIEChA61GDxm-rLf8pfOxCgXeJhuFG9/view?usp=sharing}{link}}%
+	\subcaptionbox{Semantic understanding - \href{https://drive.google.com/file/d/1VQIEChA61GDxm-rLf8pfOxCgXeJhuFG9/view?usp=sharing}{link}.}%
 	[.4\linewidth]{\animategraphics[height=1.2in,loop,autoplay]{20}{chapters/05_experiments/02_autonomous_walking/semantic_walk_01/frame-}{001}{046}}
-	\caption{}
+	\caption{Heicub's behavior in the test environment for additional tasks.}
 \label{fig::524_aw_gif_additional}
 \end{figure} 
 \begin{figure}[h]
 	\centering
-	\subcaptionbox{Dynamic Environment - Dynamic Balance}%
+	\subcaptionbox{Dynamic environment - dynamic balance.}%
 	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/02_autonomous_walking/dynamic_walk_01_zmp.pdf}}
-	\subcaptionbox{Dynamic Environment - Behavior}%
+	\subcaptionbox{Dynamic environment - behavior.}%
 	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/02_autonomous_walking/dynamic_walk_01_entropy.pdf}}
-	\subcaptionbox{Semantic Understanding - Dynamic Balance}%
+	\subcaptionbox{Semantic understanding - dynamic balance.}%
 	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/02_autonomous_walking/semantic_walk_01_zmp.pdf}}
-	\subcaptionbox{Semantic Understanding - Behavior}%
+	\subcaptionbox{Semantic understanding - behavior.}%
 	[.4\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/02_autonomous_walking/semantic_walk_01_entropy.pdf}}
-	\caption{}
+	\caption{Heicub's performance under the control of the presented neural network for additional tasks.}
 	\label{fig::524_aw_additional}
 \end{figure}
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=.5]{chapters/05_experiments/02_autonomous_walking/entropy_against_balance.pdf}
-	\caption{meanaw 3.67, meanuc 3.41, stdaw 0.56, stduc 0.69}
+	\caption{Influence of entropic commands onto Heicub's dynamic balance.}
 	\label{fig::524_entropy_balance}
 \end{figure}
+meanaw 3.67, meanuc 3.41, stdaw 0.56, stduc 0.69
 \subsection{Proximal Policy Optimization}
