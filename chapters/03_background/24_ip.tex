@@ -10,7 +10,7 @@ As already pointed out, the depth map is generated from stereo camera images by 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_background/img/image_preprocessing.png}
-	\caption{Image preprocessing to obtain edge filtered images. The images were taken within the simulation environment Gazebo (\href{http://gazebosim.org/}{link}), and show a space exploration vehicle, for which, with the friendly support of NASA, we generated a Gazebo version (\href{https://github.com/mhubii/gazebo_models}{link}).}
+	\caption{Image preprocessing to obtain edge filtered images. The images were taken within the simulation environment Gazebo (\href{http://gazebosim.org/}{\underline{link}}), and show a space exploration vehicle, for which, with the friendly support of NASA, we generated a Gazebo version (\href{https://github.com/mhubii/gazebo_models}{\underline{link}}).}
 	\label{fig::324_image_preprocessing}
 \end{figure}
 When having a look at the Sobel kernel $\bm{S}_x$ (equation \ref{eq::324_sobel}), it immediately becomes clear that it approximates the derivative of an image along the horizontal axis. Therefore, at locations of steep change, or simply put, edges, the convolution of the grayscale images with the Sobel kernel results in high values, and thus in the typical appearance of an edge filtered image.

@@ -72,7 +72,7 @@ where $n\in[1,N]$. Altogether we have
 	T
 	\end{pmatrix}.
 \end{align}
-The amount of time $NT$ that we predict into the future, is what we call the preview horizon. If we now concatenate the single entries of $\bm{c}_{k+n}$ for all $n\in[1,N]$ into one expression, we can relate the initial states $\bm{c}_k$ (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/include/pattern_generator/base_generator.h#L140}{link}) to the states on the preview horizon in an even more compact form. With the concatenations (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/include/pattern_generator/base_generator.h#L146}{link})
+The amount of time $NT$ that we predict into the future, is what we call the preview horizon. If we now concatenate the single entries of $\bm{c}_{k+n}$ for all $n\in[1,N]$ into one expression, we can relate the initial states $\bm{c}_k$ (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/include/pattern_generator/base_generator.h#L140}{\underline{link}}) to the states on the preview horizon in an even more compact form. With the concatenations (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/include/pattern_generator/base_generator.h#L146}{\underline{link}})
 \begin{align}
 	\bm{C}_{k+1}=\begin{pmatrix}
 	c_{k+1}\\
@@ -95,7 +95,7 @@ The amount of time $NT$ that we predict into the future, is what we call the pre
 	\dddot{c}_{k+N-1}
 	\end{pmatrix},
 \end{align}
-we obtain (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L887}{link})
+we obtain (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L887}{\underline{link}})
 \begin{align}
 	\bm{C}_{k+1} &= \bm{P}_{ps} \bm{c}_k + \bm{P}_{pu}\dddot{\bm{C}}_k
 	\label{eq::312_ckp1}\\
@@ -104,7 +104,7 @@ we obtain (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c
 	\ddot{\bm{C}}_{k+1} &= \bm{P}_{as} \bm{c}_k + \bm{P}_{au}\dddot{\bm{C}}_k,
 	\label{eq::312_ddckp1}
 \end{align}
-where the new matrices are given by (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L403}{link})
+where the new matrices are given by (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L403}{\underline{link}})
 \begin{align}
 	\bm{P}_{ps} &= \begin{pmatrix}
 	1 & T & T^2/2 \\
@@ -137,13 +137,13 @@ where the new matrices are given by (\href{https://github.com/mhubii/nmpc_patter
 	T & \dots & T
 	\end{pmatrix}.
 \end{align}
-If we now additionally consider the relation of the zero moment point and the center of mass, which we obtained earlier in equations \ref{eq::311_zmp_x} and \ref{eq::311_zmp_y}, we can further relate the current center of mass state to the zero moment point on the preview horizon by (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/include/pattern_generator/base_generator.h#L219}{link})
+If we now additionally consider the relation of the zero moment point and the center of mass, which we obtained earlier in equations \ref{eq::311_zmp_x} and \ref{eq::311_zmp_y}, we can further relate the current center of mass state to the zero moment point on the preview horizon by (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/include/pattern_generator/base_generator.h#L219}{\underline{link}})
 \begin{align}
 	\bm{Z}_{k+1} &= \bm{C}_{k+1} - \frac{c_z}{g}\ddot{\bm{C}}_{k+1} \\
 	&= \left(\bm{P}_{ps}-\frac{c_z}{g}\bm{P}_{as}\right)\bm{c}_k + \left(\bm{P}_{pu}-\frac{c_z}{g}\bm{P}_{au}\right)\ddddot{\bm{C}}_k = \bm{P}_{zs} \bm{c}_k + \bm{P}_{zu}\dddot{\bm{C}}_k,
 	\label{eq::312_zmp}
 \end{align}
-where the new matrices are given by (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L420}{link})
+where the new matrices are given by (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L420}{\underline{link}})
 \begin{align}
 	\bm{P}_{zs} &= \begin{pmatrix}
 	1 & T & T^2/2 - c_z/g \\
@@ -169,7 +169,7 @@ To create an objective function, as the one already outlined in section \ref{sec
 	&\frac{\gamma}{2}||\dddot{\bm{C}}_{k+1}^x||^2_2 + \frac{\gamma}{2}||\dddot{\bm{C}}_{k+1}^y||^2_2	
 	\label{eq::312_dddcxy}
 \end{align}
-Before we address the foot placement therein in more detail, we shortly want to highlight that the reference velocities are the commands, which enter the control loop from figure \ref{fig::31_pg}. We set them to be constant over the whole preview horizon and rotate them to the world frame  by considering the robot's current orientation (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L324}{link}). When we consider that the foot cannot move once it is in contact with the ground, it becomes clear that the foot step placement must be very discrete in time. The number of steps $N_f$ that we plan for in advance is simply given by $NT/T_\text{step}$, where we just divide the duration of the preview horizon $NT$ by the time it takes to perform a step $T_\text{step}$. But as already shown in equation \ref{eq::312_zmp}, and used in equation \ref{eq::312_fxy}, we require balance on a finer timescale. We therefore project the foot placement $\tilde{\bm{F}}_k\in\mathbb{R}^{N_f\times1}$ onto the temporal resolution of the center of mass' control variable by introducing the matrices $\bm{v}_{k+1}$, $\bm{V}_{k+1}$, and the current foot position $f_k$, which yields
+Before we address the foot placement therein in more detail, we shortly want to highlight that the reference velocities are the commands, which enter the control loop from figure \ref{fig::31_pg}. We set them to be constant over the whole preview horizon and rotate them to the world frame  by considering the robot's current orientation (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L324}{\underline{link}}). When we consider that the foot cannot move once it is in contact with the ground, it becomes clear that the foot step placement must be very discrete in time. The number of steps $N_f$ that we plan for in advance is simply given by $NT/T_\text{step}$, where we just divide the duration of the preview horizon $NT$ by the time it takes to perform a step $T_\text{step}$. But as already shown in equation \ref{eq::312_zmp}, and used in equation \ref{eq::312_fxy}, we require balance on a finer timescale. We therefore project the foot placement $\tilde{\bm{F}}_k\in\mathbb{R}^{N_f\times1}$ onto the temporal resolution of the center of mass' control variable by introducing the matrices $\bm{v}_{k+1}$, $\bm{V}_{k+1}$, and the current foot position $f_k$, which yields
 \begin{align}
 	\bm{F}_{k+1} = \bm{v}_{k+1}f_k + \bm{V}_{k+1}\tilde{\bm{F}}_k,
 	\label{eq:312_feet}
@@ -199,7 +199,7 @@ where $\bm{v}_{k+1}$ is a $N\times1$ matrix, and $\bm{V}_{k+1}$ is a $N\times N_
 	0 & 0 & 1
 	\end{pmatrix}
 \end{align}
-As the robot moves, the matrices change, in that the entries of $v_{k+1}$ are being shifted upwards by one index for every time step $T$, while the new entries at the bottom are set to be zero. All entries of $V_{k+1}$ are also shifted upwards, while the bottom right entry is set to one, but further are all entries of $V_{k+1}$ are being shifted to the left once all entries of $\bm{v}_{k+1}$ are zero (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L740}{link}). If all entries of $\bm{v}_{k+1}$ are zero, then $\bm{v}_{k+1}$ is replaced by the second column of $\bm{V}_{k+1}$. For example for $N_f = 2$ and $N=6$  we have
+As the robot moves, the matrices change, in that the entries of $v_{k+1}$ are being shifted upwards by one index for every time step $T$, while the new entries at the bottom are set to be zero. All entries of $V_{k+1}$ are also shifted upwards, while the bottom right entry is set to one, but further are all entries of $V_{k+1}$ are being shifted to the left once all entries of $\bm{v}_{k+1}$ are zero (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L740}{\underline{link}}). If all entries of $\bm{v}_{k+1}$ are zero, then $\bm{v}_{k+1}$ is replaced by the second column of $\bm{V}_{k+1}$. For example for $N_f = 2$ and $N=6$  we have
 \begin{align}
 	\left(
 	\begin{array}{c|c}
@@ -234,7 +234,7 @@ As the robot moves, the matrices change, in that the entries of $v_{k+1}$ are be
 	0 & 0 & 1
 	\end{array}\right)
 \end{align}
-Now to ensure the rotation of the center of mass, we introduce equation \ref{eq::312_dftheta} to the objective function. The matrices $\bm{E}_{L/R}$ therein ensure that only the foot, which is currently not touching the ground, is rotated, the rotational velocity of the center of mass itself is then obtained by averaging over the left and the right foot. Hence $\bm{E}_{L/R}$ take the form (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L1281}{link})
+Now to ensure the rotation of the center of mass, we introduce equation \ref{eq::312_dftheta} to the objective function. The matrices $\bm{E}_{L/R}$ therein ensure that only the foot, which is currently not touching the ground, is rotated, the rotational velocity of the center of mass itself is then obtained by averaging over the left and the right foot. Hence $\bm{E}_{L/R}$ take the form (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L1281}{\underline{link}})
 \begin{align}
 	\bm{E}_L = \begin{pmatrix}
 	1&&&&&&&& \\
@@ -249,7 +249,7 @@ Now to ensure the rotation of the center of mass, we introduce equation \ref{eq:
 	\end{pmatrix},\,\,
 	\bm{E}_R = \bm{1} - \bm{E}_L
 \end{align}
-The diagonal entries therein just take the same form as a single column of $\bm{V}_{k+1}$, all other entries are zero. If we now take equations \ref{eq::312_dcxy}-\ref{eq::312_dddcxy}, and replace $\dot{\bm{C}}_{k+1}^{x/y}$, as well as $\dot{\bm{F}}_{k+1}^{\theta,L/R}$, by equation \ref{eq::312_dckp1}, and insert equation \ref{eq::312_zmp} into the zero moment point on the preview horizon $\bm{Z}_{k+1}$, we obtain following relation (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/nmpc_generator.cpp#L145}{link})
+The diagonal entries therein just take the same form as a single column of $\bm{V}_{k+1}$, all other entries are zero. If we now take equations \ref{eq::312_dcxy}-\ref{eq::312_dddcxy}, and replace $\dot{\bm{C}}_{k+1}^{x/y}$, as well as $\dot{\bm{F}}_{k+1}^{\theta,L/R}$, by equation \ref{eq::312_dckp1}, and insert equation \ref{eq::312_zmp} into the zero moment point on the preview horizon $\bm{Z}_{k+1}$, we obtain following relation (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/nmpc_generator.cpp#L145}{\underline{link}})
 \begin{align}
 	\min_{\bm{U}_k} &\frac{1}{2}\bm{U_k}^T\bm{Q}_k\bm{U}_k + \bm{p}_k^T\bm{U}_k
 	\label{eq::312_canqp} \\
@@ -292,7 +292,7 @@ where we evaluated all squared $L^2$-norms via $||\bm{a}-\bm{b}||^2_2 = (\bm{a}-
 \subsubsection{The Constraints}
 The constraints we are going to deal with first, ensure dynamic balance in that they constrain the zero moment point to the support polygon of the feet. Secondly, we will explain the feasibility constraints, which force the feet positioning to a convex hull that describes kinematically feasible motions. Finally, the constraints which restrict the feet's relative velocity, and the feet's relative orientation, as wall as the ones, which allow obstacle avoidance, are introduced.
 \paragraph{Balance Constraints} 
-To ensure that the zero moment point stays within the support polygon (figure \ref{fig::312_foot_hull}), we set up a system of linear equations, of which each describes a line that connects the polygon's edges $\bm{p}_i$ (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L844}{link}). 
+To ensure that the zero moment point stays within the support polygon (figure \ref{fig::312_foot_hull}), we set up a system of linear equations, of which each describes a line that connects the polygon's edges $\bm{p}_i$ (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L844}{\underline{link}}). 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.5]{chapters/03_background/img/foot_convex_hull.png}
@@ -318,7 +318,7 @@ f_k^x & f_k^y
 \end{pmatrix}^T$. This expression describes the zero moment point with respect to the foot frame, where $\bm{R}_z(f_k^\theta) = \begin{pmatrix}
 \quad\cos f_k^\theta & \sin f_k^\theta \\
 -\sin f_k^\theta& \cos f_k^\theta
-\end{pmatrix}$ is an inverse rotation around the z-axis that adds non-linearities to the constraints. We can now extend the formalism to the whole preview horizon by utilizing equations \ref{eq::312_zmp} and \ref{eq:312_feet}. This leads to (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L946}{link})
+\end{pmatrix}$ is an inverse rotation around the z-axis that adds non-linearities to the constraints. We can now extend the formalism to the whole preview horizon by utilizing equations \ref{eq::312_zmp} and \ref{eq:312_feet}. This leads to (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L946}{\underline{link}})
 \begin{align}
 	&\bm{D}_{k+1}(\bm{F}_{k+1}^{\theta})\begin{pmatrix}
 		\bm{Z}_{k+1}^x - \bm{F}_{k+1}^x \\
@@ -355,7 +355,7 @@ where $\overline{\bm{U}_{\text{zmp},k}}$ defines the upper bounds. The above der
 The feasibility constraints constrain the foot positioning to areas that the robot of interest can actually reach. We can therefore just reuse the concept of equation \ref{eq::312_lin}, and replace $\bm{x}$ therein by the the difference of the next foot position $\tilde{\bm{F}}_{k}\in\mathcal{R}^{N_f\times1}$, and the previous one $\tilde{\bm{F}}_{k-1} = \bm{S}_0\tilde{\bm{F}}_{k} + \bm{S}_1f_k$, where $\bm{S}_0 = \begin{pmatrix}0 & 0 \\ \textbf{I}_{N_f-1} & 0
 \end{pmatrix}\in\mathcal{R}^{N_f\times N_f}$ simply shifts $\tilde{\bm{F}}_{k}$ down by one row, and $\bm{S}_1 = \begin{pmatrix}
 1 \\ 0 \\ \vdots \\ 0
-\end{pmatrix}\in\mathcal{R}^{N_f\times1}$. Altogether we have (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/base_generator.cpp#L1061}{link})
+\end{pmatrix}\in\mathcal{R}^{N_f\times1}$. Altogether we have (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/base_generator.cpp#L1061}{\underline{link}})
 \begin{align}
 \begin{pmatrix}
 \bm{A}_{k+1}^{x}&\bm{A}_{k+1}^{y}\end{pmatrix} 
@@ -377,7 +377,7 @@ where $\bm{A}_{k+1}^{x/y}=\begin{pmatrix}
 	\bm{0} &           &\bm{A}^{R/L,x/y}\bm{R}_z(f_{k+N_fN}^\theta)
 \end{pmatrix}\in\mathbb{R}^{N_\text{edges}N\times N_f}$ has alternating linear inequalities $\bm{A}^{L/R,x/y}\rightarrow\bm{A}^{R/L,x/y}$ that correspond on the support foot, and so does $\bm{B_{k+1}}\in\mathbb{R}^{N_\text{edges}N\times1}$. 
 \paragraph{Relative Constraints}
-By considering the maximum and minimum angle by which the feet are relatively oriented towards each other, we take hardware limits into account. Furthermore, the restriction of the maximally allowed relative angular velocity decreases that variation of acceleration before the foot landing \cite{naveau2016reactive}. The constraints can be formulated as follows (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/base_generator.cpp#L1244}{link})
+By considering the maximum and minimum angle by which the feet are relatively oriented towards each other, we take hardware limits into account. Furthermore, the restriction of the maximally allowed relative angular velocity decreases that variation of acceleration before the foot landing \cite{naveau2016reactive}. The constraints can be formulated as follows (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/base_generator.cpp#L1244}{\underline{link}})
 \begin{align}
 	-\bm{\theta}_\text{max}\leq\bm{F}_{k+1}^{L,\theta} - \bm{F}_{k+1}^{R,\theta} &\leq \bm{\theta}_\text{max} \\
 	-\dot{\bm{\theta}}_\text{max}\leq\dot{\bm{F}}_{k+1}^{L,\theta} - \dot{\bm{F}}_{k+1}^{R,\theta} &\leq \dot{\bm{\theta}}_\text{max},
@@ -394,7 +394,7 @@ which can be expressed in terms of the free variables with equations \ref{eq::31
 	\underline{\bm{U}_{\text{dori},k}}&\leq \bm{A}_{\text{dori},k}\bm{U}_k^\theta \leq \overline{\bm{U}_{\text{dori},k}}.
 \end{align}
 \paragraph{Obstacle Constraints}
-In contrast to similar methods like \cite{herdt2010walking}, we also include the avoidance of convex obstacles by requesting that the feet's positions must lie outside of circles $C = \{(p^x, p^y)\in\mathbb{R}^2 \,|\, (p^x-x_0)^2+(p^y-y_0)^2\leq R^2\}$, which define the obstacles, where $x_0$, and $y_0$ define the obstacle's center in world coordinates. This can be formulated by the free variables by (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/base_generator.cpp#L1271}{link})
+In contrast to similar methods like \cite{herdt2010walking}, we also include the avoidance of convex obstacles by requesting that the feet's positions must lie outside of circles $C = \{(p^x, p^y)\in\mathbb{R}^2 \,|\, (p^x-x_0)^2+(p^y-y_0)^2\leq R^2\}$, which define the obstacles, where $x_0$, and $y_0$ define the obstacle's center in world coordinates. This can be formulated by the free variables by (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/base_generator.cpp#L1271}{\underline{link}})
 \begin{align}
 	&(f_k^x-x_0)^2 + (f_k^y-y_0)^2 \geq (R + m)^2\\
 	&\bm{U}_k^{xy,T}\begin{pmatrix}
@@ -414,7 +414,7 @@ In contrast to similar methods like \cite{herdt2010walking}, we also include the
 \end{align}
 which expresses lower bounds for the free variables. Given the constraints, of which some are nonlinear, we can apply a Gauss-Newton method to find the optimal solution. This also implies that we have to linearize all of the constraints that were presented within the previous paragraphs. The linearization is described in the next paragraph - The Gauss-Newton Formulation.
 \subsubsection{The Gauss-Newton Formulation}
-As outlined in equation \ref{eq::312_gn_min}, we can now linearize the quadratic problem of equation \ref{eq::312_canqp}. This leads to (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/nmpc_generator.cpp#L377}{link})
+As outlined in equation \ref{eq::312_gn_min}, we can now linearize the quadratic problem of equation \ref{eq::312_canqp}. This leads to (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/nmpc_generator.cpp#L377}{\underline{link}})
 \begin{align}
 	\min_{\Delta\bm{U}_k}&\frac{1}{2}\Delta\bm{U}_k^T\bm{Q}_k\Delta\bm{U}_k + \tilde{\bm{p}}_k^T\Delta\bm{U}_k \\
 	\text{subject to: }&\underline{\tilde{\bm{U}}_k} \leq \tilde{\bm{A}}_k\Delta\bm{U}_k\leq\overline{\tilde{\bm{U}}_k},
@@ -463,4 +463,4 @@ where
 		\bm{A}_{\text{dori},k}\bm{U}_{k-1}^\theta
 	\end{pmatrix}.
 \end{align}
-It follows that we only need to compute the gradient of $\bm{A}_{\text{zmp},k}$, and $\bm{A}_{\text{foot},k}$, with respect to the free variable $\bm{U}^{\theta}$, which can analytically be done by deriving the rotation matrices' gradient in equations \ref{eq::312_rot1}, and \ref{eq::312_ineq_foot}. The solution to this optimal control problem yields the update $\Delta\bm{U}_k$ to the current iterate $\bm{U}_k=\bm{U}_{k-1}+\Delta\bm{U}_k$ (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/nmpc_generator.cpp#L155}{link}) under quadratic convergence, given that we are sufficiently close to a solution, as discussed earlier. The resulting positioning for the feet needs then to be interpolated, which will be explained in the following section - Interpolating Trajectories. 
+It follows that we only need to compute the gradient of $\bm{A}_{\text{zmp},k}$, and $\bm{A}_{\text{foot},k}$, with respect to the free variable $\bm{U}^{\theta}$, which can analytically be done by deriving the rotation matrices' gradient in equations \ref{eq::312_rot1}, and \ref{eq::312_ineq_foot}. The solution to this optimal control problem yields the update $\Delta\bm{U}_k$ to the current iterate $\bm{U}_k=\bm{U}_{k-1}+\Delta\bm{U}_k$ (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/nmpc_generator.cpp#L155}{\underline{link}}) under quadratic convergence, given that we are sufficiently close to a solution, as discussed earlier. The resulting positioning for the feet needs then to be interpolated, which will be explained in the following section - Interpolating Trajectories. 
