@@ -5,6 +5,7 @@ from mpl_toolkits.mplot3d import Axes3D
 
 mpl.rcParams['text.usetex'] = True
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}'] #for \text command
+mpl.rcParams.update({'font.size': 13})
 
 
 def load_csv(loc):
