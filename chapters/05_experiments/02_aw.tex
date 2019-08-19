@@ -2,6 +2,7 @@
 \label{sec::52_aw}
 The autonomous walking is based upon the performance within the test environment from section \ref{sec::512_pt}. The found parameters are used for comparative reason throughout this section as well. As explained in section \ref{sec::324_ip}, the neural network benefits strongly from an available depth map as input. We will therefore deal with the depth map extraction first.
 \subsection{Camera Calibration}
+\label{sec::521_cc}
 As described in section \ref{sec::324_ip}, in order for the stereo block matching algorithm to work properly (equation \ref{eq::324_sad}), it is required to calibrate the cameras. We shortly verified this in figure \ref{fig::521_no_calib}, where we extracted a depth map from the uncalibrated stereo camera pair.
 \begin{figure}[h!]
 	\centering
@@ -79,6 +80,7 @@ Exemplary rectified images, which rely on the matrices of table \ref{tab::521_ex
 	\label{fig::521_rect}
 \end{figure}
 \subsection{Depth Parameter Tuning}
+\label{sec::522_dp}
 Within this section, we shortly explore the effects of all tunable parameters on the depth map generation. Therefore, we utilize a simple experimental setup. Within the setup, Heicub points its stereo camera towards three chairs that are located at a distance of $1\,\text{m}$ towards each other, and towards the cameras, so to cover close, medium, and far distances. The consecutive chairs are slightly shifted, in order to enable the simultaneous observation of all of them. The rectified view of the environment is shown in figure \ref{fig::522_wls_rgb}.
 \begin{figure}[h!]
 	\centering
@@ -122,7 +124,7 @@ It contains 134401 samples in total, which were recorded at a rate of 5 frames p
 	\caption{UNet-LSTM network architecture.}
 	\label{fig::523_unet}
 \end{figure}
-The UNet promotes image abstraction capabilities of an auto-encoder that is caused by its bottleneck design, and furthermore shows faster convergence due to its residual connections, which allow the gradient flow to reach deeper layers earlier. Each image that is being forwarded, goes through a number of convolutional layers with rectifying linear unit activation functions, and is subsequently downscaled by max-pooling operations. We repeated this process for two times. Once the most downscaled layer is reached, the weights are being upscaled by simple interpolations again, which simply results in the same resolution that the layers had during the downscaling process. The skip connections then concatenate the shallow with the deep layers to a new layer at each scale, which is then being forwarded further through a number of convolutional layer with rectifying linear units. The nature of the robot's motion, which inherently causes the cameras to periodically move from the left to the right, required us to equip the network architecture by a temporal understanding. We therefore extended the UNet architecture to a novel UNet-LSTM structure. The developed architecture takes up a sequence of consecutive RGBD images, and forwards them through the UNet until it reaches a fully connected regression layer that shall output velocity values in the end. Each image therein creates a signal, from which the LSTM is supposed to only keep the most relevant information. This design helped the network to understand that a fire extinguisher to the left of the image may only be caused by the cameras that are temporally displaced to the right. The final fully connected layer then returns what we use for the loss function, and therefore a velocity. In contrast to the preceding layers, the last fully connected layer uses a hyperbolic tangent function, which restricts the output to a range of $[-1,1]$, which is then being scaled by the velocity that the pattern generator maximally allows. The architecture can be found at the provided \href{https://github.com/mhubii/nmpc_pattern_generator/blob/master/libs/learning/python/unet_model.py}{link}. Due to memory limitations, we trained the network on a sequence length of 5 RGBD images, and a batch size of 32. For the loss, we chose a mean squared error with respect to the most recent velocity command. We used the Adam optimization \cite{kingma2014adam} at a learning $0.001$, and trained for 100 epochs on a Nvidia GTX 1080 with $8\,\text{GB}$ RAM, to which we were granted access to. This took us around 48 hours. The loss history is shown in figure \ref{fig::523_loss}, which reveals a good convergence after around 40 epochs.
+The UNet promotes image abstraction capabilities of an auto-encoder that is caused by its bottleneck design, and furthermore shows faster convergence due to its residual connections, which allow the gradient flow to reach deeper layers earlier. Each image that is being forwarded, goes through a number of convolutional layers with rectifying linear unit activation functions, and is subsequently downscaled by max-pooling operations. We repeated this process for two times. Once the most downscaled layer is reached, the weights are being upscaled by simple interpolations again, which simply results in the same resolution that the layers had during the downscaling process. The skip connections then concatenate the shallow with the deep layers to a new layer at each scale, which is then being forwarded further through a number of convolutional layer with rectifying linear units. The nature of the robot's motion, which inherently causes the cameras to periodically move from the left to the right, required us to equip the network architecture by a temporal understanding. We therefore extended the UNet architecture to a novel UNet-LSTM structure. The developed architecture takes up a sequence of consecutive RGBD images, and forwards them through the UNet until it reaches a fully connected regression layer that shall output velocity values in the end. Each image therein creates a signal, from which the LSTM is supposed to only keep the most relevant information. This design helped the network to understand that a fire extinguisher to the left of the image may only be caused by the cameras that are temporally displaced to the right. The final fully connected layer then returns what we use for the loss function, and therefore a velocity. In contrast to the preceding layers, the last fully connected layer uses a hyperbolic tangent function, which restricts the output to a range of $[-1,1]$, which is then being scaled by the velocity that the pattern generator maximally allows. The architecture can be found at the provided \href{https://github.com/mhubii/nmpc_pattern_generator/blob/master/libs/learning/python/unet_model.py}{link}. Due to memory limitations, we trained the network on a sequence length of 5 RGBD images, and a batch size of 32. For the loss, we chose a mean squared error with respect to the most recent velocity command. We used the Adam optimization \cite{kingma2014adam} at a learning rate of  $0.001$, and trained for 100 epochs on a Nvidia GTX 1080 with $8\,\text{GB}$ RAM, to which we were granted access to. This took us around 48 hours. The loss history is shown in figure \ref{fig::523_loss}, which reveals a good convergence after around 40 epochs.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.4]{chapters/05_experiments/02_autonomous_walking/05_07_19_loss_history.pdf}
@@ -145,6 +147,7 @@ By pure sight, it can already be seen that the network performs well on the vali
 \end{align}
 where for our case, $p(v)$ is the ground truth velocity distribution, and $q(v)$ is the predicted velocity distribution. For the distribution of linear velocities along the x-axis $v_x$, we computed the Kullback-Leibler divergence to be $D^x_\text{KL}=0.33\,\text{a.u.}$, and for the angular velocity about the z-axis $\omega_z$, we obtained $D^z_\text{KL}=0.06\,\text{a.u.}$. Now the beauty within the task at hand lies in the fact that we were not solely dependent on a validation split for performance evaluations, but instead that we simply could run Heicub in a previously unseen test environment. It is the same test environment, which we already introduced in section \ref{sec::51_uc}, and we will evaluate the trained neural network's behavior within it in the next section - Perfomance in Test Environment.
 \subsection{Performance in Test Environment}
+\label{sec::524_pt}
 For the performance benchmarking, we relied on the well defined experimental setup from section \ref{sec::51_uc}. Once more the tasks were to move straight towards a fire extinguisher, to turn and to move towards it, to avoid an obstacle on the way, and to find the fire extinguisher. In order to ensure reproducibility, we let Heicub solve each of these tasks twice, as we did for the user controlled case. The setup is shown in figure \ref{fig::524_aw_gif_basic}, which shows Heicub's movement over the course of each task along with its sight of the scene.
 \begin{figure}[h!]
 	\centering
@@ -237,13 +240,14 @@ Especially in the behavior plot of figure \ref{fig::524_aw_additional_semantic},
 	\label{fig::524_aw_additional_semantic}
 \end{figure}
 \subsection{Proximal Policy Optimization}
+\label{sec::525_pp}
 Since there is to this date no feasible way of training an agent on autonomous navigation in real time with reinforcement learning, we decided to implement a benchmarking environment that is shown in figure \ref{fig::525_ppo_env}.
 \begin{figure}[h!]
 	\centering
+	\subcaptionbox{Agent at epoch 1.}%
+	[.45\linewidth]{\includegraphics[scale=.4]{chapters/05_experiments/02_autonomous_walking/epoch_1.pdf}}	
 	\subcaptionbox{Agent at epoch 30.}%
-	[.45\linewidth]{\includegraphics[scale=.3]{chapters/05_experiments/02_autonomous_walking/epoch_30/frame-80.jpg}}	
-	\subcaptionbox{Agent in test mode.}%
-	[.45\linewidth]{\includegraphics[scale=.3]{chapters/05_experiments/02_autonomous_walking/test_mode/frame-40.jpg}}
+	[.45\linewidth]{\includegraphics[scale=.4]{chapters/05_experiments/02_autonomous_walking/epoch_30.pdf}}
 	\caption{Artificial agent in proximal policy optimization test environment.}	
 	\label{fig::525_ppo_env}
 \end{figure} 
@@ -251,13 +255,25 @@ The agent's goal within this setup is to move towards the red dot, while keeping
 a_x & a_y
 \end{pmatrix}^T$ with that of the goal $\bm{g} = \begin{pmatrix}
 g_x & g_y
-\end{pmatrix}^T$. The reward $r_t$, at time step $t$, is designed to encourage motion towards the goal, by taking the difference of the previous and the current goal distance $r_t = ||\bm{a}_{t-1}-\bm{g}_{t-1}||_2 - ||\bm{a}_{t}-\bm{g}_{t}||_2$. Furthermore, a reward of ten was gained for successful completion, while a reward of negative ten was granted for whenever the agent left the maximally allowed distance towards the goal. In each of the cases, the environment was reset, and the goal got spawned at a random location. For both, the agent and the critic network, we used a fully connected neural network with 2 hidden layers of size 16, and 32, respectively. The output layer provided 2 units, which reflect our agent's degrees of freedom in the environment. For the hidden units, we again relied on rectifying linear units as our activation function, while we used a hyperbolic tangent for the output. We were able to produce the best results with a gradient clipping at $\epsilon=0.2$ (see equation \ref{eq::323_clip}), and the cost function hyper-parameters $c_1 = 0.5$ and $c_2 = 0.1/r_t$, which can be found in equation \ref{eq::323_ppo_loss}. We ran the environment for $10000$ steps per epoch, and updated the networks every $4096$ actions, with a minibatch size of $M=512$ for $8$ proximal policy optimization epochs (see algorithm \ref{alg::325_ac}). The Adam optimizer then lead to convergence at a learning rate of $0.01$ after about thirty epochs (see figure \ref{fig::525_ppo_hist}). A main reason for the fast convergence was caused by the chosen entropy hyperparameter $c_2$, which encouraged exploration on low rewards, and damped exploration on high rewards.  TODO find true std dev hist, not only the exp of logprob, as it maybe
+\end{pmatrix}^T$. The reward $r_t$, at time step $t$, is designed to encourage motion towards the goal, by taking the difference of the previous and the current goal distance $r_t = ||\bm{a}_{t-1}-\bm{g}_{t-1}||_2 - ||\bm{a}_{t}-\bm{g}_{t}||_2$. Furthermore, a reward of ten was gained for successful completion, while a reward of negative ten was granted for whenever the agent left the maximally allowed distance towards the goal, see for example \ref{fig::525_ppo_env} (a). In each of the cases, the environment was reset, and the goal got spawned at a random location. For both, the agent and the critic network, we used a fully connected neural network with 2 hidden layers of size 16, and 32, respectively. The output layer provided 2 units, which reflect our agent's degrees of freedom in the environment. For the hidden units, we again relied on rectifying linear units as our activation function, while we used a hyperbolic tangent for the output. We were able to produce the best results with a gradient clipping at $\epsilon=0.2$ (see equation \ref{eq::323_clip}), and the cost function hyper-parameters $c_1 = 0.5$ and $c_2 = 0.1/\overline{r_t}$, where $\overline{r_t}$ denotes the average reward, and which can be found in equation \ref{eq::323_ppo_loss}. We ran the environment for $10000$ steps per epoch, and updated the networks every $4096$ actions, with a minibatch size of $M=512$ for $8$ proximal policy optimization epochs (see algorithm \ref{alg::325_ac}). The Adam optimizer then led to convergence at a learning rate of $0.01$ after about thirty epochs (see figure \ref{fig::525_ppo_hist}). A main reason for the fast convergence was caused by the chosen entropy hyperparameter $c_2$, which encouraged exploration on low rewards, and damped exploration on high rewards. We computed the entropy $S[\pi_\theta]$ from the differential entropy of our Gaussian policy $\pi_\theta$ via (\href{https://github.com/mhubii/ppo_libtorch/blob/481c1e326dcd6220b2c1c955a0303a410c2cb0dd/Models.h#L82}{link})
+\begin{align}
+	S[\pi_\theta] = 0.5 + 0.5\log(2\pi)+\log(\sigma),
+\end{align}
+where $\sigma$ is the standard deviation. We can then see the standard deviation's influence on the reward, as it starts to increase strongly in figure \ref{fig::525_ppo_hist} (b). 
 \begin{figure}[h!]
 	\centering
 	\subcaptionbox{Reward history.}%
-	[.45\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/02_autonomous_walking/ppo_reward_history.pdf}}	
+	[.45\linewidth]{\includegraphics[scale=.4]{chapters/05_experiments/02_autonomous_walking/ppo_reward_history.pdf}}	
 	\subcaptionbox{Standard deviation history.}%
-	[.45\linewidth]{\includegraphics[scale=.35]{chapters/05_experiments/02_autonomous_walking/ppo_std_history.pdf}}
+	[.45\linewidth]{\includegraphics[scale=.4]{chapters/05_experiments/02_autonomous_walking/ppo_std_history.pdf}}
 	\caption{Proximal policy optimization in test environment over 50 epochs.}	
 	\label{fig::525_ppo_hist}
 \end{figure}
+After having trained the agent successfully for $50$ epochs, we ran the policy $\pi_\theta$ without noise contribution, but rather took the average $\mu$, as proposed by the actor network. An example of the agent's behavior can be seen in figure \ref{fig::525_ppo_test}, which now appears really smooth. 
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=.4]{chapters/05_experiments/02_autonomous_walking/test_mode.pdf}
+	\caption{Proximal policy optimization in test mode, that is without noisy policy $\pi_\theta$.}	
+	\label{fig::525_ppo_test}
+\end{figure}
+We ran the agent ten times for $10000$ steps without noise contribution, and observed $311\pm3$ wins on average, and no lost game at all, which indicates that the neural network learned to generalize the task well.
