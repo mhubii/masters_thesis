@@ -7,6 +7,7 @@ from matplotlib.patches import Circle
 
 mpl.rcParams['text.usetex'] = True
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}'] #for \text command
+mpl.rcParams.update({'font.size': 13})
 
 
 def load_csv(loc):
@@ -87,9 +88,9 @@ def plot_3d(loc):
     ax.plot(left_x, left_y, left_z, label='Left Foot')
     ax.plot(right_x, right_y, right_z, label='Right Foot')
 
-    ax.set_xlabel(r'$\text{x}\,/\,\text{m}$')
-    ax.set_ylabel(r'$\text{y}\,/\,\text{m}$')
-    ax.set_zlabel(r'$\text{z}\,/\,\text{m}$')	
+    ax.set_xlabel(r'$\text{x}\,[\text{m}]$')
+    ax.set_ylabel(r'$\text{y}\,[\text{m}]$')
+    ax.set_zlabel(r'$\text{z}\,[\text{m}]$')	
 
     ax.view_init(45, -115) 
 
@@ -129,8 +130,8 @@ def plot_with_obstacle(loc):
     ax.plot(left_x, left_y, label='Left Foot')
     ax.plot(right_x, right_y, label='Right Foot')
 
-    ax.set_xlabel(r'$\text{x}\,/\,\text{m}$')
-    ax.set_ylabel(r'$\text{y}\,/\,\text{m}$')
+    ax.set_xlabel(r'$\text{x}\,[\text{m}]$')
+    ax.set_ylabel(r'$\text{y}\,[\text{m}]$')
 
     # circle with radius = radius + margin + max foot
     circle = plt.Circle(([1.6, 1.0]), 1.0, linestyle='-', color='gray', fill=False, label='Obstacle')
