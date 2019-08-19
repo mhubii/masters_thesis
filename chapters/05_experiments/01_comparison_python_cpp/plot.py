@@ -7,7 +7,7 @@ from matplotlib.patches import Circle
 
 mpl.rcParams['text.usetex'] = True
 mpl.rcParams['text.latex.preamble'] = [r'\usepackage{amsmath}'] #for \text command
-mpl.rcParams.update({'font.size': 13})
+mpl.rcParams.update({'font.size': 18})
 
 
 def load_csv(loc):
@@ -94,7 +94,7 @@ def plot_3d(loc):
 
     ax.view_init(45, -115) 
 
-    plt.legend()
+    plt.legend(loc='center right')
     #plt.title('Walking Trajectories')
     #plt.show()
 
@@ -105,6 +105,7 @@ def plot_3d(loc):
     else:
         out = 'img/{}{}'.format(loc[4:-4], '.pdf')
 
+    plt.tight_layout()
     plt.savefig(out)
 
 
@@ -154,6 +155,7 @@ def plot_with_obstacle(loc):
     else:
         out = 'img/{}{}'.format(loc[4:-4], '.pdf')
 
+    plt.tight_layout()
     plt.savefig(out)
 
 
