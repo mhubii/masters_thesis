@@ -1,0 +1,57 @@
+\section{Code Structure}
+\label{sec::31_cs}
+
+
+With YARP, it is possible to directly interface the robot's motors, the cameras, and the force torque sensors. Moreover, it enables the user to run multiple programs in parallel, which can then communicate with each other. A part of the pattern generation library therefore implements rate threads with YARP, which are periodically being called and perform different tasks, such as the generation of dynamically balanced motion, and the decision taking via a neural network.  
+
+
+
+\begin{figure}
+\begin{forest}
+	for tree={
+		font=\ttfamily,
+		grow'=0,
+		child anchor=west,
+		parent anchor=south,
+		anchor=west,
+		calign=first,
+		edge path={
+			\noexpand\path [draw, \forestoption{edge}]
+			(!u.south west) +(7.5pt,0) |- node[fill,inner sep=1.25pt] {} (.child anchor)\forestoption{edge label};
+		},
+		before typesetting nodes={
+			if n=1
+			{insert before={[,phantom]}}
+			{}
+		},
+		fit=band,
+		before computing xy={l=15pt},
+	}
+	[\href{https://github.com/mhubii/nmpc_pattern_generator}{\underline{nmpc\_pattern\_generator}}
+	[\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/libs}{\underline{libs}}
+	[\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/libs/io_module}{\underline{io\_module}}
+	[\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/libs/io_module/include/io_module}{\underline{include/io\_module}}[reader.h][writer.h]]
+	[configs.yaml][cam\_stereo.yaml]]
+	[\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/libs/kinematics}{\underline{kinematics}}[\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/libs/kinematics/include/kinematics}{\underline{include/kinematics}}[kinematics.h]][configs.yaml]
+	]
+	[
+	\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/libs/learning}{\underline{learning}}[\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/libs/learning/include/learning}{\underline{include/learning}}[models.h][proximal\_policy\_optimization.h]][\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/libs/learning/python}{\underline{python}}]
+	]
+	[\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/libs/pattern_generator}{\underline{pattern\_generator}}[\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/libs/pattern_generator/include/pattern_generator}{\underline{include/pattern\_generator}}[base\_generator.h][interpolation.h][nmpc\_generator.h]]
+	]
+	]
+	[\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/models}{\underline{models}}]
+	[\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/sh}{\underline{sh}}]
+	[\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/src}{\underline{src}}]
+	]
+\end{forest}
+\caption{Folder structure of the code, which got implemented for this thesis. The code is freely available on GitHub at the provided \href{https://github.com/mhubii/nmpc_pattern_generator}{\underline{link}}. Install instruction can be found in the appendix \ref{sec::A_si}.}
+\end{figure}
+\cite{eigenweb} % eigen
+\cite{ferreau2014qpoases} % qpOASES
+\cite{felis2017rbdl} %rbdl
+\cite{ben2005yaml} % yaml
+\cite{googletest} % gtest
+\cite{opencv_library}
+\cite{paszke2017automatic} % pytorch
+
