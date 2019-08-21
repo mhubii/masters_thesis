@@ -164,7 +164,7 @@ To run the code on a real robot, one has to use inverse kinematics, which turn t
   // Kinematics.
   Kinematics ki(ki_config);
 \end{minted}
-which loads the configurations from a YAML file that can be found in figure \ref{sec::32_ki_conf}. It is then required to initialize the inverse kinematics with an appropriate guess, such that it does not converge to an unwanted local minimum. We can do so by setting the initial joint angles with
+which loads the configurations from a YAML file that can be found in figure \ref{sec::32_ki_conf}. One of the most important settings in there is the location of robot's URDF model. For Heicub, this model is located in the models folder from figure \ref{fig::31_folder}.  It is then required to initialize the inverse kinematics with an appropriate guess, such that it does not converge to an unwanted local minimum. We can do so by setting the initial joint angles with
 \begin{minted}{cpp}
   // Initialize position with a good guess.
   Eigen::VectorXd q_init(21 /*heicub's degrees of freedom*/);
