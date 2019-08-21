@@ -1,7 +1,7 @@
 \section{Code Structure}
 \label{sec::31_cs}
 As shown in figure \ref{fig::31_folder}, there are four main folders within the implemented code. Those include the libraries inside the libs folder, the models, among them Heicub's URDF model for computing kinematics and another one for pure visualization with MeshUp \cite{meshup}, the sh folder, which contains shell scripts for easy execution, and furthermore the source folder, which relies on the libraries to build executables from. And while these executables are very much dependent on the robot at hand, as they are coupled to the robot's communication system, they pose some nice examples on how the pattern generator can be embedded into a robot's operation system. Now in order to reuse the code for a different robot, one could either install the libraries and include the headers, as explained in section \ref{sec::A1_pg}, or replace the input-output module (io\_module) by a new one and keep the folder's structure. Nonetheless, we will only focus on the libraries' usage by introducing simple examples in the following sections, and keep the details of implementation on a different operating system up to the future reader. We will further bridge the gap between the background of section \ref{sec::2_bg} by explaining the different methods, which we implemented, and we will further highlight its correlation with the YAML \cite{ben2005yaml} configuration files that can be found as building block of each library. 
-\begin{figure}
+\begin{figure}[h!]
 \begin{forest}
 	for tree={
 		font=\ttfamily,

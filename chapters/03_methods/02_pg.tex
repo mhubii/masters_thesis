@@ -1,54 +1,58 @@
 \section{Pattern Generation}
 \label{sec::32_pg}
-lalal
-\begin{minipage}{1.\textwidth}
-	\begin{minipage}{0.3\textwidth}
+The pattern generation library is built upon the very fast linear algebra library Eigen \cite{eigenweb}, which makes it perfectly compatible with the rigid body dynamics library RBDL \cite{felis2017rbdl} that is used for the forward and inverse kinematics. To solve the sequential quadratic programming task, the pattern generation utilizes 
+\cite{ferreau2014qpoases} % qpOASES
+
+\cite{googletest} % gtest
+\\
+\begin{minipage}[t]{1.\textwidth}
+	\begin{minipage}{0.5\textwidth}
 		\scriptsize{
-			\hfill Specifications\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
+			\hfill \textbf{Specifications}\\
+			\mbox{}~\hfill Double + single support time\\
+			\mbox{}~\hfill Used to shrink convex hull $\bm{p}_i$ in fig.  \ref{fig::212_foot_hull}\\
+			\mbox{}~\hfill TODO plot\\
+			\mbox{}~\hfill TODO plot\\
+			\mbox{}~\hfill Used to compute convex hull $\bm{p}_i$ in fig.  \ref{fig::212_foot_hull}\\
+			\mbox{}~\hfill Used to compute convex hull $\bm{p}_i$ in fig.  \ref{fig::212_foot_hull}\\
+			\mbox{}~\hfill Distance between feet frames\\
 			
-			\hfill Interpolation\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
+			\hfill \textbf{Interpolation}\\
+			\mbox{}~\hfill Evaluate eq. \ref{eq::213_pos_poly}-\ref{eq::213_acc_poly} at $t=nt_\text{command\_period}$\\
+			\mbox{}~\hfill Initially stand still for $n_\text{still}$ preview horizons\\
+			\mbox{}~\hfill Double support time\\
+			\mbox{}~\hfill Maximal step height $z_{T/2}$ in eq. \ref{eq::213_step}\\
 			
-			\hfill Initial Values\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
+			\hfill \textbf{Initial Values}\\
+			\mbox{}~\hfill Initial x-CoM $\bm{c}_k^x$ in eq. \ref{eq::212_ckp1}-\ref{eq::212_ddckp1}\\
+			\mbox{}~\hfill Initial y-CoM $\bm{c}_k^y$ in eq. \ref{eq::212_ckp1}-\ref{eq::212_ddckp1}\\
+			\mbox{}~\hfill Initial z-CoM $c_z$ in eq. \ref{eq::212_zmp}\\
+			\mbox{}~\hfill Initial $\theta$-CoM $\bm{c}_k^\theta$ in eq. \ref{eq::212_ckp1}-\ref{eq::212_ddckp1}\\
+			\mbox{}~\hfill Initial support foot\\
+			\mbox{}~\hfill Initial support foot $f_k^x$ in eq. \ref{eq:312_feet}\\
+			\mbox{}~\hfill Initial support foot $f_k^y$ in eq. \ref{eq:312_feet}\\
+			\mbox{}~\hfill Initial support foot $\bm{f}_k^\theta$ in eq. \ref{eq::212_ckp1}-\ref{eq::212_ddckp1}\\
 			
-			\hfill Environment\\
-			\mbox{}~\hfill 1\\
+			\hfill \textbf{Environment}\\
+			\mbox{}~\hfill Gravity in eq. \ref{eq::212_zmp}\\
 			
-			\hfill Obstacle\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
+			\hfill \textbf{Obstacle}\\
+			\mbox{}~\hfill False if no obstacle is used\\
+			\mbox{}~\hfill Obstacle position $x_0$ in eq. \ref{eq::212_obstacle}\\
+			\mbox{}~\hfill Obstacle position $y_0$ in eq. \ref{eq::212_obstacle}\\
+			\mbox{}~\hfill Obstacle radius $R$ in eq. \ref{eq::212_obstacle}\\
 			
-			\hfill Optimization\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1}
+			\hfill \textbf{Optimization}\\
+			\mbox{}~\hfill Preview intervals $N$ in eq. \ref{eq::212_preview}\\
+			\mbox{}~\hfill Preview time $T$ in eq. \ref{eq::212_preview_mat}\\
+			\mbox{}~\hfill CoM and feet position feedback time\\
+			\mbox{}~\hfill Weight in eq. \ref{eq::212_dcxy}-\ref{eq::212_dddcxy}\\
+			\mbox{}~\hfill Weight in eq. \ref{eq::212_dcxy}-\ref{eq::212_dddcxy}\\
+			\mbox{}~\hfill Weight in eq. \ref{eq::212_dcxy}-\ref{eq::212_dddcxy}\\
+			\mbox{}~\hfill Maximally allowed CPU time for qpOASES\\
+			\mbox{}~\hfill Maximally allowed number of calculations for qpOASES}
 	\end{minipage}
-	\begin{minipage}{0.7\textwidth}
+	\begin{minipage}{0.5\textwidth}
 		\begin{lstlisting}[language=yaml]
 # Specifications.
 t_step: 3.2
@@ -95,34 +99,29 @@ cpu_time: 0.1
 nwsr: 1000
 		\end{lstlisting}
 	\end{minipage}
-	\captionof{table}{The configurations YAML file for the pattern generator. It can be found at the provided \href{https://github.com/mhubii/nmpc_pattern_generator/blob/master/libs/pattern_generator/configs.yaml}{\underline{link}}.}
+	\captionof{table}{The configurations YAML file for the pattern generator, and its relation to the background of section \ref{sec::2_bg}. It can be found at the provided \href{https://github.com/mhubii/nmpc_pattern_generator/blob/master/libs/pattern_generator/configs.yaml}{\underline{link}}.}
 \end{minipage}
-\cite{eigenweb} % eigen
-\cite{ferreau2014qpoases} % qpOASES
-\cite{felis2017rbdl} %rbdl
-\cite{googletest} % gtest
-\cite{opencv_library}
-\cite{paszke2017automatic} % pytorch
-\begin{minipage}{1.\textwidth}
-	\begin{minipage}{0.3\textwidth}
+\\
+\begin{minipage}[t]{1.\textwidth}
+	\begin{minipage}{0.4\textwidth}
 		\scriptsize{
-			\hfill URDF Model\\
-			\mbox{}~\hfill 1\\
+			\hfill \textbf{URDF Model}\\
+			\mbox{}~\hfill URDF model for kinematics with RBDL\\
 			
-			\hfill Initial Inverse Kinematic Runs\\
-			\mbox{}~\hfill 1\\
+			\hfill \textbf{Initial Inverse Kinematic Runs}\\
+			\mbox{}~\hfill Run inverse kinematics initially $n_\text{init}$ times\\
 			
-			\hfill Inverse Kinematic Parameters\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
+			\hfill \textbf{Inverse Kinematic Parameters}\\
+			\mbox{}~\hfill Tolerance used for convergence detection\\
+			\mbox{}~\hfill Damping $\lambda$ in eq. \ref{eq::2142_levenberg}\\
+			\mbox{}~\hfill Maximally allowed optimization steps\\
 			
-			\hfill Body Points\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1\\
-			\mbox{}~\hfill 1}
+			\hfill \textbf{Body Points}\\
+			\mbox{}~\hfill Computed automatically by RBDL\\
+			\mbox{}~\hfill Left foot inverse kinematics constraint\\
+			\mbox{}~\hfill Right foot inverse kinematics constraint}
 	\end{minipage}
-	\begin{minipage}{0.7\textwidth}
+	\begin{minipage}{0.6\textwidth}
 		\begin{lstlisting}[language=yaml]
 # Location of the urdf model.
 urdf_loc: ../../models/icub_heidelberg01_no_weights.urdf
@@ -141,5 +140,5 @@ lf_body_point: [0.0, 0.0, 0.0]
 rf_body_point: [0.0, 0.0, 0.0]
 		\end{lstlisting}
 	\end{minipage}
-	\captionof{table}{The configurations YAML file for the kinematics. It can be found at the provided \href{https://github.com/mhubii/nmpc_pattern_generator/blob/master/libs/kinematics/configs.yaml}{\underline{link}}.}
+	\captionof{table}{The configurations YAML file for the kinematics, and its relation to the background of section \ref{sec::2_bg}. It can be found at the provided \href{https://github.com/mhubii/nmpc_pattern_generator/blob/master/libs/kinematics/configs.yaml}{\underline{link}}.}
 \end{minipage}

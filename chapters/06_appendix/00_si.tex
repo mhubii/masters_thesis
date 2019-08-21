@@ -111,9 +111,11 @@ The simulation models can be found on GitHub at the following \href{https://gith
 \section{Build Third Party Software}
 \label{sec::A5_tp}
 The software that was developed as part of this thesis has some third party dependencies, of which not all are necessary but required for some additional features.
+\FloatBarrier
 \subsection{Necessary Dependencies}
 \label{sec::A51_nd}
 These dependencies need to be installed.
+\FloatBarrier
 \subsubsection{Eigen}
 \begin{enumerate}
 	\item The pattern generator is based on the blazingly fast Eigen library. To install it do
@@ -122,6 +124,7 @@ These dependencies need to be installed.
 	\newline \inlinecode{}{sudo ln -s /usr/include/eigen3/Eigen/ /usr/include/}
 	\newline \inlinecode{}{sudo ln -s /usr/include/eigen3/unsupported/ /usr/include/}
 \end{enumerate}
+\FloatBarrier
 \subsubsection{qpOASES}
 To solve the sequential quadratic program, we need to install qpOASES. Please follow the \href{https://projects.coin-or.org/qpOASES/wiki/QpoasesInstallation}{install instructions}, or head on as described below
 \begin{enumerate}
@@ -138,14 +141,17 @@ To solve the sequential quadratic program, we need to install qpOASES. Please fo
 	\newline \inlinecode{}{make}
 	\newline \inlinecode{}{sudo make install}
 \end{enumerate}
+\FloatBarrier
 \subsubsection{YAML}
 The configurations are read in using the YAML file format. Run the command
 \begin{enumerate}
 	\item \inlinecode{}{sudo apt install libyaml-cpp-dev}
 \end{enumerate}
+\FloatBarrier
 \subsection{Real Robot and Simulation Dependencies}
 \label{sec::A52_rs}
 To run the NMPC generator on a real robot or the simulation, we will need to install some more dependencies.
+\FloatBarrier
 \subsubsection{Gazebo}
 The simulation environment can be installed according to the \href{http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install}{install instructions}. The main steps are
 \begin{enumerate}
@@ -156,6 +162,7 @@ The simulation environment can be installed according to the \href{http://gazebo
 	\newline \inlinecode{}{sudo apt-get install gazebo9}
 	\newline \inlinecode{}{sudo apt-get install libgazebo9-dev}
 \end{enumerate}
+\FloatBarrier
 \subsubsection{RBDL}
 The rigid body kinematics are solved with RBDL. To install RBDL, do
 \begin{enumerate}
@@ -166,6 +173,7 @@ The rigid body kinematics are solved with RBDL. To install RBDL, do
 	\newline \inlinecode{}{cmake -DCMAKE\_BUILD\_TYPE=Release \\}
 	\newline \inlinecode{}{-DRBDL\_BUILD\_ADDON\_URDFREADER=ON ..}
 \end{enumerate}
+\FloatBarrier
 \subsubsection{YARP}
 Additionally, for communicating with the real robot, or the simulation, we need YARP. To install YARP, follow the \href{https://www.yarp.it/install.html}{installation instructions}, or head on as described below
 \begin{enumerate}
@@ -180,6 +188,7 @@ Additionally, for communicating with the real robot, or the simulation, we need 
 	\newline \inlinecode{}{make}
 	\newline \inlinecode{}{sudo make install}
 \end{enumerate}
+\FloatBarrier
 \subsubsection{Gazebo YARP Plugins}
 Plugins for Gazebo are used to clone the behavior of the real robot into the simulation environment. Proceed as below
 \begin{enumerate}
@@ -193,13 +202,16 @@ Plugins for Gazebo are used to clone the behavior of the real robot into the sim
 	\newline \inlinecode{}{export GAZEBO\_PLUGIN\_PATH=\$\{GAZEBO\_PLUGIN\_PATH\}}
 	\newline \inlinecode{}{:\$HOME/gazebo-yarp-plugins/lib}
 \end{enumerate}
+\FloatBarrier
 \subsubsection{Gazebo Models}
 The models are used within the simulation environment Gazebo. See section \ref{sec::A4_sm}.
+\FloatBarrier
 \subsubsection{NCurses}
 For the visualization of the control pannel, we need to install ncurses, do
 \begin{enumerate}
 	\item \inlinecode{}{sudo apt install libncurses5-dev}
 \end{enumerate}
+\FloatBarrier
 \subsection{Deep Learning Dependencies}
 \label{sec::A53_dl}
 To learn Nonlinear Model Predictive Control or simple navigation on top of Nonlinear Model Predictive Control, we will need to install PyTorch. For PyTorch to work in combination with RBDL, we need a source installation. Please checkout this \href{https://gist.github.com/mhubii/1c1049fb5043b8be262259efac4b89d5}{gist} to figure out how to perform a clean setup.

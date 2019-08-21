@@ -1,6 +1,7 @@
 \section{Autonomous Walking}
 \label{sec::42_aw}
 The autonomous walking is based upon the performance within the test environment from section \ref{sec::412_pt}. The found parameters are used for comparative reason throughout this section as well. As explained in section \ref{sec::224_ip}, the neural network benefits strongly from an available depth map as input. We will therefore deal with the depth map extraction first.
+\FloatBarrier
 \subsection{Camera Calibration}
 \label{sec::421_cc}
 As described in section \ref{sec::224_ip}, in order for the stereo block matching algorithm to work properly (equation \ref{eq::224_sad}), it is required to calibrate the cameras. We shortly verified this in figure \ref{fig::421_no_calib}, where we extracted a depth map from the uncalibrated stereo camera pair.
@@ -79,6 +80,7 @@ Exemplary rectified images, which rely on the matrices of table \ref{tab::421_ex
 	\caption{Rectified and original view of the stereo camera. Refer to figure \ref{fig::224_rectified} for the theory.}
 	\label{fig::421_rect}
 \end{figure}
+\FloatBarrier
 \subsection{Depth Parameter Tuning}
 \label{sec::422_dp}
 Within this section, we shortly explore the effects of all tunable parameters on the depth map generation. Therefore, we utilize a simple experimental setup. Within the setup, Heicub points its stereo camera towards three chairs that are located at a distance of $1\,\text{m}$ towards each other, and towards the cameras, so to cover close, medium, and far distances. The consecutive chairs are slightly shifted, in order to enable the simultaneous observation of all of them. The rectified view of the environment is shown in figure \ref{fig::422_wls_rgb}.
@@ -108,6 +110,7 @@ In combination with the confidence weighted least squares filtering, we can obse
 	\caption{Confidence weighted least squares disparity for changing energy weightings $\sigma$ and $\lambda$. Please refer to equations \ref{eq::224_weight} and \ref{eq::224_energy_function} for the theory.}
 	\label{fig::422_sigma_lambda}
 \end{figure}
+\FloatBarrier
 \subsection{Data Acquisition and Training}
 \label{sec::423_da}
 As already pointed out, the task we wanted our neural network to solve was to find a fire extinguisher within a room and then to move towards it. For us to apply behavioral cloning to the task, it was necessary to act according to this policy first, and then to train a neural network on the acquired data. For the data, it is essential to sample homogeneously over the task's distribution. We therefore recorded velocity commands and the corresponding images for 66 distinct epochs. Each of the epochs was designed to reflect different scenarios, among them obstacle avoidance, interaction with humans, walking towards the fire extinguisher, and searching for the fire extinguisher when it was not possible to directly see it. As a result of the observations that we gained from the user controlled walking in section \ref{sec::41_uc}, we restricted the user's policy to only use linear velocities along the x-axis, and angular velocities about the z-axis, since linear velocities along the y-axis revealed to pose an inefficient way of moving the robot. Exemplary samples of the recorded dataset are presented in figure \ref{fig::423_dataset}.
@@ -146,6 +149,7 @@ By pure sight, it can already be seen that the network performs well on the vali
 	D_\text{KL} = \sum_{v\in \bm{V}}p(v)\log\frac{p(v)}{q(v)},
 \end{align}
 where for our case, $p(v)$ is the ground truth velocity distribution, and $q(v)$ is the predicted velocity distribution. For the distribution of linear velocities along the x-axis $v_x$, we computed the Kullback-Leibler divergence to be $D^x_\text{KL}=0.33\,\text{a.u.}$, and for the angular velocity about the z-axis $\omega_z$, we obtained $D^z_\text{KL}=0.06\,\text{a.u.}$. Now the beauty within the task at hand lies in the fact that we were not solely dependent on a validation split for performance evaluations, but instead that we simply could run Heicub in a previously unseen test environment. It is the same test environment, which we already introduced in section \ref{sec::41_uc}, and we will evaluate the trained neural network's behavior within it in the next section - Perfomance in Test Environment.
+\FloatBarrier
 \subsection{Performance in Test Environment}
 \label{sec::424_pt}
 For the performance benchmarking, we relied on the well defined experimental setup from section \ref{sec::41_uc}. Once more the tasks were to move straight towards a fire extinguisher, to turn and to move towards it, to avoid an obstacle on the way, and to find the fire extinguisher. In order to ensure reproducibility, we let Heicub solve each of these tasks twice, as we did for the user controlled case. The setup is shown in figure \ref{fig::424_aw_gif_basic}, which shows Heicub's movement over the course of each task along with its sight of the scene.
@@ -203,7 +207,7 @@ Furthermore, to rate the dynamic balance, we computed the mean distance of the i
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.5]{chapters/04_experiments/02_autonomous_walking/entropy_against_balance.pdf}
-	\caption{Influence of entropic commands onto Heicub's dynamic balance. It can be seen that within the confidence interval there is no effect of the command signal's entropy on the robot's balance.}
+	\caption{TODO check statistics Influence of entropic commands onto Heicub's dynamic balance. It can be seen that within the confidence interval there is no effect of the command signal's entropy on the robot's balance.}
 	\label{fig::424_entropy_balance}
 \end{figure}
 The average mean distance with the standard deviation for user controlled walking therein is $3.41\pm0.69\,\text{cm}$, while that of autonomously controlled walking is $3.67\pm0.56\,\text{cm}$. Within the $1\sigma$-range, we could therefore demonstrate that the control signal's entropy does not have an affect on the balance. In addition to the benchmarking tasks, we further wanted to demonstrate the robot's behavior in two more scenarios. The first additional scenario involves a dynamic environment, in which the robot interacts with a human and a moving fire extinguisher. The second additional scenario simply demonstrates semantic understanding of the neural network, in that it poses the challenge of having similarly colored objects to distinguish from. Both additional tests are shown in figure \ref{fig::424_aw_gif_additional}, and they were solved successfully.
@@ -233,6 +237,7 @@ Especially in the behavior plot of figure \ref{fig::424_aw_additional_semantic},
 	\caption{Autonomously controlled for demonstration of semantic understanding. The robot started to the plot's left hand side (a), and moved forward to the fire extinguisher to its left. Heicub had to distinguish between the fire extinguisher and another orange object right in front of it.}
 	\label{fig::424_aw_additional_semantic}
 \end{figure}
+\FloatBarrier
 \subsection{Proximal Policy Optimization}
 \label{sec::425_pp}
 Since there is to this date no feasible way of training an agent on autonomous navigation in real time with reinforcement learning, we decided to implement a benchmarking environment that is shown in figure \ref{fig::425_ppo_env}. The agent's goal within this setup is to move towards the red dot, while keeping a maximum distance of $10\,\text{a.u.}$ towards it. The environment's state is simply described by a concatenation of the agent's position $\bm{a} = \begin{pmatrix}

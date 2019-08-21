@@ -1,6 +1,7 @@
 \section{User Controlled Walking}
 \label{sec::41_uc}
 As the fundamental building block for the comparison to autonomous walking, we now need to investigate on user controlled walking. This enables us, in contrast to the control by a neural network, to find the best parameters for the pattern generation in a well controllable environment. These parameters will then be kept constant throughout the rest of this thesis, in order to allow for a good comparison between user controlled walking and autonomously controlled walking. Furthermore, we will rely on them to gather data for the behavioral cloning approach in section \ref{sec::423_da}.
+\FloatBarrier
 \subsection{Benchmarking of Implementation}
 To evaluate the pattern generator implementation of ours, we have benchmarked it against an existing one, which was written in Python. Therefore, we defined velocity commands, as they typically may appear in real world scenarios. The four defined use cases, which are shown in figures \ref{fig::411_benchmarking_basic} and \ref{fig::411_benchmarking_advanced}, were parametrized in accordance to the HRP-2 humanoid robot.
 \begin{figure}[h!]
@@ -43,6 +44,7 @@ To ensure a smooth motion at all times, and to benchmark the interpolation, we p
 	\label{fig::411_benchmarking_inter}
 \end{figure}
  The benchmarked pattern generator then enabled us to run it on the real robot, which we did in a test environment that will be presented in the next section - Performance in Test Environment.
+\FloatBarrier
 \subsection{Performance in Test Environment}
 \label{sec::412_pt}
 For the execution on Heicub, we chose a parameter setting with which we could ensure balanced motion for all velocity commands. This could be achieved by choosing the parameters, which are listed in the YAML configurations file at the provided \href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/pattern_generator/configs.yaml#L1}{\underline{link}}. The most important ones therein are further shown in table \ref{tab::412_params}.
