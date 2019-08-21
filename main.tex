@@ -33,6 +33,51 @@ version  = 3.03
 \usepackage{animate}           % for animated gifs
 \usepackage{listings}          % for code
 \usepackage{algorithm2e}       % algorithm
+\usepackage{forest}            % folder structure
+
+%%%%%%%%%%%%
+%%% YAML %%%
+%%%%%%%%%%%%
+\newcommand\YAMLcolonstyle{\color{black}\mdseries}
+\newcommand\YAMLkeystyle{\color{black}\bfseries}
+\newcommand\YAMLvaluestyle{\color{blue}\mdseries}
+
+\makeatletter
+
+% here is a macro expanding to the name of the language
+% (handy if you decide to change it further down the road)
+\newcommand\language@yaml{yaml}
+
+\expandafter\expandafter\expandafter\lstdefinelanguage
+\expandafter{\language@yaml}
+{
+	keywords={true,false},
+	keywordstyle=\color{blue},
+	basicstyle=\YAMLkeystyle\scriptsize,                                 % assuming a key comes first
+	sensitive=false,
+	comment=[l]{\#},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{red}\ttfamily,
+	stringstyle=\YAMLvaluestyle,%\ttfamily,
+	moredelim=[l][\color{orange}]{\&},
+	moredelim=[l][\color{magenta}]{*},
+	moredelim=**[il][\YAMLcolonstyle{:}\YAMLvaluestyle]{:},   % switch to value style at :
+	morestring=[b]',
+	morestring=[b]",
+	literate =    {---}{{\ProcessThreeDashes}}3
+	{>}{{\textcolor{red}\textgreater}}1     
+	{|}{{\textcolor{red}\textbar}}1 
+	{\ -\ }{{\mdseries\ -\ }}3,
+}
+
+% switch to key style at EOL
+\lst@AddToHook{EveryLine}{\ifx\lst@language\language@yaml\YAMLkeystyle\fi}
+\makeatother
+
+\newcommand\ProcessThreeDashes{\llap{\color{cyan}\mdseries-{-}-}}
+%%%%%%%%%%%%
+%%% YAML %%%
+%%%%%%%%%%%%
 
 % my commands
 \definecolor{lightgray}{gray}{0.9}
@@ -61,8 +106,8 @@ version  = 3.03
 	\chapter{Introduction}
 	% humanoids (icub, others), problem statement, research aim and objectives
 	
-	\chapter{State of the Art}
-	\label{sec::2_sota}
+	%\chapter{State of the Art}
+	%\label{sec::2_sota}
 	% contributions
 	
 	\chapter{Background}
@@ -80,17 +125,14 @@ version  = 3.03
 	\input{chapters/03_background/24_ip}   % image processing
 	
 	\chapter{Methods}
-	\section{Software}
-	%\input{chapters/04_methods/01_eig}     % eigen
-	%\input{chapters/04_methods/02_qp}      % qpoases
-	%\input{chapters/04_methods/03_rbdl}    % rbdl
-	%\input{chapters/04_methods/04_yarp}    % yarp
-	%\input{chapters/04_methods/05_pyt}     % pytorch
-	%\input{chapters/04_methods/06_cv}      % opencv
-	
-	\section{Implementation}  
+	\input{chapters/04_methods/00_in}
+	\input{chapters/04_methods/01_cs}
+	\input{chapters/04_methods/02_pg}
+	\input{chapters/04_methods/03_dl}
+	\input{chapters/04_methods/04_co}
 	
 	\chapter{Experiments}
+	\input{chapters/05_experiments/00_in}
 	\input{chapters/05_experiments/01_uc}
 	\input{chapters/05_experiments/02_aw}
 	
