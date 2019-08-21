@@ -1,6 +1,10 @@
 \section{Communication with Heicub}
 \label{sec::34_co}
 
+
+With YARP, it is possible to directly interface the robot's motors, the cameras, and the force torque sensors. Moreover, it enables the user to run multiple programs in parallel, which can then communicate with each other. A part of the pattern generation library therefore implements rate threads with YARP, which are periodically being called and perform different tasks, such as the generation of dynamically balanced motion, and the decision taking via a neural network.  
+
+
 which relies on YARP \cite{metta2006yarp} to do the communication between the executing computer, and the robot, see figure \ref{fig::3_yarp}. 
 
 
