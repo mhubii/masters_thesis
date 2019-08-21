@@ -273,7 +273,8 @@ The diagonal entries therein just take the same form as a single column of $\bm{
 	\bm{0} & \bm{Q}_k^{y} & \bm{0} & \bm{0} \\
 	\bm{0} & \bm{0} & \bm{Q}_k^L & \bm{0} \\ 
 	\bm{0} & \bm{0} & \bm{0} & \bm{Q}_k^R
-	\end{pmatrix}\\
+	\end{pmatrix}
+	\label{eq::212_qk}\\
 	& \bm{Q}_k^x = \bm{Q}_k^y = \begin{pmatrix}
 		\alpha\bm{P}_{vu}^T\bm{P}_{vu}+\beta\bm{P}_{zu}^T\bm{P}_{zu}+\gamma\bm{1} & -\beta\bm{P}_{zu}^T\bm{V}_{k+1} \\
 		-\beta\bm{V}_{k+1}^T\bm{P}_{zu} & \beta\bm{V}_{k+1}^T\bm{V}_{k+1}
@@ -424,9 +425,11 @@ In contrast to similar methods like \cite{herdt2010walking}, we also include the
 which expresses lower bounds for the free variables. Given the constraints, of which some are nonlinear, we can apply a Gauss-Newton method to find the optimal solution. This also implies that we have to linearize all of the constraints that were presented within the previous paragraphs. The linearization is described in the next paragraph - The Gauss-Newton Formulation.
 \FloatBarrier
 \subsubsection{The Gauss-Newton Formulation}
+\label{sec::212_gn}
 As outlined in equation \ref{eq::212_gn_min}, we can now linearize the quadratic problem of equation \ref{eq::212_canqp}. This leads to (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/nmpc_generator.cpp#L377}{\underline{link}})
 \begin{align}
-	\min_{\Delta\bm{U}_k}&\frac{1}{2}\Delta\bm{U}_k^T\bm{Q}_k\Delta\bm{U}_k + \tilde{\bm{p}}_k^T\Delta\bm{U}_k \\
+	\min_{\Delta\bm{U}_k}&\frac{1}{2}\Delta\bm{U}_k^T\bm{Q}_k\Delta\bm{U}_k + \tilde{\bm{p}}_k^T\Delta\bm{U}_k 
+	\label{eq::212_ocp}\\
 	\text{subject to: }&\underline{\tilde{\bm{U}}_k} \leq \tilde{\bm{A}}_k\Delta\bm{U}_k\leq\overline{\tilde{\bm{U}}_k},
 \end{align}
 where
