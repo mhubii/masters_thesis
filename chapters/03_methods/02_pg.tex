@@ -1,8 +1,64 @@
 \FloatBarrier
 \section{Pattern Generation Library}
 \label{sec::32_pg}
-The pattern generation library is built upon the very fast linear algebra library Eigen \cite{eigenweb}, which makes it perfectly compatible with the rigid body dynamics library RBDL \cite{felis2017rbdl} that is used for the forward and inverse kinematics. To solve the sequential quadratic programming task, the pattern generation library utilizes qpOASES \cite{ferreau2014qpoases}. 
-\cite{googletest} % gtest
+The pattern generation library is built upon the very fast linear algebra library Eigen \cite{eigenweb}, which makes it perfectly compatible with the rigid body dynamics library RBDL \cite{felis2017rbdl} that is used for the kinematics. Its main duty is to build the formulation of the optimal control problem that was introduced with much detail in section \ref{sec::212_nmpc}. Starting from the linear time stepping scheme (equations \ref{eq::212_ckp1}-\ref{eq::212_ddckp1}), the \inlinecode{C++}{BaseGenerator} class, sets up all of the necessary matrices for the nonlinear model predictive control. What the \inlinecode{C++}{NMPCGenerator} class then mainly does is to inherit from \inlinecode{C++}{BaseGenerator} in order to sort the matrices for the sequential quadratic programming formulation of equation \ref{eq::212_ocp}. All of the ordering is then being done by \inlinecode{C++}{NMPCGenerator::CalculateCommonExpressions}, while \inlinecode{C++}{NMPCGenerator::CalculateDerivatives} computes the linearization of the optimal control problem, which got explained in detail in section \ref{sec::212_gn}. Then to solve the sequential quadratic programming task, the pattern generation library utilizes qpOASES \cite{ferreau2014qpoases}, and the results are being interpolated by the \inlinecode{C++}{Interpolation} class, which relies on the theory of section \ref{sec::213_it}. But to use the pattern generation library, the user does not have to deal with the private methods, and can only use the public interface. A typical use case would involve the initialization of a \inlinecode{C++}{NMPCGenerator} object like so
+\begin{minted}{cpp}
+  // Initialize pattern generator.
+  const std::string config_file_loc = "/path/to/configs.yaml";
+
+  NMPCGenerator nmpc(config_file_loc);
+\end{minted} 
+then ones has to set the initial values as follows
+\begin{minted}{cpp}
+  // Pattern generator preparation.
+  nmpc.SetSecurityMargin(nmpc.SecurityMarginX(), 
+  		               nmpc.SecurityMarginY());
+	
+  // Set initial values.
+  PatternGeneratorState pg_state = {nmpc.Ckx0(),
+                                    nmpc.Cky0(),
+                                    nmpc.Hcom(),
+                                    nmpc.Fkx0(),
+                                    nmpc.Fky0(),
+                                    nmpc.Fkq0(),
+                                    nmpc.CurrentSupport().foot,
+                                    nmpc.Ckq0()};
+
+  nmpc.SetInitialValues(pg_state);
+\end{minted}
+where the YAML configurations file loads the robot specific settings at run time, that is they can be changed without having to recompile the code. An example of the pattern generator's configurations file is shown in figure \ref{sec::32_pg_conf}. The interpolation is then done on the basis of the state of the pattern generator, and therefore it takes a reference to it as follows
+\begin{minted}{cpp}
+  Interpolation ip_nmpc(nmpc);
+  ip_nmpc.StoreTrajectories(true);
+\end{minted}
+which brings us to the main loop
+\begin{minted}{cpp}
+  Eigen::Vector3d velocity_reference(0.1, 0., 0.);
+
+  // Pattern generator event loop.
+  for (int i = 0; i < 100; i++) {
+      std::cout << "Iteration: " << i << std::endl;
+
+      // Set reference velocities.
+      nmpc.SetVelocityReference(velocity_reference);
+
+      // Solve QP.
+      nmpc.Solve();
+      nmpc.Simulate();
+      ip_nmpc.InterpolateStep();
+
+      // Initial value embedding by internal states and simulation.
+      pg_state = nmpc.Update();
+      nmpc.SetInitialValues(pg_state);
+  }
+\end{minted}
+These are the main methods a user would want to interact with. \inlinecode{C++}{Simulate()} computes the states on the preview horizon for the optimization, according to equations \ref{eq::212_ckp1}-\ref{eq::212_ddckp1}, given the current state, which is then being updated by \inlinecode{C++}{Update()}. It is possible to elaborate feedback by changing the CoM, and, or the feet members of the \inlinecode{}{PatternGeneratorState} struct. Afterwards, the trajectories can be stored with
+\begin{minted}{cpp}
+  // Save interpolated results.
+  Eigen::MatrixXd trajectories = ip_nmpc.GetTrajectories().transpose();
+  WriteCsv("trajectories.csv", trajectories);
+\end{minted}
+The trajectories, which are being written out with this method, are ordered according to $c_k^x$, $\dot{c}_k^x$, $\ddot{c}_k^x$, $c_k^y$, $\dot{c}_k^y$, $\ddot{c}_k^y$, $c_z$, $c_k^\theta$, $\dot{c}_k^\theta$, $\ddot{c}_k^\theta$, $z_k^x$, $_k^y$, $z_k^z$, $f_k^{L,x}$, $f_k^{L,y}$, $f_k^{L,z}$, $f_k^{L,\theta}$, $f_k^{R,x}$, $f_k^{R,y}$, $f_k^{R,z}$, $f_k^{R,\theta}$. An exemplary plotting routine in python is provided at the following \href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/plot/plot_pattern.py#L15}{\underline{link}}.
 \\
 \begin{minipage}[t]{1.\textwidth}
 	\begin{minipage}{0.5\textwidth}
@@ -98,8 +154,40 @@ cpu_time: 0.1
 nwsr: 1000
 		\end{lstlisting}
 	\end{minipage}
+	\label{sec::32_pg_conf}
 	\captionof{table}{The configurations YAML file for the pattern generator, and its relation to the background of section \ref{sec::2_bg}. It can be found at the provided \href{https://github.com/mhubii/nmpc_pattern_generator/blob/master/libs/pattern_generator/configs.yaml}{\underline{link}}.}
 \end{minipage}
+\\
+\\
+To run the code on a real robot, one has to use inverse kinematics, which turn the obtained CoM, and feet positions, into joint angles $\bm{q}$. Within this work, this is done with RBDL, and implemented in the \inlinecode{C++}{Kinematics} class, which also provides methods to generate feedback via forward kinematics. It is therefore required to initialize a \inlinecode{}{Kinematics} object as follows
+\begin{minted}{cpp}
+  // Kinematics.
+  Kinematics ki(ki_config);
+\end{minted}
+which loads the configurations from a YAML file that can be found in figure \ref{sec::32_ki_conf}. It is then required to initialize the inverse kinematics with an appropriate guess, such that it does not converge to an unwanted local minimum. We can do so by setting the initial joint angles with
+\begin{minted}{cpp}
+  // Initialize position with a good guess.
+  Eigen::VectorXd q_init(21 /*heicub's degrees of freedom*/);
+  q_init.setZero();
+
+  q_init = ...;
+
+  ki.SetQInit(q_init);
+\end{minted}
+and finally compute the desired joint angles by
+\begin{minted}{cpp}
+  // Get desired initial state of the robot.
+  Eigen::MatrixXd traj = ip_nmpc.GetTrajectories();
+
+  // Initialize inverse kinematics.
+  Eigen::MatrixXd com_traj(4, traj.cols());     
+  Eigen::MatrixXd lf_traj(4, traj.cols());  
+  Eigen::MatrixXd rf_traj(4, traj.cols());
+
+  ki.Inverse(com_traj, lf_traj, rf_traj);
+  Eigen::MatrixXd q_traj = ki.GetQTraj();
+\end{minted}
+How to use these joint angles, in order to get it running on Heicub, is described in section \ref{sec::34_co}. We have now seen that it is only required to set the reference velocity to control the robot, and the next section will explain how this can be done with the use of a neural network.
 \\
 \begin{minipage}[t]{1.\textwidth}
 	\begin{minipage}{0.4\textwidth}
@@ -139,5 +227,12 @@ lf_body_point: [0.0, 0.0, 0.0]
 rf_body_point: [0.0, 0.0, 0.0]
 		\end{lstlisting}
 	\end{minipage}
+	\label{sec::32_ki_conf}
 	\captionof{table}{The configurations YAML file for the kinematics, and its relation to the background of section \ref{sec::2_bg}. It can be found at the provided \href{https://github.com/mhubii/nmpc_pattern_generator/blob/master/libs/kinematics/configs.yaml}{\underline{link}}.}
 \end{minipage}
+
+
+
+
+
+
