@@ -204,7 +204,22 @@ In contrast to the validation split, there is no simple method anymore to compar
 \begin{align}
 	S(p(v)) = \sum_{v\in \bm{V}}p(v)\log p(v)
 \end{align}
-Furthermore, to rate the dynamic balance, we computed the mean distance of the inverted pendulum zero moment point from the pattern generator, and the measured zero moment point. We did so for every behavior and dynamic balance plot of our benchmarking setup. We then plotted the mean distance against the entropy in figure \ref{fig::424_entropy_balance}, in order to probe the influence of noisy decisions onto the balance.
+Furthermore, to rate the dynamic balance, we computed the distance $\Delta z$ of the inverted pendulum zero moment point from the pattern generator, and the measured zero moment point. We did so for every behavior and dynamic balance plot of our benchmarking setup. An exemplary distributions of the distances $\Delta z$ is shown in fifugre \ref{fig::424_aw_zmp_dist}, and it can be seen that there are mainly to contributions to the distribution, of which we figured that the distribution at small distances originates from the rotational degree of freedom, see figure \ref{fig::424_aw_zmp_dist_split}.
+\begin{figure}[h!] 
+	\centering
+	\includegraphics[scale=.45]{chapters/04_experiments/02_autonomous_walking/zmp_distribution_benchmark.pdf}
+	\caption{The plot shows the distribution of the distances between the measured zero moment point and the zero moment point as it originates from the nonlinear model predictive control. We can observe two main contributions within it.}
+	\label{fig::424_aw_zmp_dist}
+\end{figure} 
+\begin{figure}[h!] 
+	\subcaptionbox{ZMP distance distribution for the environment scanning.}%
+	[.5\linewidth]{\includegraphics[scale=.45]{chapters/04_experiments/02_autonomous_walking/zmp_distribution_sight.pdf}}
+	\subcaptionbox{ZMP distance distribution for the straight walk.}%
+	[.5\linewidth]{\includegraphics[scale=.45]{chapters/04_experiments/02_autonomous_walking/zmp_distribution_straight.pdf}}
+	\caption{Within the ZMP distance distributions, we can see that the contribution at lower distances mainly originates from the robot's rotation. We can say so, since (a) represents the distribution for the environment scanning benchmarking test, for which an vast amount of rotation is required. Whereas (b) corresponds to the straight walk, and where we can see that the second contribution to the zero moment point distance is much higher.}
+	\label{fig::424_aw_zmp_dist_split}
+\end{figure} 
+Since it can be seen in figure \ref{fig::424_aw_zmp_dist_split} that the translational velocity $v_x$ contributes to the greater deviations from the desired zero moment point, we used the linear velocity's entropy as reference for the balance evaluation. The mean distance is therefore plotted against the entropy in figure \ref{fig::424_entropy_balance}, in order to probe the influence of noisy decisions onto the balance.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.5]{chapters/04_experiments/02_autonomous_walking/entropy_against_balance.pdf}
