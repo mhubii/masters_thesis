@@ -361,7 +361,14 @@ and $\bm{B}_{k+1}=\begin{pmatrix} \bm{B}^{L/R} & \dots & \bm{B}^{L/R}\end{pmatri
 \end{align}
 where $\overline{\bm{U}_{\text{zmp},k}}$ defines the upper bounds. The above derivation delivers a nice framework, which can be used to express the feasibility constraints as well.
 \paragraph{Feasibility Constraints}
-The feasibility constraints constrain the foot positioning to areas that the robot of interest can actually reach. We can therefore just reuse the concept of equation \ref{eq::212_lin}, and replace $\bm{x}$ therein by the the difference of the next foot position $\tilde{\bm{F}}_{k}\in\mathcal{R}^{N_f\times1}$, and the previous one $\tilde{\bm{F}}_{k-1} = \bm{S}_0\tilde{\bm{F}}_{k} + \bm{S}_1f_k$, where $\bm{S}_0 = \begin{pmatrix}0 & 0 \\ \textbf{I}_{N_f-1} & 0
+The feasibility constraints constrain the foot positioning to areas that the robot of interest can actually reach, which can again be defined as a set of linear inequalities, with the position vectors $\bm{p}_i$ that are shown in figure \ref{fig::212_foot_feasibility}. 
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=.5]{chapters/02_background/img/foot_constraints.png}
+	\caption{The foot's feasibility polygon, which is described by the position vectors $\bm{p}_i$. The center is always defined by the current support foot's position, within the picture the support foot can therefore be the left as well as the right foot.}
+	\label{fig::212_foot_feasibility}
+\end{figure}
+We can therefore just reuse the concept of equation \ref{eq::212_lin}, and replace $\bm{x}$ therein by the the difference of the next foot position $\tilde{\bm{F}}_{k}\in\mathcal{R}^{N_f\times1}$, and the previous one $\tilde{\bm{F}}_{k-1} = \bm{S}_0\tilde{\bm{F}}_{k} + \bm{S}_1f_k$, where $\bm{S}_0 = \begin{pmatrix}0 & 0 \\ \textbf{I}_{N_f-1} & 0
 \end{pmatrix}\in\mathcal{R}^{N_f\times N_f}$ simply shifts $\tilde{\bm{F}}_{k}$ down by one row, and $\bm{S}_1 = \begin{pmatrix}
 1 \\ 0 \\ \vdots \\ 0
 \end{pmatrix}\in\mathcal{R}^{N_f\times1}$. Altogether we have (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/base_generator.cpp#L1061}{\underline{link}})

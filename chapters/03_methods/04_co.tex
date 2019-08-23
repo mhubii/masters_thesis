@@ -3,7 +3,7 @@
 \label{sec::34_co}
 With YARP \cite{metta2006yarp}, it is possible to directly interface the robot's motors, the cameras, and the force torque sensors. Moreover, it enables the user to run multiple programs in parallel, which can then communicate with each other, which is of special importance for the control loop that was implemented within the scope of this thesis (see figure \ref{fig::3_yarp}).
 \begin{figure}[h!]
-	\centering
+	\hspace*{-1cm}
 	\includegraphics[scale=.4]{chapters/03_methods/img/yarp_diag.png}
 	\caption{YARP is used to run multiple threads in parallel, each of which is indicated by the dashed boxes. It further enables the individual threads to communicate with each other via ports, which exchange YARP objects. It enables communication to the real robot as well as to a simulated version of it. The diagram demonstrates the types of data, which are being used, and the functions that convert them. Notice that this is an extended version of figure \ref{fig::2_cl}.}
 	\label{fig::3_yarp}
