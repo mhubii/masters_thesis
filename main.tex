@@ -41,6 +41,8 @@ version  = 3.03
 \setminted{fontsize=\small,baselinestretch=1}
 
 \pagestyle{fancy}
+\fancyhead[LE,RO]{\nouppercase \rightmark}
+\fancyhead[LO,RE]{\nouppercase Chapter \arabic{chapter}}
 
 %%%%%%%%%%%%
 %%% YAML %%%
@@ -112,8 +114,6 @@ version  = 3.03
 	%% chapters
 	\chapter{Introduction}
 	\input{chapters/01_introduction/00_in}
-	\input{chapters/01_introduction/01_ro}
-	\input{chapters/01_introduction/02_st}
 	% humanoids (icub, others), problem statement, research aim and objectives
 	
 	\chapter{Background}
