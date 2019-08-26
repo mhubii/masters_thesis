@@ -4,6 +4,7 @@
 As the fundamental building block for the comparison to autonomous walking, we now need to investigate on user controlled walking. This enables us, in contrast to the control by a neural network, to find the best parameters for the pattern generation in a well controllable environment. These parameters will then be kept constant throughout the rest of this thesis, in order to allow for a good comparison between user controlled walking and autonomously controlled walking. Furthermore, we will rely on them to gather data for the behavioral cloning approach in section \ref{sec::423_da}.
 \FloatBarrier
 \subsection{Benchmarking of Implementation}
+\label{sec::411_bm}
 To evaluate the pattern generator implementation of ours, we have benchmarked it against an existing one, which was written in Python. Therefore, we defined velocity commands, as they typically may appear in real world scenarios. The four defined use cases, which are shown in figures \ref{fig::411_benchmarking_basic} and \ref{fig::411_benchmarking_advanced}, were parametrized in accordance to the HRP-2 humanoid robot.
 \begin{figure}[h!]
 	\centering
