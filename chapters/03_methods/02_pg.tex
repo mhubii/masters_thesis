@@ -187,7 +187,7 @@ and finally compute the desired joint angles by
   ki.Inverse(com_traj, lf_traj, rf_traj);
   Eigen::MatrixXd q_traj = ki.GetQTraj();
 \end{minted}
-How to use these joint angles, in order to get it running on Heicub, is described in section \ref{sec::35_co}. We have now seen that it is only required to set the reference velocity to control the robot, and the next section will explain how this can be done with the use of a neural network.
+How to use these joint angles, in order to get it running on Heicub, is described in section \ref{sec::341_co}. We have now seen that it is only required to set the reference velocity to control the robot, and the next section will explain how this can be done with the use of a neural network.
 \\
 \begin{minipage}[t]{1.\textwidth}
 	\hspace*{-1cm}
