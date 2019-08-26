@@ -1,13 +1,13 @@
 \FloatBarrier
 \section{Pattern Generation Library}
 \label{sec::32_pg}
-The pattern generation library is built upon the very fast linear algebra library Eigen \cite{eigenweb}, which makes it perfectly compatible with the rigid body dynamics library RBDL \cite{felis2017rbdl} that is used for the kinematics. Its main duty is to build the formulation of the optimal control problem that was introduced with much detail in section \ref{sec::212_nmpc}. Starting from the linear time stepping scheme (equations \ref{eq::212_ckp1}-\ref{eq::212_ddckp1}), the \inlinecode{C++}{BaseGenerator} class sets up all of the necessary matrices for the nonlinear model predictive control. What the \inlinecode{C++}{NMPCGenerator} class then mainly does is to inherit from \inlinecode{C++}{BaseGenerator} in order to sort the matrices for the sequential quadratic programming formulation of equation \ref{eq::212_ocp}. All of the ordering is then being done by \inlinecode{C++}{NMPCGenerator::CalculateCommonExpressions}, while \inlinecode{C++}{NMPCGenerator::CalculateDerivatives} computes the linearization of the optimal control problem, which got explained in detail in section \ref{sec::212_gn}. Then to solve the sequential quadratic programming task, the pattern generation library utilizes qpOASES \cite{ferreau2014qpoases}, and the results are being interpolated by the \inlinecode{C++}{Interpolation} class, which relies on the theory of section \ref{sec::213_it}. But to use the pattern generation library, the user does not have to deal with the private methods, and can only use the public interface. A typical use case would involve the initialization of a \inlinecode{C++}{NMPCGenerator} object like so
+The pattern generation library is built upon the very fast linear algebra library Eigen \cite{eigenweb}, which makes it perfectly compatible with the rigid body dynamics library RBDL \cite{felis2017rbdl} that is used for the kinematics. Its main duty is to build the formulation of the optimal control problem that was introduced with much detail in section \ref{sec::212_nmpc}. Starting from the linear time stepping scheme (equations \ref{eq::212_ckp1}-\ref{eq::212_ddckp1}), the \inlinecode{C++}{BaseGenerator} class sets up all of the necessary matrices for the nonlinear model predictive control. What the \inlinecode{C++}{NMPCGenerator} class then mainly does is to inherit from \inlinecode{C++}{BaseGenerator} in order to sort the matrices for the sequential quadratic programming formulation of equation \ref{eq::212_ocp}. All of the ordering is then being done by \inlinecode{C++}{NMPCGenerator::CalculateCommonExpressions}, while \inlinecode{C++}{NMPCGenerator::CalculateDerivatives} computes the linearization of the optimal control problem, which got explained in detail in section \ref{sec::212_gn}. Then to solve the sequential quadratic programming task, the pattern generation library utilizes qpOASES \cite{ferreau2014qpoases}, and the results are being interpolated by the \inlinecode{C++}{Interpolation} class, which relies on the theory of section \ref{sec::213_it}. But to use the pattern generation library, the user does not have to deal with the private methods and can only use the public interface. A typical use case would involve the initialization of a \inlinecode{C++}{NMPCGenerator} object like so
 \begin{minted}{cpp}
   // Initialize pattern generator.
   const std::string config_file_loc = "/path/to/configs.yaml";
   NMPCGenerator nmpc(config_file_loc);
 \end{minted} 
-where the YAML configurations file loads the robot specific settings at run time, that is they can be changed without having to recompile the code. An example of the pattern generator's configurations file is shown in figure \ref{sec::32_pg_conf}. One then one has to set the initial values as follows
+where the YAML configurations file loads the robot specific settings at run time, that is they can be changed without having to recompile the code. An example of the pattern generator's configurations file is shown in figure \ref{sec::32_pg_conf}. One then one must set the initial values as follows
 \begin{minted}{cpp}
   // Pattern generator preparation.
   nmpc.SetSecurityMargin(nmpc.SecurityMarginX(), 
@@ -25,7 +25,7 @@ where the YAML configurations file loads the robot specific settings at run time
 
   nmpc.SetInitialValues(pg_state);
 \end{minted}
-The interpolation is then done on the basis of the pattern generator's state, and therefore it takes a reference to it as follows
+The interpolation is then done based on the pattern generator's state, and therefore it takes a reference to it as follows
 \begin{minted}{cpp}
   Interpolation ip_nmpc(nmpc);
   ip_nmpc.StoreTrajectories(true);
@@ -158,7 +158,7 @@ nwsr: 1000
 \end{minipage}
 \\
 \\
-To run the code on a real robot, one has to use inverse kinematics, which turn the obtained CoM, and feet positions, into joint angles $\bm{q}$. Within this work, this is done with RBDL, and implemented in the \inlinecode{C++}{Kinematics} class, which also provides methods to generate feedback via forward kinematics. It is therefore required to initialize a \inlinecode{}{Kinematics} object as follows
+To run the code on a real robot, one must use inverse kinematics, which turn the obtained CoM, and feet positions, into joint angles $\bm{q}$. Within this work, this is done with RBDL, and implemented in the \inlinecode{C++}{Kinematics} class, which also provides methods to generate feedback via forward kinematics. It is therefore required to initialize a \inlinecode{}{Kinematics} object as follows
 \begin{minted}{cpp}
   // Kinematics.
   const std::string config_file_loc = "/path/to/configs.yaml";

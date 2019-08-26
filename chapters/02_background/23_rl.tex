@@ -17,7 +17,7 @@ where $\psi_t$ can take many forms. Since the gradient is just an estimate, as i
 	\hat{A}^{\text{GAE}(\gamma,\lambda)}_t = \sum_{l=0}^\infty(\gamma\lambda)^l\delta_{t+l}^V,
 	\label{eq::223_gae}
 \end{align}
-where $\delta^V_{t,l} = r_t + \gamma V(s_{t+1}) - V(s_t)$ is the temporal difference \cite{sutton1998introduction}, and $V$ the value function, which is given by a critic network. The critic's goal then is to have the gradient estimate steer the acting policy network towards actions that maximize the reward. A huge problem therein is that the policy may diverge and that policies may be discarded on the basis of a gradient estimate with a high variance. This is prohibited in proximal policy optimization by clipping the general advantage estimate, and therefore the gradient, under the following objective
+where $\delta^V_{t,l} = r_t + \gamma V(s_{t+1}) - V(s_t)$ is the temporal difference \cite{sutton1998introduction}, and $V$ the value function, which is given by a critic network. The critic's goal then is to have the gradient estimate steer the acting policy network towards actions that maximize the reward. A huge problem therein is that the policy may diverge and that policies may be discarded based on a gradient estimate with a high variance. This is prohibited in proximal policy optimization by clipping the general advantage estimate, and therefore the gradient, under the following objective
 \begin{align}
 	L^\text{CLIP} = \min(\rho_t(\theta)\hat{A}_t, \text{clip}(\rho_t(\theta), 1-\epsilon, 1+\epsilon)\hat{A}_t),
 	\label{eq::223_clip}
@@ -29,7 +29,7 @@ where $\rho_t(\theta) = \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_\text{old}}(a_t|s
 	\caption{Policy gradient clipping in proximal policy optimization for positive and negative advantage estimates $\hat{A}_t$.}
 	\label{fig::223_ppo}
 \end{figure}
-Also, for a negative advantage estimate, it assures that the gradient points aways from these policies. The total objective $L_t^{\text{CLIP}+\text{VF}+\text{S}}$ of proximal policy optimization is further extended by an entropy term $S$ that results in exploration, and the critic's loss $L^\text{VF}$, such that it can steer the gradient (equation \ref{eq::223_ppo_loss}).
+Also, for a negative advantage estimate, it assures that the gradient points away from these policies. The total objective $L_t^{\text{CLIP}+\text{VF}+\text{S}}$ of proximal policy optimization is further extended by an entropy term $S$ that results in exploration, and the critic's loss $L^\text{VF}$, such that it can steer the gradient (equation \ref{eq::223_ppo_loss}).
 \begin{align}
 	L_t^{\text{CLIP}+\text{VF}+\text{S}} = \mathbb{E}\left[L_t^\text{CLIP}(\theta)-c_1L_t^\text{VF}(\theta)+c_2S\left[\pi_\theta\right](s_t)\right]
 	\label{eq::223_ppo_loss}

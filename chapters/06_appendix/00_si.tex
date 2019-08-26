@@ -1,6 +1,6 @@
 \chapter{Software Installation}
 \label{sec::A_si}
-Since all of the software is freely available on GitHub, you can always find a build section within the provided readme file there. The links to the respective GitHub folders are provided within each following section. For the case of an error that may occur during the build procedure, do no hesitate to open up an issue there. I will then help you to get the software running on your device.
+Since all the software is freely available on GitHub, you can always find a build section within the provided readme file there. The links to the respective GitHub folders is provided within each following section. For the case of an error that may occur during the build procedure, do not hesitate to open an issue there. I will then help you to get the software running on your device.
 \FloatBarrier
 \section{Build the Pattern Generator}
 \label{sec::A1_pg}
@@ -67,7 +67,7 @@ The Joystick app can be found on GitHub at the following \href{https://github.co
 		\caption{Installation process.}
 		\label{fig::A2_apk}
 	\end{figure}
-	\item Follow the on screen instructions and wait for the installation to finish (figure \ref{fig::A2_apk} (c) and (d)).
+	\item Follow the on-screen instructions and wait for the installation to finish (figure \ref{fig::A2_apk} (c) and (d)).
 \end{enumerate}
 \FloatBarrier
 \section{Build Proximal Policy Optimization}
@@ -101,7 +101,7 @@ The simulation models can be found on GitHub at the following \href{https://gith
 	\item Clone the models from GitHub with
 	\newline \inlinecode{}{git clone https://github.com/mhubii/gazebo_models.git}
 	\item You can either install the models to a location that Gazebo knows, or update the path, where Gazebo is looking for models.
-	\item To update the path add following line to your \inlinecode{}{bashrc}
+	\item To update the path, add following line to your \inlinecode{}{bashrc}
 	\newline \inlinecode{}{export GAZEBO\_MODEL\_PATH=<>/gazebo\_models:\$GAZEBO\_MODEL\_PATH}
 	\newline Therein, replace \inlinecode{}{<>} by the location to which you cloned the repository.
 	\item To install the models do
@@ -115,7 +115,7 @@ The simulation models can be found on GitHub at the following \href{https://gith
 \FloatBarrier
 \section{Build Third Party Software}
 \label{sec::A5_tp}
-The software that was developed as part of this thesis has some third party dependencies, of which not all are necessary but required for some additional features.
+The software that was developed as part of this thesis has some third-party dependencies, of which not all are necessary but required for some additional features.
 \FloatBarrier
 \subsection{Necessary Dependencies}
 \label{sec::A51_nd}
@@ -131,7 +131,7 @@ These dependencies need to be installed.
 \end{enumerate}
 \FloatBarrier
 \subsubsection{qpOASES}
-To solve the sequential quadratic program, we need to install qpOASES. Please follow the \href{https://projects.coin-or.org/qpOASES/wiki/QpoasesInstallation}{install instructions}, or head on as described below
+To solve the sequential quadratic program, we need to install qpOASES. Please follow the \href{https://projects.coin-or.org/qpOASES/wiki/QpoasesInstallation}{\underline{install instructions}}, or head on as described below
 \begin{enumerate}
 	\item Download qpOASES
 	\newline \inlinecode{}{wget https://www.coin-or.org/download/source/qpOASES/qpOASES-3.2.1.zip}
@@ -158,7 +158,7 @@ The configurations are read in using the YAML file format. Run the command
 To run the NMPC generator on a real robot or the simulation, we will need to install some more dependencies.
 \FloatBarrier
 \subsubsection{Gazebo}
-The simulation environment can be installed according to the \href{http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install}{install instructions}. The main steps are
+The simulation environment can be installed according to the \href{http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install}{\underline{install instructions}}. The main steps are
 \begin{enumerate}
 	\item \inlinecode{}{sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable"\\}
 	\newline \inlinecode{}{"`lsb\_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'}
@@ -181,7 +181,7 @@ The rigid body kinematics are solved with RBDL. To install RBDL, do
 \FloatBarrier
 \subsubsection{YARP}
 \label{sec::a52_yarp}
-Additionally, for communicating with the real robot, or the simulation, we need YARP. To install YARP, follow the \href{https://www.yarp.it/install.html}{installation instructions}, or head on as described below
+Additionally, for communicating with the real robot, or the simulation, we need YARP. To install YARP, follow the \href{https://www.yarp.it/install.html}\underline{{installation instructions}}, or head on as described below
 \begin{enumerate}
 	\item \inlinecode{}{git clone https://github.com/robotology/yarp.git}
 	\newline \inlinecode{}{cd yarp \&\& mkdir build \&\& cd build}
@@ -214,11 +214,11 @@ Plugins for Gazebo are used to clone the behavior of the real robot into the sim
 The models are used within the simulation environment Gazebo. See section \ref{sec::A4_sm}.
 \FloatBarrier
 \subsubsection{NCurses}
-For the visualization of the control pannel, we need to install ncurses, do
+For the visualization of the control panel, we need to install ncurses, do
 \begin{enumerate}
 	\item \inlinecode{}{sudo apt install libncurses5-dev}
 \end{enumerate}
 \FloatBarrier
 \subsection{Deep Learning Dependencies}
 \label{sec::A53_dl}
-To learn Nonlinear Model Predictive Control or simple navigation on top of Nonlinear Model Predictive Control, we will need to install PyTorch. For PyTorch to work in combination with RBDL, we need a source installation. Please checkout this \href{https://gist.github.com/mhubii/1c1049fb5043b8be262259efac4b89d5}{gist} to figure out how to perform a clean setup.
+To learn Nonlinear Model Predictive Control or simple navigation on top of Nonlinear Model Predictive Control, we will need to install PyTorch. For PyTorch to work in combination with RBDL, we need a source installation. Please check out this \href{https://gist.github.com/mhubii/1c1049fb5043b8be262259efac4b89d5}{\underline{gist}} to figure out how to perform a clean setup.

@@ -1,8 +1,8 @@
-\chapter{Startup and Shutdown Procedures}
+\chapter{Start-up and Shutdown Procedures}
 \label{sec::B_su}
-In this chapter, we will briefly document how to run the software that was developed within this thesis. In section \ref{sec::B1_rr}, we will introduce how the Heicub robot is supposed to be started, while in the subsequent section \ref{sec::B2_ss}, we will explain how to run the robot within the simulation environment Gazebo. Furthermore, once the robot has been started, either in real or in simulation, it is possible to use the provided pattern generator for control in realtime with the terminal interface or the Android joysitck app. Both possibilities will be explained in section \ref{sec::B3_sp}. Finally, a short demonstration for the behavioral augmentation is given in section \ref{sec::B4_ba}.
+In this chapter, we will briefly document how to run the software that was developed within this thesis. In section \ref{sec::B1_rr}, we will introduce how the Heicub robot is supposed to be started, while in the subsequent section \ref{sec::B2_ss}, we will explain how to run the robot within the simulation environment Gazebo. Furthermore, once the robot has been started, either in real or in simulation, it is possible to use the provided pattern generator for control in real-time with the terminal interface or the Android joystick app. Both possibilities will be explained in section \ref{sec::B3_sp}. Finally, a short demonstration for the behavioral augmentation is given in section \ref{sec::B4_ba}.
 \FloatBarrier
-\section{Real Robot Startup}
+\section{Real Robot Start-up}
 \label{sec::B1_rr}
 \begin{enumerate}
 	\item Turn on the icubsrv (figure \ref{fig::B1_icubsrv}), username is \inlinecode{bash}{icub}, password is \inlinecode{bash}{icub}.
@@ -44,14 +44,14 @@ In this chapter, we will briefly document how to run the software that was devel
 	\end{figure}
 	\item Run the cluster manager from a new terminal on the icubsrv, therefore do \newline \inlinecode{}{cd /usr/local/src/robot/icub-main/build-pc104/bin}
 	\newline \inlinecode{}{python icub-cluster.py}
-	\item Within the cluster manager, run the yarp name server, and then yarp on all other devices (figure \ref{fig::B1_cluster} (a), then (b)).
+	\item Within the cluster manager, run the YARP name server, and then YARP on all other devices (figure \ref{fig::B1_cluster} (a), then (b)).
 	\begin{figure}[h!]
 		\centering
-		\subcaptionbox{Run the yarp nameserver.}%
+		\subcaptionbox{Run the YARP nameserver.}%
 		[.4\linewidth]{\includegraphics[scale=.3]{chapters/06_appendix/img/ran_yarp.png}}
-		\subcaptionbox{Run yarp on other devices.}%
+		\subcaptionbox{Run YARP on other devices.}%
 		[.4\linewidth]{\includegraphics[scale=.3]{chapters/06_appendix/img/ran_yarp_others.png}}
-		\caption{Run yarp.}
+		\caption{Run YARP.}
 		\label{fig::B1_cluster}
 	\end{figure}
 	\item We can now turn on the motors and the cameras, as well as to connect our own laptop, which is explained in the following sections.
@@ -78,7 +78,7 @@ If the real robot is up and running (section \ref{sec::B1_rr}), you can now star
 		\caption{Safety button.}
 		\label{fig::B1_red}
 	\end{figure}
-	\item Within your terminal to pc104 (figure \ref{fig::B1_pc104} (b)) run the command \newline \inlinecode{}{yarprobotinterface} \newline This will run all the motor drivers and connect them to the yarp network.
+	\item Within your terminal to pc104 (figure \ref{fig::B1_pc104} (b)) run the command \newline \inlinecode{}{yarprobotinterface} \newline This will run all the motor drivers and connect them to the YARP network.
 	\item If no errors occured, we can now run the yarpmotorgui to play around with the motors. This step is not necessary. To run the yarpmotorgui, open a new terminal on the icubsrv, and run the command \newline \inlinecode{}{yarpmotorgui} (figure \ref{fig::B11_gui} (a)) \newline Then, press \inlinecode{}{OK}. The motors can now be manipulated from within the GUI (figure \ref{fig::B11_gui} (b)), e.g. by clicking on the house, which will bring all motors to the home position.
 	\begin{figure}[h!]
 		\centering
@@ -94,9 +94,9 @@ If the real robot is up and running (section \ref{sec::B1_rr}), you can now star
 \FloatBarrier
 \subsection{Start the Cameras}
 \label{sec::B12_sc}
-If the real robot is up and running (section \ref{sec::B1_rr}), you can now start Heicub's cameras. Therefore proceed as described below.
+If the real robot is up and running (section \ref{sec::B1_rr}), you can now start Heicub's cameras. Therefore, proceed as described below.
 \begin{enumerate}
-	\item Within a new terminal to pc104 (figure \ref{fig::B1_pc104} (a)), do \newline \inlinecode{}{cd ./local/share/yarp/robots/iCubHeidelberg01/camera}\newline Then, start the camera via \newline \inlinecode{}{yarpdev --from dragonfly2_config_left.ini}\newline This will run the left camera and connect it to the yarp network. Repeat the above steps for the right camera, but replace left by right within the \inlinecode{}{.ini} file.
+	\item Within a new terminal to pc104 (figure \ref{fig::B1_pc104} (a)), do \newline \inlinecode{}{cd ./local/share/yarp/robots/iCubHeidelberg01/camera}\newline Then, start the camera via \newline \inlinecode{}{yarpdev --from dragonfly2_config_left.ini}\newline This will run the left camera and connect it to the YARP network. Repeat the above steps for the right camera, but replace left by right within the \inlinecode{}{.ini} file.
 	\item If no errors occured, we can now run a yarpview to see what Heicub sees. This step is not necessary. To run a yarpview, open a new terminal on the icubsrv, and run the command \newline \inlinecode{}{yarpview} (figure \ref{fig::B12_yarpview} (a)) \newline Then, connect a camera to the yarpview. Therefore, open a new terminal on the icubsrv and run the command \newline \inlinecode{}{yarp connect /icub/cam/left /yarpview/img:i} (figure \ref{fig::B12_yarpview} (b)) \newline You should now see an image.
 	\begin{figure}[h!]
 		\centering
@@ -117,7 +117,7 @@ Make sure you installed YARP, as described in section \ref{sec::A5_tp}. You can 
 	\item If you connected successfully, open a terminal on your device and run \newline \inlinecode{}{yarp detect --write} \newline If it does not find the running yarpserver, manually configure the connection via the following commands from a terminal \newline \inlinecode{}{yarp conf 10.0.0.1 1000} \newline \inlinecode{}{yarp namespace /iCubHeidelberg} \newline \inlinecode{}{yarp detect}
 \end{enumerate}
 \FloatBarrier
-\section{Simulated Robot Startup}
+\section{Simulated Robot Start-up}
 \label{sec::B2_ss}
 Make sure you installed Gazebo, YARP, and the Gazebo YARP plugins as described in section \ref{sec::A5_tp}. Also, you need to have the simulation model installed, which is described in section \ref{sec::A4_sm}. When these requirements are satisfied, then proceed as described below.
 \begin{enumerate}
@@ -128,7 +128,7 @@ Make sure you installed Gazebo, YARP, and the Gazebo YARP plugins as described i
 \FloatBarrier
 \section{Start the Pattern Generator}
 \label{sec::B3_sp}
-Make sure you installed the pattern generator library as described in section \ref{sec::A1_pg}. The robot needs to be running, either in real (section \ref{sec::B1_rr}, and section \ref{sec::B11_sm}) or in simulation (section \ref{sec::B2_ss}). By construction, the startup procedure for the simulation and the real robot is the same. You can choose to control the robot via the terminal, or the provided Android app. Both possibilities are described below in section \ref{sec::B31_terminal}, and section \ref{sec::B32_app}, respectively.
+Make sure you installed the pattern generator library as described in section \ref{sec::A1_pg}. The robot needs to be running, either in real (section \ref{sec::B1_rr}, and section \ref{sec::B11_sm}) or in simulation (section \ref{sec::B2_ss}). By construction, the start-up procedure for the simulation and the real robot is the same. You can choose to control the robot via the terminal, or the provided Android app. Both possibilities are described below in section \ref{sec::B31_terminal}, and section \ref{sec::B32_app}, respectively.
 \FloatBarrier
 \subsection{Control via the Terminal}
 \label{sec::B31_terminal}
@@ -188,7 +188,7 @@ Make sure you installed the Android joystick app as described in section \ref{se
 \FloatBarrier
 \section{Start the Behavioral Augmentation Demo}
 \label{sec::B4_ba}
-There is a trained neural network available on heicub01 to run a demonstration of the behavioral augmentation as trained in section \ref{sec::42_aw}. The network will navigate Heicub towards a fire extinguisher, and look around if it does not see one. Make sure the robot and its cameras are running (section \ref{sec::B1_rr}, section \ref{sec::B11_sm}, and section \ref{sec::B12_sc}). Proceed as described below.
+There is a trained neural network available on heicub01 to run a demonstration of the behavioral augmentation as trained in section \ref{sec::42_aw}. The network will navigate Heicub towards a fire extinguisher and look around if it does not see one. Make sure the robot and its cameras are running (section \ref{sec::B1_rr}, section \ref{sec::B11_sm}, and section \ref{sec::B12_sc}). Proceed as described below.
 \begin{enumerate}
 	\item Login to heicub01, username is \inlinecode{}{icub}, password it \inlinecode{}{icubheidelberg01}.
 	\item Make sure that YARP is running on heicub01 (figure \ref{fig::B1_cluster} (b)). Therefore, select heicub01 and click \inlinecode{}{Run Selected}.
@@ -201,7 +201,7 @@ There is a trained neural network available on heicub01 to run a demonstration o
 \end{enumerate}
 \FloatBarrier
 \section{Real Robot Shutdown}
-Before you shutdown the robot, make sure it is in a safe position, that is, lift it up. Proceed as described below.
+Before you shut down the robot, make sure it is in a safe position, that is, lift it up. Proceed as described below.
 \begin{enumerate}
 	\item Lift the robot from the floor.
 	\item Close all running applications. \inlinecode{}{Ctrl+C} the yarprobotinterface and the camera interfaces.

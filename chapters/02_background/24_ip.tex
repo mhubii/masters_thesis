@@ -1,7 +1,7 @@
 \FloatBarrier
 \subsection{Image Processing}
 \label{sec::224_ip}
-In the previous sections we have learned about two different approaches to train neural nets on solving certain tasks. Although we came to understand that the complexity of the task to be solved correlates strongly with the amount of data at hand, there exist domains from which it is undeniably easier to do so. To equip a neural net with some sort of prior knowledge by switching the domain may therefore not only be highly desirable but sometimes also needed if the amount or quality of data is not sufficient. One domain which is of special interest when it comes to interacting in a three dimensional environment is a domain that represents depth information. If there are any, it may sometimes be possible to extract this kind of prior knowledge from a depth camera. As for this work, we need to rely on stereo cameras and powerful algorithms that allow us to compute depth images in real time. The algorithm that helps us to do so, in terms of the extraction of weighted least squares disparity maps \cite{min2014fast}, will be presented in the following paragraph - Depth Map Extraction.
+In the previous sections we have learned about two different approaches to train neural nets on solving certain tasks. Although we came to understand that the complexity of the task to be solved correlates strongly with the amount of data at hand, there exist domains from which it is undeniably easier to do so. To equip a neural net with some sort of prior knowledge by switching the domain may therefore not only be highly desirable but sometimes also needed if the amount or quality of data is not sufficient. One domain which is of special interest when it comes to interacting in a three-dimensional environment is a domain that represents depth information. If there are any, it may sometimes be possible to extract this kind of prior knowledge from a depth camera. As for this work, we need to rely on stereo cameras and powerful algorithms that allow us to compute depth images in real time. The algorithm that helps us to do so, in terms of the extraction of weighted least squares disparity maps \cite{min2014fast}, will be presented in the following paragraph - Depth Map Extraction.
 \FloatBarrier
 \subsubsection{Depth Map Extraction}
 As already pointed out, the depth map is generated from stereo camera images by a technique called stereo block matching \cite{hamzah2010sum}. This method works best for edge filtered images, as will become clear soon. To obtain edge filtered images $\bm{E}$, the stereo RGB images are first converted into grayscale $\bm{G}$, which are then convolved with the Sobel kernel $\bm{S}_x$ along the horizontal axis \cite{sobel2014an} (equation \ref{eq::224_sobel_conv}, figure \ref{fig::224_image_preprocessing}). 
@@ -12,7 +12,7 @@ As already pointed out, the depth map is generated from stereo camera images by 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.28]{chapters/02_background/img/image_preprocessing.png}
-	\caption{Image preprocessing to obtain edge filtered images. The images were taken within the simulation environment Gazebo (\href{http://gazebosim.org/}{\underline{link}}), and show a space exploration vehicle, for which, with the friendly support of NASA, we generated a Gazebo version (\href{https://github.com/mhubii/gazebo_models}{\underline{link}}).}
+	\caption{Image pre-processing to obtain edge filtered images. The images were taken within the simulation environment Gazebo (\href{http://gazebosim.org/}{\underline{link}}), and show a space exploration vehicle, for which, with the friendly support of NASA, we generated a Gazebo version (\href{https://github.com/mhubii/gazebo_models}{\underline{link}}).}
 	\label{fig::224_image_preprocessing}
 \end{figure}
 When having a look at the Sobel kernel $\bm{S}_x$ (equation \ref{eq::224_sobel}), it immediately becomes clear that it approximates the derivative of an image along the horizontal axis. Therefore, at locations of steep change, or simply put, edges, the convolution of the grayscale images with the Sobel kernel results in high values, and thus in the typical appearance of an edge filtered image.
@@ -32,7 +32,7 @@ To understand the block matching algorithm, we first need to figure out the tran
 	\caption{The stereo setup with a left and a right camera.}
 	\label{fig::224_stereo_camera}
 \end{figure}
-It results that, to find correspondences, one only has to search along the epipolar line. Also, since points in the right image that correspond to points in the left image, will always be displaced to the left, one only has to search in this direction. The procedure is shown in figure \ref{fig::224_left_disparity_map}. Instead of looking for single pixel correspondences, it is advised to search for whole block correspondences, since it reduces the noise drastically. Blocks of a defined block size $N$ are taken from the left image, and then the sum of absolute differences SAD is computed for every displacement $d$ in the right image, ranging from zero to number of disparities $D$ (equation \ref{eq::224_sad}, figure \ref{fig::224_left_disparity_map}).
+It results that, to find correspondences, one only must search along the epipolar line. Also, since points in the right image that correspond to points in the left image, will always be displaced to the left, one only must search in this direction. The procedure is shown in figure \ref{fig::224_left_disparity_map}. Instead of looking for single pixel correspondences, it is advised to search for whole block correspondences, since it reduces the noise drastically. Blocks of a defined block size $N$ are taken from the left image, and then the sum of absolute differences SAD is computed for every displacement $d$ in the right image, ranging from zero to number of disparities $D$ (equation \ref{eq::224_sad}, figure \ref{fig::224_left_disparity_map}).
 \begin{align}
 	\text{SAD}(d) = \sum_{x,y=0}^N |\bm{E}_\text{left}(x,y) - \bm{E}_\text{right}(x-d,y)|
 	\label{eq::224_sad}
@@ -64,7 +64,7 @@ where $\alpha = \frac{1}{\text{width}\cdot\text{height}}$ is the normalization f
 \begin{align}
 	\text{Con}(\bm{D}) = \max\left(1-r\text{Var}(\bm{D}),0\right),
 \end{align}
-where $r$ is a roll-off factor that defines the change of confidence with growing variance. The resulting disparity confidence is shown in figure \ref{fig::224_confidence_map}, and is used to outweigh outlying disparity values from the final weighted least squares disparity map. 
+where $r$ is a roll-off factor that defines the change of confidence with growing variance. The resulting disparity confidence is shown in figure \ref{fig::224_confidence_map} and is used to outweigh outlying disparity values from the final weighted least squares disparity map. 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.28]{chapters/02_background/img/confidence_map.png}
@@ -150,7 +150,7 @@ where
 	r = &\,\,\sqrt{x_{c,d}^2+y_{c,d}^2}.
 	\nonumber
 \end{align}
-Together, the focal lengths, the principal point, and the distortion coefficients make up the unknowns within our camera model. Goal of the mono camera calibration is now to find these coefficients from images of a well known calibration pattern. Therefore, images of the calibration pattern are taken from different perspectives (figure \ref{fig::224_calibration_process}). 
+Together, the focal lengths, the principal point, and the distortion coefficients make up the unknowns within our camera model. Goal of the mono camera calibration is now to find these coefficients from images of a well-known calibration pattern. Therefore, images of the calibration pattern are taken from different perspectives (figure \ref{fig::224_calibration_process}). 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.28]{chapters/02_background/img/calibration_process.png}
@@ -191,7 +191,7 @@ from which we compute the re-projection error $\Delta x = ||\bm{x}_{wh,u} - \bm{
 \begin{align}
 	\bm{x}_{c_\text{right}}^T\bm{F}\bm{x}_{c_\text{left}} = \bm{0}
 \end{align}
-The mapping enables us to rectify the left and the right image \cite{loop1999computing}, using the rectification transforms $\bm{R}_i$, which means that we can compute homography transforms that align epipolar lines within the images (figure \ref{fig::224_rectified}), which where previously defined by the fundamental matrix. 
+The mapping enables us to rectify the left and the right image \cite{loop1999computing}, using the rectification transforms $\bm{R}_i$, which means that we can compute homography transforms that align epipolar lines within the images (figure \ref{fig::224_rectified}), which were previously defined by the fundamental matrix. 
 \begin{figure}[h!]
 	\centering
 	\subcaptionbox{}%
