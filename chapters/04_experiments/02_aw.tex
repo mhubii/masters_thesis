@@ -142,7 +142,7 @@ After training, we generated velocity histograms, as we already did in section \
 	[.45\linewidth]{\includegraphics[scale=.45]{chapters/04_experiments/02_autonomous_walking/user_entropy.pdf}}
 	\subcaptionbox{Predicted velocity commands.}%
 	[.45\linewidth]{\includegraphics[scale=.45]{chapters/04_experiments/02_autonomous_walking/predicted_entropy_kldivx_0_33_kldivz_0_06_imgs_13441_duration_4_ms.pdf}}
-	\caption{Normalized velocity histograms over the validation split. The ground truth (a), and the predicted velocity commands (b), appear to be very similar., which indicates a successful training.}
+	\caption{Normalized velocity histograms over the validation split. The ground truth (a), and the predicted velocity commands (b), appear to be very similar, which indicates a successful training.}
 	\label{fig::423_training_dist}
 \end{figure}
 By pure sight, it can already be seen that the network performs well on the validation split, and the Kullback-Leibler divergence $D_\text{KL}$, which measures the distance of probability distributions, enforces this observation further. The Kullback-Leibler divergence for two discrete probability distributions $p(v)$ and $q(v)$, is computed as follows
