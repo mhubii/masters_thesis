@@ -18,7 +18,7 @@ In inverse kinematics, we aim at finding joint angles $\bm{q}$ that satisfy cert
 	S(\bm{q},\Delta\bm{q}) = \sum_{i=0}^m\left[a_i-\textbf{FK}_i(\bm{q})-\frac{\partial\textbf{FK}_i(\bm{q})}{\partial\bm{q}}\Delta\bm{q}\right]^2
 	\label{eq::2142_min}
 \end{align}
-A damped version of this minimization yields the Levenberg-Marquardt algorithm \cite{more1978levenberg}, with which one can iteratively update the pose $\bm{q}$ by $\Delta\bm{q}$, so to satisfy the posed requirements (equation \ref{eq::2142_levenberg}).
+A damped version of this minimization yields the Levenberg-Marquardt algorithm \cite{more1978levenberg}\cite{sugihara2011solvability}, with which one can iteratively update the pose $\bm{q}$ by $\Delta\bm{q}$, so to satisfy the posed requirements (equation \ref{eq::2142_levenberg}).
 \begin{align}
 	\Delta\bm{q} = (\bm{J}^T\bm{J}+\lambda\bm{I})^{-1}\bm{J}^T(\bm{y}-\textbf{FK}(\bm{q}))
 	\label{eq::2142_levenberg}
