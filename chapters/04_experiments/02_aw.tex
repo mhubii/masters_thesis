@@ -141,7 +141,7 @@ After training, we generated velocity histograms, as we already did in section \
 	\subcaptionbox{Ground truth velocity commands.}%
 	[.45\linewidth]{\includegraphics[scale=.45]{chapters/04_experiments/02_autonomous_walking/user_entropy.pdf}}
 	\subcaptionbox{Predicted velocity commands.}%
-	[.45\linewidth]{\includegraphics[scale=.45]{chapters/04_experiments/02_autonomous_walking/predicted_entropy_kldivx_0_33_kldivz_0_06_imgs_13441_duration_4_ms.pdf}}
+	[.45\linewidth]{\includegraphics[scale=.45]{chapters/04_experiments/02_autonomous_walking/predicted_entropy.pdf}}
 	\caption{Normalized velocity histograms over the validation split. The ground truth (a), and the predicted velocity commands (b), appear to be very similar, which indicates a successful training.}
 	\label{fig::423_training_dist}
 \end{figure}
@@ -149,7 +149,7 @@ By pure sight, it can already be seen that the network performs well on the vali
 \begin{align}
 	D_\text{KL} = \sum_{v\in \bm{V}}p(v)\log\frac{p(v)}{q(v)},
 \end{align}
-where for our case, $p(v)$ is the ground truth velocity distribution, and $q(v)$ is the predicted velocity distribution. For the distribution of linear velocities along the x-axis $v_x$, we computed the Kullback-Leibler divergence to be $D^x_\text{KL}=0.33\,\text{a.u.}$, and for the angular velocity about the z-axis $\omega_z$, we obtained $D^z_\text{KL}=0.06\,\text{a.u.}$. Now the beauty within the task at hand lies in the fact that we were not solely dependent on a validation split for performance evaluations, but instead that we simply could run Heicub in a previously unseen test environment. It is the same test environment, which we already introduced in section \ref{sec::41_uc}, and we will evaluate the trained neural network's behavior within it in the next section - Performance in Test Environment.
+where for our case, $p(v)$ is the ground truth velocity distribution, and $q(v)$ is the predicted velocity distribution. For the distribution of linear velocities along the x-axis $v_x$, we computed the Kullback-Leibler divergence to be $D^x_\text{KL}=0.20\,\text{a.u.}$, and for the angular velocity about the z-axis $\omega_z$, we obtained $D^z_\text{KL}=0.01\,\text{a.u.}$. Now the beauty within the task at hand lies in the fact that we were not solely dependent on a validation split for performance evaluations, but instead that we simply could run Heicub in a previously unseen test environment. It is the same test environment, which we already introduced in section \ref{sec::41_uc}, and we will evaluate the trained neural network's behavior within it in the next section - Performance in Test Environment.
 \FloatBarrier
 \subsection{Performance in Test Environment}
 \label{sec::424_pt}
