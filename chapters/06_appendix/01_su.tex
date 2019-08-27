@@ -5,7 +5,7 @@ In this chapter, we will briefly document how to run the software that was devel
 \section{Real Robot Start-up}
 \label{sec::B1_rr}
 \begin{enumerate}
-	\item Turn on the icubsrv (figure \ref{fig::B1_icubsrv}), username is \inlinecode{bash}{icub}, password is \inlinecode{bash}{icub}.
+	\item Turn on the icubsrv (figure \ref{fig::B1_icubsrv}), username is \inlinecode{bash}{icub}, ask someone at the ORB for the password.%password is \inlinecode{bash}{icub}.
 	\begin{figure}[h!]
 		\centering
 		\includegraphics[scale=.04]{chapters/06_appendix/img/icubsrv.jpg}
@@ -190,7 +190,7 @@ Make sure you installed the Android joystick app as described in section \ref{se
 \label{sec::B4_ba}
 There is a trained neural network available on heicub01 to run a demonstration of the behavioral augmentation as trained in section \ref{sec::42_aw}. The network will navigate Heicub towards a fire extinguisher and look around if it does not see one. Make sure the robot and its cameras are running (section \ref{sec::B1_rr}, section \ref{sec::B11_sm}, and section \ref{sec::B12_sc}). Proceed as described below.
 \begin{enumerate}
-	\item Login to heicub01, username is \inlinecode{}{icub}, password it \inlinecode{}{icubheidelberg01}.
+	\item Login to heicub01, username is \inlinecode{}{icub}, ask someone at the ORB for the password.%password it \inlinecode{}{icubheidelberg01}.
 	\item Make sure that YARP is running on heicub01 (figure \ref{fig::B1_cluster} (b)). Therefore, select heicub01 and click \inlinecode{}{Run Selected}.
 	\item On heicub01, open a new terminal and go to the shell scripts within the pattern generator folder via \newline \inlinecode{}{cd /home/icub/Documents/nmpc\_pattern\_generator/sh}
 	\newline Then run the keyboard user interface with
