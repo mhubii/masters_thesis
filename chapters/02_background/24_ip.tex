@@ -1,7 +1,7 @@
 \FloatBarrier
 \subsection{Image Processing}
 \label{sec::224_ip}
-In the previous sections we have learned about two different approaches to train neural nets on solving certain tasks. Although we came to understand that the complexity of the task to be solved correlates strongly with the amount of data at hand, there exist domains from which it is undeniably easier to do so. To equip a neural network with some sort of prior knowledge by switching the domain may therefore not only be highly desirable but sometimes also needed if the amount or quality of data is not sufficient. One domain which is of special interest when it comes to interacting in a three-dimensional environment is a domain that represents depth information. If there are any, it may sometimes be possible to extract this kind of prior knowledge from a depth camera. As for this work, we need to rely on stereo cameras and powerful algorithms that allow us to compute depth images in real time. The algorithm that helps us to do so, in terms of the extraction of weighted least squares disparity maps \cite{min2014fast}, will be presented in the following paragraph - Depth Map Extraction.
+In the previous sections, we have learned about two different approaches to train neural nets on solving certain tasks. Although we came to understand that the complexity of the task to be solved correlates strongly with the amount of data at hand, there exist domains from which it is undeniably easier to do so. To equip a neural network with some prior knowledge by switching the domain may therefore not only be highly desirable but sometimes also needed if the amount or quality of data is not sufficient. One domain which is of special interest when it comes to interacting in a three-dimensional environment is a domain that represents depth information. If there are any, it may sometimes be possible to extract this kind of prior knowledge from a depth camera. As for this work, we need to rely on stereo cameras and powerful algorithms that allow us to compute depth images in real-time. The algorithm that helps us to do so, in terms of the extraction of weighted least squares disparity maps \cite{min2014fast}, will be presented in the following paragraph - Depth Map Extraction.
 \FloatBarrier
 \subsubsection{Depth Map Extraction}
 As already pointed out, the depth map is generated from stereo camera images by a technique called stereo block matching \cite{hamzah2010sum}. This method works best for edge filtered images, as will become clear soon. To obtain edge filtered images $\bm{E}$, the stereo RGB images are first converted into grayscale $\bm{G}$, which are then convolved with the Sobel kernel $\bm{S}_x$ along the horizontal axis \cite{sobel2014an} (equation \ref{eq::224_sobel_conv}, figure \ref{fig::224_image_preprocessing}). 
@@ -32,7 +32,7 @@ To understand the block matching algorithm, we first need to figure out the tran
 	\caption{The stereo setup with a left and a right camera.}
 	\label{fig::224_stereo_camera}
 \end{figure}
-It results that, to find correspondences, one only must search along the epipolar line. Also, since points in the right image that correspond to points in the left image, will always be displaced to the left, one only must search in this direction. The procedure is shown in figure \ref{fig::224_left_disparity_map}. Instead of looking for single pixel correspondences, it is advised to search for whole block correspondences, since it reduces the noise drastically. Blocks of a defined block size $N$ are taken from the left image, and then the sum of absolute differences SAD is computed for every displacement $d$ in the right image, ranging from zero to number of disparities $D$ (equation \ref{eq::224_sad}, figure \ref{fig::224_left_disparity_map}).
+It results that, to find correspondences, one only must search along the epipolar line. Also, since points in the right image that correspond to points in the left image, will always be displaced to the left, one only must search in this direction. The procedure is shown in figure \ref{fig::224_left_disparity_map}. Instead of looking for single-pixel correspondences, it is advised to search for whole block correspondences, since it reduces the noise drastically. Blocks of a defined block size $N$ are taken from the left image, and then the sum of absolute differences SAD is computed for every displacement $d$ in the right image, ranging from zero to number of disparities $D$ (equation \ref{eq::224_sad}, figure \ref{fig::224_left_disparity_map}).
 \begin{align}
 	\text{SAD}(d) = \sum_{x,y=0}^N |\bm{E}_\text{left}(x,y) - \bm{E}_\text{right}(x-d,y)|
 	\label{eq::224_sad}
@@ -71,7 +71,7 @@ where $r$ is a roll-off factor that defines the change of confidence with growin
 	\caption{Generation of the confidence map from the variance within the disparity map.}
 	\label{fig::224_confidence_map}
 \end{figure}
-Prior to that, we further introduce an additional measure for the prevention of accidentally assigned correspondences in the initial block matching algorithm by using a left right consistency check \cite{egnal2004stereo}. Therefore, the block matching algorithm is used on the right image, and we search for correspondences in the left image. In contrast to the computation of the left disparity map $\bm{D}_\text{left}$, for the right disparity map $\bm{D}_\text{right}$, we only need to check for correspondences along the epipolar line in the positive displacement direction. The left right consistency $\bm{L}$ is then obtained by 
+Before that, we further introduce an additional measure for the prevention of accidentally assigned correspondences in the initial block matching algorithm by using a left-right consistency check \cite{egnal2004stereo}. Therefore, the block matching algorithm is used in the right image, and we search for correspondences in the left image. In contrast to the computation of the left disparity map $\bm{D}_\text{left}$, for the right disparity map $\bm{D}_\text{right}$, we only need to check for correspondences along the epipolar line in the positive displacement direction. The left-right consistency $\bm{L}$ is then obtained by 
 \begin{align}
 	\bm{L}(x, y) = 
 	\begin{cases}
@@ -79,7 +79,7 @@ Prior to that, we further introduce an additional measure for the prevention of 
 	0 & \text{else}
 	\end{cases},
 \end{align}
-where $d_\text{left}$ is the disparity of $\bm{D}_\text{left}$ at position $(x,y)$, and therefore represents the index shift which results from the block matching algorithm. Furthermore, if $\Delta d = \bm{D}_\text{left}(x, y) + \bm{D}_\text{right}(x + d_\text{left}, y)$ is smaller than a threshold $t$, then the left right consistency $\bm{L}$ is taken to be the lower bound approximation of the left and right confidences. Otherwise, the consistency is taken to be false, and hence zero (figure \ref{fig::224_weighted_least_squares_disparity}). As already pointed out, the left right consistency, which is nothing but a confidence measure, usually reveals uncertainties in textureless regions. The weighted least squares filtering that we are about to present uses this fact to its advantage. In a first step, a consistency weighted disparity map $\bm{C}$ is computed via equation \ref{eq::224_cwd} (figure \ref{fig::224_weighted_least_squares_disparity}).
+where $d_\text{left}$ is the disparity of $\bm{D}_\text{left}$ at position $(x,y)$, and therefore represents the index shift which results from the block matching algorithm. Furthermore, if $\Delta d = \bm{D}_\text{left}(x, y) + \bm{D}_\text{right}(x + d_\text{left}, y)$ is smaller than a threshold $t$, then the left-right consistency $\bm{L}$ is taken to be the lower bound approximation of the left and right confidences. Otherwise, the consistency is taken to be false, and hence zero (figure \ref{fig::224_weighted_least_squares_disparity}). As already pointed out, the left-right consistency, which is nothing but a confidence measure, usually reveals uncertainties in textureless regions. The weighted least squares filtering that we are about to present uses this fact to its advantage. In a first step, a consistency weighted disparity map $\bm{C}$ is computed via equation \ref{eq::224_cwd} (figure \ref{fig::224_weighted_least_squares_disparity}).
 \begin{align}
 	\bm{C}=\bm{L}\cdot\bm{D}_\text{left},
 	\label{eq::224_cwd}
@@ -99,15 +99,15 @@ where $c_{x,y}$ are single pixels of the consistency weighted disparity map. The
 	\bm{D}_\text{final} = \frac{\bm{U}}{\text{WLS}(\bm{L})},
 	\label{eq::224_wls_final}
 \end{align}
-where $\text{WLS}(\bm{U})$ is the weighted least squares filtered version of the left right consistency $\bm{L}$.
+where $\text{WLS}(\bm{U})$ is the weighted least squares filtered version of the left-right consistency $\bm{L}$.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.28]{chapters/02_background/img/weighted_least_squares_disparity.png}
-	\caption{Generation of the confidence weighted least squares disparity from the disparity map, and the left right consistency.}
+	\caption{Generation of the confidence weighted least squares disparity from the disparity map, and the left-right consistency.}
 	\label{fig::224_weighted_least_squares_disparity}
 \end{figure}
 \\\\
-As already mentioned for figure \ref{fig::224_stereo_camera}, the assumption of a simply translated stereo camera pair is almost never correct. In addition, there exist camera intrinsics that deform the observed image, and so the epipolar lines. Therefore, as a requirement for the algorithm to work properly, it is important to calibrate the robot's cameras. The next chapter - Mono and Stereo Camera Calibration, will explain in detail how this is done.
+As already mentioned in figure \ref{fig::224_stereo_camera}, the assumption of an only translated stereo camera pair is rarely correct. Besides, there exist camera intrinsics that deform the observed image, and so the epipolar lines. Therefore, as a requirement for the algorithm to work properly, it is important to calibrate the robot's cameras. The next chapter - Mono and Stereo Camera Calibration, will explain in detail how this is done.
 \FloatBarrier
 \subsubsection{Mono and Stereo Camera Calibration}
 To correct images, as we observe them with a camera, it is required to have a mathematical description of it. A simple one for a camera is the pinhole model, which is shown in figure \ref{fig::224_pin_hole_camera}. For a pinhole camera model, the image plane lies behind the coordinate frame of the camera, and is turned the other way around, but it is easier to describe the image in a virtual plane, which is located at a distance $f$ along the $z_c$-axis, where $f$ is the focal length.
@@ -154,7 +154,7 @@ Together, the focal lengths, the principal point, and the distortion coefficient
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.28]{chapters/02_background/img/calibration_process.png}
-	\caption{Calibration pattern as observed from the camera's coordinate system $C$. Within the object's coordinate system, all chessboard corners lie at a zero $z$-position.}
+	\caption{Calibration pattern, as observed from the camera's coordinate system $C$. Within the object's coordinate system, all chessboard corners lie at a zero $z$-position.}
 	\label{fig::224_calibration_process}
 \end{figure}
 For the mathematical description, the calibration pattern is taken to be at a fixed position and orientation, while it is assumed that the camera was moved. The position of each corner can then be described by the square's size $a$ as follows

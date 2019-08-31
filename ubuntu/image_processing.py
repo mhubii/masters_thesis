@@ -50,7 +50,7 @@ roll_off = 0.001
 l_conf = np.maximum(1.0 - roll_off*l_var, 0.)
 r_conf = np.maximum(1.0 - roll_off*r_var, 0.)
 
-# left right consistency
+# left-right consistency
 lrc = np.zeros(l_disp.shape)
 thresh = 24
 
