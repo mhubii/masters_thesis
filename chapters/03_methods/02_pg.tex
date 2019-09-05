@@ -1,5 +1,5 @@
 \FloatBarrier
-\section{Pattern Generation Library}
+\section{Implementation of Pattern Generation Library}
 \label{sec::32_pg}
 The pattern generation library is built upon the fast linear algebra library Eigen \cite{eigenweb}, which makes it perfectly compatible with the rigid body dynamics library RBDL \cite{felis2017rbdl} that is used for the kinematics. Its main duty is to build the formulation of the optimal control problem that was introduced with much detail in section \ref{sec::212_nmpc}. Starting from the linear time-stepping scheme (equations \ref{eq::212_ckp1}-\ref{eq::212_ddckp1}), the \inlinecode{C++}{BaseGenerator} class sets up all of the necessary matrices for the nonlinear model predictive control. What the \inlinecode{C++}{NMPCGenerator} class then mainly does is to inherit from \inlinecode{C++}{BaseGenerator} in order to sort the matrices for the sequential quadratic programming formulation of equation \ref{eq::212_ocp}. All of the ordering is then being done by \inlinecode{C++}{NMPCGenerator::CalculateCommonExpressions}, while \inlinecode{C++}{NMPCGenerator::CalculateDerivatives} computes the linearization of the optimal control problem, which got explained in detail in section \ref{sec::212_gn}. Then to solve the sequential quadratic programming task, the pattern generation library utilizes qpOASES \cite{ferreau2014qpoases}, and the results are being interpolated by the \inlinecode{C++}{Interpolation} class, which relies on the theory of section \ref{sec::213_it}. However, to use the pattern generation library, the user does not have to deal with the private methods and can only use the public interface. A typical use case would involve the initialization of a \inlinecode{C++}{NMPCGenerator} object like so
 \begin{minted}{cpp}
@@ -187,7 +187,7 @@ and finally compute the desired joint angles by
   ki.Inverse(com_traj, lf_traj, rf_traj);
   Eigen::MatrixXd q_traj = ki.GetQTraj();
 \end{minted}
-How to use these joint angles, in order to get it running on Heicub, is described in section \ref{sec::341_co}. We have now seen that it is only required to set the reference velocity to control the robot, and the next section will explain how this can be done with the use of a neural network.
+How to use these joint angles, in order to get it running on Heicub, is described in section \ref{sec::342_co}. We have now seen that it is only required to set the reference velocity to control the robot, and the next section will explain how this can be done with the use of a neural network.
 \\
 \begin{minipage}[t]{1.\textwidth}
 	\hspace*{-1cm}

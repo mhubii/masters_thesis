@@ -1,6 +1,6 @@
 \FloatBarrier
-\section{Autonomous Walking}
-\label{sec::42_aw}
+\section{Autonomous Walking via Behavioral Cloning}
+\label{sec::42_ab}
 The autonomous walking is based upon the performance within the test environment from section \ref{sec::412_pt}. The found parameters are used for comparative reason throughout this section as well. As explained in section \ref{sec::224_ip}, the neural network benefits strongly from an available depth map as input. We will therefore deal with the depth map extraction first.
 \FloatBarrier
 \subsection{Camera Calibration}
@@ -82,7 +82,7 @@ Exemplary rectified images, which rely on the matrices of table \ref{tab::421_ex
 	\label{fig::421_rect}
 \end{figure}
 \FloatBarrier
-\subsection{Depth Parameter Tuning}
+\subsection{Depth Map Parameter Tuning}
 \label{sec::422_dp}
 Within this section, we shortly explore the effects of all tuneable parameters on the depth map generation. Therefore, we utilize a simple experimental setup. Within the setup, Heicub points its stereo camera towards three chairs that are located at a distance of $1\,\text{m}$ towards each other, and towards the cameras, so to cover close, medium, and far distances. The consecutive chairs are slightly shifted, in order to enable the simultaneous observation of all of them. The rectified view of the environment is shown in figure \ref{fig::422_wls_rgb}.
 \begin{figure}[h!]
@@ -253,70 +253,3 @@ Especially in the behavior plot of figure \ref{fig::424_aw_additional_semantic},
 	\caption{Autonomously controlled for demonstration of a semantic understanding. The robot started to the plot's left-hand side (a), and moved forward to the fire extinguisher to its left. Heicub had to distinguish between the fire extinguisher and another orange object right in front of it.}
 	\label{fig::424_aw_additional_semantic}
 \end{figure}
-\FloatBarrier
-\subsection{Proximal Policy Optimization}
-\label{sec::425_pp}
-Since there is to this date no feasible way of training an agent on autonomous navigation in real time with reinforcement learning, we first decided to implement a benchmarking environment, which is introduced in section \ref{sec::425_bpp}, and then to use the benchmarking environment to test the fusion of nonlinear model predictive control with proximal policy optimization in, which is demonstrated in section \ref{sec::425_fpp}.
-\subsubsection{Benchmarking Proximal Policy Optimization}
-\label{sec::425_bpp}
-To validate the implementation of proximal policy optimization, we used a little benchmarking environment that is shown in figure \ref{fig::425_ppo_env}. The agent's goal within this setup is to move towards the red dot, while keeping a maximum distance of $10\,\text{a.u.}$ towards it. The environment's state is simply described by a concatenation of the agent's position $\bm{a} = \begin{pmatrix}
-a_x & a_y
-\end{pmatrix}^T$ with that of the goal $\bm{g} = \begin{pmatrix}
-g_x & g_y
-\end{pmatrix}^T$. The reward $r_t$, at time step $t$, is designed to encourage motion towards the goal, by taking the difference of the previous and the current goal distance $r_t = ||\bm{a}_{t-1}-\bm{g}_{t-1}||_2 - ||\bm{a}_{t}-\bm{g}_{t}||_2$. Furthermore, a reward of ten was gained for successful completion, while a reward of negative ten was granted for whenever the agent left the maximally allowed distance towards the goal, see for example figure \ref{fig::425_ppo_env} (a).
-\begin{figure}[h!]
-	\centering
-	\subcaptionbox{Agent at epoch 1.}%
-	[.45\linewidth]{\includegraphics[scale=.45]{chapters/04_experiments/02_autonomous_walking/epoch_1.pdf}}	
-	\subcaptionbox{Agent at epoch 30.}%
-	[.45\linewidth]{\includegraphics[scale=.45]{chapters/04_experiments/02_autonomous_walking/epoch_30.pdf}}
-	\caption{Artificial agent in proximal policy optimization test environment. While the agent acts randomly in epoch 1 (a), the goal is reached with high confidence at epoch 30 (b).}	
-	\label{fig::425_ppo_env}
-\end{figure} 
-In each of the cases, the environment was reset, and the goal got spawned at a random location. For both, the agent and the critic network, we used a fully connected neural network with 2 hidden layers of size 16, and 32, respectively. The output layer provided 2 units, which reflect our agent's degrees of freedom in the environment. For the hidden units, we again relied on rectifying linear units as our activation function, while we used a hyperbolic tangent for the output. We were able to produce the best results with a gradient clipping at $\epsilon=0.2$ (see equation \ref{eq::223_clip}), and the cost function hyper-parameters $c_1 = 0.5$ and $c_2 = 0.1/\overline{r_t}$, where $\overline{r_t}$ denotes the average reward, and which can be found in equation \ref{eq::223_ppo_loss}. 
-\begin{figure}[h!]
-	\centering
-	\subcaptionbox{Reward history.}%
-	[.45\linewidth]{\includegraphics[scale=.35]{chapters/04_experiments/02_autonomous_walking/ppo_reward_history.pdf}}	
-	\subcaptionbox{Standard deviation history.}%
-	[.45\linewidth]{\includegraphics[scale=.35]{chapters/04_experiments/02_autonomous_walking/ppo_std_history.pdf}}
-	\caption{Proximal policy optimization in test environment over 50 epochs. The agent learned to maximize the reward after around 20 epochs, by increasing its exploration with a higher standard deviation within the policy $\pi_\theta$ (b).}	
-	\label{fig::425_ppo_hist}
-\end{figure}
-We ran the environment for $10000$ steps per epoch, and updated the networks every $4096$ actions, with a minibatch size of $M=512$ for $8$ proximal policy optimization epochs (see algorithm \ref{alg::225_ac}). The Adam optimizer then led to convergence at a learning rate of $0.01$ after about thirty epochs (see figure \ref{fig::425_ppo_hist}). A main reason for the fast convergence was caused by the chosen entropy hyperparameter $c_2$, which encouraged exploration on low rewards, and damped exploration on high rewards. We computed the entropy $S[\pi_\theta]$ from the differential entropy of our Gaussian policy $\pi_\theta$ via (\href{https://github.com/mhubii/ppo_libtorch/blob/481c1e326dcd6220b2c1c955a0303a410c2cb0dd/Models.h#L82}{\underline{link}})
-\begin{align}
-S[\pi_\theta] = 0.5 + 0.5\log(2\pi)+\log(\sigma),
-\end{align}
-where $\sigma$ is the standard deviation. We can then see the standard deviation's influence on the reward, as it starts to increase strongly in figure \ref{fig::425_ppo_hist} (b). After having trained the agent successfully for $50$ epochs, we ran the policy $\pi_\theta$ without noise contribution, but rather took the average $\mu$, as proposed by the actor network. An example of the agent's behavior can be seen in figure \ref{fig::425_ppo_test}, which now appears smooth. 
-\begin{figure}[h!]
-	\centering
-	\includegraphics[scale=.45]{chapters/04_experiments/02_autonomous_walking/test_mode.pdf}
-	\caption{Proximal policy optimization in test mode that is without noisy policy $\pi_\theta$. The agent almost learned to move the shortest path towards the goal.}	
-	\label{fig::425_ppo_test}
-\end{figure}
-We ran the agent ten times for $10000$ steps without noise contribution, and observed $311\pm3$ wins on average, and no lost game at all, which indicates that the neural network learned to generalize the task well.
-\subsubsection{Fusion of Nonlinear Model Predictive Control with Proximal Policy Optimization}
-\label{sec::425_fpp}
-For the autonomous navigation, we then combined proximal policy optimization with nonlinear model predictive control. 
-\begin{figure}[h!]
-	\centering
-	\subcaptionbox{Reward history.}%
-	[.45\linewidth]{\includegraphics[scale=.35]{chapters/04_experiments/02_autonomous_walking/nmpc_ppo_reward_history.pdf}}	
-	\subcaptionbox{Standard deviation history.}%
-	[.45\linewidth]{\includegraphics[scale=.35]{chapters/04_experiments/02_autonomous_walking/nmpc_ppo_std_history.pdf}}
-	\caption{}	
-	\label{fig::425_nmpc_ppo_hist}
-\end{figure}
-\begin{figure}[h!]
-	\centering
-	\subcaptionbox{}%
-	[.45\linewidth]{\includegraphics[scale=.45]{chapters/04_experiments/02_autonomous_walking/test_mode_0_m4.pdf}}	
-	\subcaptionbox{}%
-	[.45\linewidth]{\includegraphics[scale=.45]{chapters/04_experiments/02_autonomous_walking/test_mode_4_4.pdf}}
-	\subcaptionbox{}%
-	[.45\linewidth]{\includegraphics[scale=.45]{chapters/04_experiments/02_autonomous_walking/test_mode_m4_4.pdf}}
-	\subcaptionbox{}%
-	[.45\linewidth]{\includegraphics[scale=.45]{chapters/04_experiments/02_autonomous_walking/test_mode_m4_m4.pdf}}
-	\caption{}	
-	\label{fig::425_nmpc_ppo_env}
-\end{figure} 
