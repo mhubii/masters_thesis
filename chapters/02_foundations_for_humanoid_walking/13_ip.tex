@@ -1,18 +1,18 @@
 \FloatBarrier
-\subsection{Interpolating Trajectories}
+\section{Interpolating Trajectories}
 \label{sec::213_it}
 As already shortly depicted in figure \ref{fig::21_pg}, we need to interpolate the trajectories that we obtain from the nonlinear model predictive control. This especially holds for the feet, since the computed results do only consider the pendulums dynamic balance with respect to the x-, and the y-position, but not for a robot that must lift its feet along the z-axis. Furthermore, the feet's movement shall be executed such that they stop moving when they are about to touch the ground. This constraint, and others, will be achieved by interpolating the feet trajectories with polynomials. In order to then match the center of mass trajectory's temporal resolution with the feet trajectories', we will upscale it under the already well-known assumption of a linear inverted pendulum. The resulting trajectories are shown in figure \ref{fig::213_ip} and will further be explained in the following. 
 \begin{figure}[h!]
 	\centering
 	\subcaptionbox{}%
-	[.4\linewidth]{\includegraphics[scale=.4]{chapters/02_background/img/raw_results.png}}
+	[.4\linewidth]{\includegraphics[scale=.4]{chapters/02_foundations_for_humanoid_walking/img/raw_results.png}}
 	\subcaptionbox{}%
-	[.4\linewidth]{\includegraphics[scale=.4]{chapters/02_background/img/interpolated_results.png}}
+	[.4\linewidth]{\includegraphics[scale=.4]{chapters/02_foundations_for_humanoid_walking/img/interpolated_results.png}}
 	\caption{Uninterpolated trajectories (a), as obtained from the nonlinear model predictive control, and interpolated trajectories (b) for the feet and the center of mass.}
 	\label{fig::213_ip}
 \end{figure}
 \FloatBarrier
-\subsubsection{Interpolating the Feet Trajectories}
+\subsection{Interpolating the Feet Trajectories}
 Any trajectory can in principal be approximated by a polynomial function. For our purposes, we want to approximate positions $p$ as they evolve over time $t$, and further obtain the corresponding velocities $\dot{p}$ and accelerations $\ddot{p}$ (equations \ref{eq::213_pos_poly} - \ref{eq::213_acc_poly}).  
 \begin{align}
 	p(t) &= \sum_{i = 0}^{N}a_it^i 
@@ -153,5 +153,5 @@ and inversion yields the polynomial's coefficients $a_{x,i}$
 \end{align}
 The exact same formalism is used to interpolate the foot's y-position during single support phase (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/c82c64a28da7527e75442764f585bd50a8f61ee9/libs/pattern_generator/src/interpolation.cpp#L806}{\underline{link}}). In contrast to the interpolation of the feet's positions, the center of mass positions will be extrapolated under the introduced assumption of a linear inverted pendulum. The method will be shortly explained in the following paragraph - Interpolating the Center of Mass Trajectories.
 \FloatBarrier
-\subsubsection{Interpolating the Center of Mass Trajectories}
+\subsection{Interpolating the Center of Mass Trajectories}
 The center of mass trajectories can now simply be adjusted to the temporal resolution of the feet trajectories by applying the linear time-stepping scheme from equation \ref{eq::212_ltss} with an adjusted temporal resolution $T$. An iterative application (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/interpolation.cpp#L776}{\underline{link}}) of these matrices then yields the desired interpolation. The only requirement left to get our robot to walk is now the transformation of trajectories in Cartesian space to trajectories within the joint space, which will be resolved in the following chapter - Kinematics.

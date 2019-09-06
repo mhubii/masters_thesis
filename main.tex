@@ -114,49 +114,54 @@ version  = 3.03
 	%% chapters
 	\chapter{Introduction}
 	\input{chapters/01_introduction/00_in}
-	% humanoids (icub, others), problem statement, research aim and objectives
 	
-	\chapter{Background}
-	\input{chapters/02_background/00_in}   % introduction to background
-	\input{chapters/02_background/10_hw}   % short overview of humanoid walking
-	\input{chapters/02_background/11_zmp}  % zero moment point
-	\input{chapters/02_background/12_nmpc} % nonlinear model predictive control
-	\input{chapters/02_background/13_ip}   % interpolation
-	\input{chapters/02_background/14_ki}   % kinematics
+	\chapter{Foundations for Humanoid Walking}
+	\input{chapters/02_foundations_for_humanoid_walking/00_in}   % introduction to background
+	\input{chapters/02_foundations_for_humanoid_walking/10_hw}   % short overview of humanoid walking
+	\input{chapters/02_foundations_for_humanoid_walking/11_zmp}  % zero moment point
+	\input{chapters/02_foundations_for_humanoid_walking/12_nmpc} % nonlinear model predictive control
+	\input{chapters/02_foundations_for_humanoid_walking/13_ip}   % interpolation
+	\input{chapters/02_foundations_for_humanoid_walking/14_ki}   % kinematics
 	
-	\input{chapters/02_background/20_ml}   % short overview of machine learning
-	\input{chapters/02_background/21_nn}   % short introduction to neural networks
-	\input{chapters/02_background/22_bc}   % behavioral cloning
-	\input{chapters/02_background/23_rl}   % reinforcement learning
-	\input{chapters/02_background/24_ip}   % image processing
+	\chapter{Principles of Machine Learning}
+	\input{chapters/03_principles_of_machine_learning/00_ml}   % short overview of machine learning
+	\input{chapters/03_principles_of_machine_learning/10_nn}   % short introduction to neural networks
+	\input{chapters/03_principles_of_machine_learning/20_rl}   % reinforcement learning
+	\input{chapters/03_principles_of_machine_learning/30_ip}   % image processing
 	
-	\chapter{Methods}
-	\input{chapters/03_methods/00_in}
-	\input{chapters/03_methods/01_cs}
-	\input{chapters/03_methods/02_pg}
-	\input{chapters/03_methods/03_dl}
-	\input{chapters/03_methods/04_he}
+	\chapter{Implementing an Autonomous Walking Pattern Generation}
 	
-	\chapter{Experiments}
-	\input{chapters/04_experiments/00_in}
-	\input{chapters/04_experiments/01_uc}
-	\input{chapters/04_experiments/02_aw}
-	\input{chapters/04_experiments/03_ar}
+	%\input{chapters/02_background/22_bc}   % behavioral cloning
+	%\input{chapters/02_background/23_rl}   % reinforcement learning
+	
+
+	
+	%\chapter{Methods}
+	%\input{chapters/03_methods/00_in}
+	%\input{chapters/03_methods/01_cs}
+	%\input{chapters/03_methods/02_pg}
+	%\input{chapters/03_methods/03_dl}
+	%\input{chapters/03_methods/04_he}
+	
+	\chapter{Walking Experiments}
+	\input{chapters/05_walking_experiments/00_in}
+	\input{chapters/05_walking_experiments/01_uc}
+	\input{chapters/05_walking_experiments/02_aw}
 	
 	\chapter{Conclusion}
-	\input{chapters/05_conclusion/00_in}
+	\input{chapters/06_conclusion/00_in}
 	
 	\part{Appendix}
 	\begin{appendix}
 		\label{sec::a}
-		\input{chapters/06_appendix/00_si}
-		\input{chapters/06_appendix/01_su}
+		\input{chapters/07_appendix/00_si}
+		\input{chapters/07_appendix/01_su}
 		\chapter{Lists}
 		\listoffigures
 		\listoftables
 		\bibliographystyle{unsrt}
-		\bibliography{chapters/06_appendix/references}
-		\input{chapters/06_appendix/acknowledgements}
-		\include{chapters/06_appendix/deposition}
+		\bibliography{chapters/07_appendix/references}
+		\input{chapters/07_appendix/acknowledgements}
+		\include{chapters/07_appendix/deposition}
 	\end{appendix}
 \end{document}

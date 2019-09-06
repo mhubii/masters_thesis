@@ -1,9 +1,9 @@
 \FloatBarrier
-\subsection{Kinematics}
+\section{Kinematics}
 \label{sec::214_k}
 As already shortly depicted in figure \ref{fig::21_pg}, it is required to compute the robot's kinematics in order to switch between the Cartesian space and the joint space. For our purposes, we need to find joint angles that satisfy the center of mass and the feet trajectories. While it is rather straight forward to compute the forward kinematics, as it is just a concatenation of spatial transformations, the inverse kinematics require an optimization, since there usually is no unique solution.
 \FloatBarrier
-\subsubsection{Forward Kinematics}
+\subsection{Forward Kinematics}
 \label{sec::2141_fk}
 The goal in forward kinematics is to transform joint angles $\bm{q}$ into Cartesian coordinates $\bm{x}$ such that $\textbf{FK}(\bm{q}) = \bm{x}$. For this thesis, it enables us to feedback the robot's center of mass position, given the current state of it. In terms of homogeneous coordinates, one can express the forward kinematics as a series of spatial transformations, which include translations $\bm{t}$ and rotations $\bm{R}$ 
 \begin{align}
@@ -11,7 +11,7 @@ The goal in forward kinematics is to transform joint angles $\bm{q}$ into Cartes
 \end{align}
 where $\bm{x}_i=[x\,y\,z\,1]^T$, and $\bm{H}_i^{i-1}=\begin{pmatrix}\bm{R} & \bm{t} \\ \bm{0} & 1 \end{pmatrix}$ are homogeneous coordinates and transformations from frame $i$ to frame $i-1$, respectively.
 \FloatBarrier
-\subsubsection{Inverse Kinematics}
+\subsection{Inverse Kinematics}
 \label{sec::2142_ik}
 In inverse kinematics, we aim at finding joint angles $\bm{q}$ that satisfy certain positional and orientational constraints, which we set for the kinematic chain of interest. For this work, we require the robot's feet and center of mass to be at a position that we obtain from the nonlinear model predictive control. That is, we minimize the sum of squared differences $S(\bm{q},\Delta\bm{q})$ between desired positions and orientations $a_i$ and the linearization of the forward kinematics around the robot's current pose $\bm{q}$ (equation \ref{eq::2142_min}), to find an incremental update $\Delta\bm{q}$. 
 \begin{align}
