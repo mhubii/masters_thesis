@@ -1,5 +1,5 @@
 \FloatBarrier
-\subsubsection{Camera Calibration}
+\section{Camera Calibration}
 \label{sec::421_cc}
 As described in section \ref{sec::3_ip}, for the stereo block matching algorithm to work properly (equation \ref{eq::31_sad}), it is required to calibrate the cameras. We shortly verified this in figure \ref{fig::421_no_calib}, where we extracted a depth map from the uncalibrated stereo camera pair.
 \begin{figure}[h!]
@@ -15,7 +15,7 @@ For the calibration we chose to use a chess-board calibration pattern, see figur
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.28]{chapters/10_image_processing_experiments/img/calib.png}
-	\caption{Exemplary left and right camera views of the calibration pattern as acquired during the calibration process. The colorful points indicate the detected corners in the image plane. Refer to figure \ref{fig::32_distortion} for the theory.}
+	\caption{Exemplary left and right camera views of the calibration pattern as acquired during the calibration process. The colorful points indicate the detected corners in the image plane. Refer to section \ref{sec::32_cc} for the theory.}
 	\label{fig::421_calib}
 \end{figure}
 As the resulting mean squared re-projection error $\Delta \bar{x} = 1/(WHN)\sum_0^{WHN} \Delta x$ (equation \ref{eq::32_reprojection}), we obtained $\Delta \bar{x}_l = 0.26\, \text{pixel}$, and $\Delta \bar{x}_r = 0.25\,\text{pixel}$, for the left, and the right camera, respectively. According to equations \ref{eq::32_focal_intrinsics}, \ref{eq::32_x_dist}, and \ref{eq::32_y_dist}, we therefore determined the camera's intrinsic parameters as listed in table \ref{tab::421_intrinsics}.
@@ -74,11 +74,11 @@ Exemplary rectified images, which rely on the matrices of table \ref{tab::421_ex
 	[.4\linewidth]{\includegraphics[scale=.25]{chapters/10_image_processing_experiments/img/rect.png}}
 	\subcaptionbox{Rotated rectified images.}%
 	[.4\linewidth]{\includegraphics[scale=.25]{chapters/10_image_processing_experiments/img/rect_line.png}}
-	\caption{Rectified and original view of the stereo camera. Refer to figure \ref{fig::32_rectified} for the theory.}
+	\caption{Rectified and original view of the stereo camera. Refer to section \ref{sec::22_cc} for the theory.}
 	\label{fig::421_rect}
 \end{figure}
 \FloatBarrier
-\subsubsection{Depth Map Parameter Tuning}
+\section{Depth Map Parameter Tuning}
 \label{sec::422_dp}
 Within this section, we shortly explore the effects of all tuneable parameters on the depth map generation. Therefore, we utilize a simple experimental setup. Within the setup, Heicub points its stereo camera towards three chairs that are located at a distance of $1\,\text{m}$ towards each other, and towards the cameras, so to cover close, medium, and far distances. The consecutive chairs are slightly shifted, in order to enable the simultaneous observation of all of them. The rectified view of the environment is shown in figure \ref{fig::422_wls_rgb}.
 \begin{figure}[h!]

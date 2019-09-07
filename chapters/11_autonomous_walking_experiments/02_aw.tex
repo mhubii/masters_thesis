@@ -1,11 +1,10 @@
 \FloatBarrier
-\section{Learning Autonomous Walking: Towards Smart Machines}
 \label{sec::42_ab}
 The autonomous walking is based upon the performance within the test environment from section \ref{sec::412_pt}. The found parameters are used for comparative reason throughout this section as well. As explained in section \ref{sec::3_ip}, the neural network benefits strongly from an available depth map as input. We will therefore deal with the depth map extraction first.
 \FloatBarrier
-\subsection{Autonomous Walking via Behavioral Cloning}
+\section{Autonomous Walking via Behavioral Cloning}
 \FloatBarrier
-\subsubsection{Data Acquisition and Training}
+\subsection{Data Acquisition and Training}
 \label{sec::423_da}
 As already pointed out, the task we wanted our neural network to solve was to find a fire extinguisher within a room and then to move towards it. For us to apply behavioral cloning to the task, it was necessary to act according to this policy first, and then to train a neural network on the acquired data. For the data, it is essential to sample homogeneously over the task's distribution. We, therefore, recorded velocity commands and the corresponding images for 66 distinct epochs. Each of the epochs was designed to reflect different scenarios, among them obstacle avoidance, interaction with humans, walking towards the fire extinguisher, and searching for the fire extinguisher when it was not possible to directly see it. As a result of the observations that we gained from the user-controlled walking in section \ref{sec::41_uc}, we restricted the user's policy to only use linear velocities along the x-axis, and angular velocities about the z-axis, since linear velocities along the y-axis revealed to pose an inefficient way of moving the robot. Exemplary samples of the recorded dataset are presented in figure \ref{fig::423_dataset}.
 \begin{figure}[h!]
@@ -44,7 +43,7 @@ By pure sight, it can already be seen that the network performs well on the vali
 \end{align}
 where for our case, $p(v)$ is the ground truth velocity distribution, and $q(v)$ is the predicted velocity distribution. For the distribution of linear velocities along the x-axis $v_x$, we computed the Kullback-Leibler divergence to be $D^x_\text{KL}=0.20\,\text{a.u.}$, and for the angular velocity about the z-axis $\omega_z$, we obtained $D^z_\text{KL}=0.01\,\text{a.u.}$. Now the beauty within the task at hand lies in the fact that we were not solely dependent on a validation split for performance evaluations, but instead that we could run Heicub in a previously unseen test environment. It is the same test environment, which we already introduced in section \ref{sec::41_uc}, and we will evaluate the trained neural network's behavior within it in the next section - Performance in Test Environment.
 \FloatBarrier
-\subsubsection{Performance in Test Environment}
+\subsection{Performance in Test Environment}
 \label{sec::424_pt}
 For the performance benchmarking, we relied on the well-defined experimental setup from section \ref{sec::41_uc}. Once more, the tasks were to move straight towards a fire extinguisher, to turn and to move towards it, to avoid an obstacle on the way, and to find the fire extinguisher. In order to ensure reproducibility, we let Heicub solve each of these tasks twice, as we did for the user-controlled case. The setup is shown in figure \ref{fig::424_aw_gif_basic}, which shows Heicub's movement over the course of each task along with its sight of the scene.
 \begin{figure}[h!]
@@ -147,10 +146,10 @@ Especially in the behavior plot of figure \ref{fig::424_aw_additional_semantic},
 	\label{fig::424_aw_additional_semantic}
 \end{figure}
 \FloatBarrier
-\subsection{Autonomous Walking via Reinforcement Learning}
+\section{Autonomous Walking via Reinforcement Learning}
 \label{sec::43_ar}
 Since there is to this date no feasible way of training an agent on autonomous navigation in real time with reinforcement learning, we first decided to implement a benchmarking environment, which is introduced in section \ref{sec::431_bpp}, and then to use the benchmarking environment to test the fusion of nonlinear model predictive control with proximal policy optimization in, which is demonstrated in section \ref{sec::431_fpp}.
-\subsubsection{Benchmarking Proximal Policy Optimization}
+\subsection{Benchmarking Proximal Policy Optimization}
 \label{sec::431_bpp}
 To validate the implementation of proximal policy optimization, we used a little benchmarking environment that is shown in figure \ref{fig::431_ppo_env}. The agent's goal within this setup is to move towards the red dot, while keeping a maximum distance of $10\,\text{a.u.}$ towards it. The environment's state is simply described by a concatenation of the agent's position $\bm{a} = \begin{pmatrix}
 a_x & a_y
@@ -188,7 +187,7 @@ where $\sigma$ is the standard deviation. We can then see the standard deviation
 	\label{fig::431_ppo_test}
 \end{figure}
 We ran the agent ten times for $10000$ steps without noise contribution, and observed $311\pm3$ wins on average, and no lost game at all, which indicates that the neural network learned to generalize the task well.
-\subsubsection{Fusion of Nonlinear Model Predictive Control with Proximal Policy Optimization}
+\subsection{Fusion of Nonlinear Model Predictive Control with Proximal Policy Optimization}
 \label{sec::431_fpp}
 For the autonomous navigation, it is then possible to combine proximal policy optimization with nonlinear model predictive control (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dev/src/train_ppo_nmpc.cpp}{\underline{link}}). Just as in the previous section, a neural network has to solve goal navigation, but this time the agent's trajectories are computed by using the nonlinear model predictive control. The environment's state is simply described by the goal's position $\bm{g}_a=\begin{pmatrix}
 g_x & g_y
