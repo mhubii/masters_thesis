@@ -4,7 +4,7 @@
 Behavioral cloning in itself is not always related to machine learning but poses one possible way of training a neural network in a supervised manner. The presented concept is easy to understand and got inspired by \cite{bojarski2016end}, where they used it for self-driving cars, and since having a car drive along the road is easier to achieve than having a robot walk around an environment, we will deal with the additional details later to focus on the main points for now. The proposed method utilizes the control loop, which was already introduced in figure \ref{fig::2_cl}. In order to then replace the human user by an artificial agent, we have a human user perform a desired behavior, and copy it. The required extended control loop is shown in figure \ref{fig::222_bc}.
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=.5]{chapters/02_background/img/behavioral_cloning.png}
+	\includegraphics[scale=.5]{chapters/05_implementing_an_autonomous_walking_pattern_generator/img/behavioral_cloning.png}
 	\caption{Pipeline for behavioral cloning. The neural network is trained on stored RGBD images, and corresponding velocity commands that are correlated by a timestamp}
 	\label{fig::222_bc}
 \end{figure}
