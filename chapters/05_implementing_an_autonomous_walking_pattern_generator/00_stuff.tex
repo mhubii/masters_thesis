@@ -1,0 +1,69 @@
+%%%%%%%%%%%
+%%% ZMP %%%
+%%%%%%%%%%%
+
+%%% SUPPORT POLYGON %%% explain the software implementation
+We now came to appreciate the importance of the support polygon for the definition of the zero moment point. 
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=.5]{chapters/02_foundations_for_humanoid_walking/img/support_polygon.png}
+	\caption{Full support polygon, and the resulting support polygon with security margin (dashed lines).}
+	\label{fig::21_support_polygon}
+\end{figure}
+The support polygon is defined as the convex hull of all contact points of the feet with the ground, so the minimum number of points to fully contain all of them. As the most restrictive case for balance, in this work, we will only consider the support polygon of one foot at a time. Since a rectangle well describes a foot's convex hull, we only rely on the foot width (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/bc79a6d4f9bcfd3794146355af44429f5b7a9fe0/libs/pattern_generator/configs.yaml#L14}{\underline{link}}), and the foot length (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/bc79a6d4f9bcfd3794146355af44429f5b7a9fe0/libs/pattern_generator/configs.yaml#L15}{\underline{link}}) to fully describe it. Also, to ensure that the zero moment point never comes close to the edges of the feet and therefore to provide balance, we define a security margin to their borders (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/bc79a6d4f9bcfd3794146355af44429f5b7a9fe0/libs/pattern_generator/configs.yaml#L3}{\underline{link}}). The respective values are robot specific and can be set in the configurations file by following the provided links.
+
+
+%%% LIPM %%% explain where to set this values or leave it out, cause of config file
+The specific values can be set in the configurations file (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/bc79a6d4f9bcfd3794146355af44429f5b7a9fe0/libs/pattern_generator/configs.yaml#L27}{\underline{link}}).
+%%%%%%%%%%%
+%%% ZMP %%%
+%%%%%%%%%%%
+
+
+%%%%%%%%%%%%
+%%% NMPC %%%
+%%%%%%%%%%%%
+BaseGenerator::Simulate \ref{eq::223_ckp1} - \ref{eq::223_ddckp1}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L887}{\underline{link}})
+
+BaseGenerator::InitializeConstantMatrices
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L403}{\underline{link}})
+
+BaseGenerator::InitializeCopMatrices \ref{eq::223_zmp}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L420}{\underline{link}})
+
+BaseGenerator::SetVelocityReference 
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L324}{\underline{link}})
+
+BaseGenerator::UpdateSelectionMatrices \ref{eq::224_fs}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L740}{\underline{link}})
+
+BaseGenerator::UpdateFootSelectionMatrices \ref{eq::224_fsm}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L1281}{\underline{link}})
+
+NMPCGenerator::PreprocessSolution \ref{eq::224_canqp}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/nmpc_generator.cpp#L145}{\underline{link}})
+
+BaseGenerator::ComputeLinearSystem \ref{fig::225_foot_hull}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L844}{\underline{link}})
+
+BaseGenerator::BuildCopContraint \ref{eq::22_cop_hull}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L946}{\underline{link}})
+
+BaseGenerator::BuildFootIneqConstraint \ref{eq::225_ineq_foot}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/base_generator.cpp#L1061}{\underline{link}})
+
+BaseGenerator::BuildRotIneqConstraint \ref{eq::225_ineq_rot}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/base_generator.cpp#L1244}{\underline{link}})
+
+BaseGenerator::BuildObstacleConstraint \ref{eq::225_obs_const}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/base_generator.cpp#L1271}{\underline{link}})
+
+NMPCGenerator::CalculateDerivatives \ref{eq::226_ocp}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/nmpc_generator.cpp#L377}{\underline{link}})
+
+NMPCGenerator::PreprocessSolution
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/nmpc_generator.cpp#L155}{\underline{link}})
+%%%%%%%%%%%%
+%%% NMPC %%%
+%%%%%%%%%%%%
