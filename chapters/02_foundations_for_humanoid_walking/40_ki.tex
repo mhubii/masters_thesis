@@ -1,10 +1,10 @@
 \FloatBarrier
 \section{Kinematics}
-\label{sec::214_k}
+\label{sec::24_k}
 As already shortly depicted in figure \ref{fig::21_pg}, it is required to compute the robot's kinematics in order to switch between the Cartesian space and the joint space. For our purposes, we need to find joint angles that satisfy the center of mass and the feet trajectories. While it is rather straight forward to compute the forward kinematics, as it is just a concatenation of spatial transformations, the inverse kinematics require an optimization, since there usually is no unique solution.
 \FloatBarrier
 \subsection{Forward Kinematics}
-\label{sec::2141_fk}
+\label{sec::241_fk}
 The goal in forward kinematics is to transform joint angles $\bm{q}$ into Cartesian coordinates $\bm{x}$ such that $\textbf{FK}(\bm{q}) = \bm{x}$. For this thesis, it enables us to feedback the robot's center of mass position, given the current state of it. In terms of homogeneous coordinates, one can express the forward kinematics as a series of spatial transformations, which include translations $\bm{t}$ and rotations $\bm{R}$ 
 \begin{align}
 	\bm{x}_\text{0} = \prod_{i=N}^{0}\bm{H}_i^{i-1}(q)\bm{x}_\text{N},
@@ -12,15 +12,15 @@ The goal in forward kinematics is to transform joint angles $\bm{q}$ into Cartes
 where $\bm{x}_i=[x\,y\,z\,1]^T$, and $\bm{H}_i^{i-1}=\begin{pmatrix}\bm{R} & \bm{t} \\ \bm{0} & 1 \end{pmatrix}$ are homogeneous coordinates and transformations from frame $i$ to frame $i-1$, respectively.
 \FloatBarrier
 \subsection{Inverse Kinematics}
-\label{sec::2142_ik}
-In inverse kinematics, we aim at finding joint angles $\bm{q}$ that satisfy certain positional and orientational constraints, which we set for the kinematic chain of interest. For this work, we require the robot's feet and center of mass to be at a position that we obtain from the nonlinear model predictive control. That is, we minimize the sum of squared differences $S(\bm{q},\Delta\bm{q})$ between desired positions and orientations $a_i$ and the linearization of the forward kinematics around the robot's current pose $\bm{q}$ (equation \ref{eq::2142_min}), to find an incremental update $\Delta\bm{q}$. 
+\label{sec::242_ik}
+In inverse kinematics, we aim at finding joint angles $\bm{q}$ that satisfy certain positional and orientational constraints, which we set for the kinematic chain of interest. For this work, we require the robot's feet and center of mass to be at a position that we obtain from the nonlinear model predictive control. That is, we minimize the sum of squared differences $S(\bm{q},\Delta\bm{q})$ between desired positions and orientations $a_i$ and the linearization of the forward kinematics around the robot's current pose $\bm{q}$ (equation \ref{eq::242_min}), to find an incremental update $\Delta\bm{q}$. 
 \begin{align}
 	S(\bm{q},\Delta\bm{q}) = \sum_{i=0}^m\left[a_i-\textbf{FK}_i(\bm{q})-\frac{\partial\textbf{FK}_i(\bm{q})}{\partial\bm{q}}\Delta\bm{q}\right]^2
-	\label{eq::2142_min}
+	\label{eq::242_min}
 \end{align}
-A damped version of this minimization yields the Levenberg-Marquardt algorithm \cite{more1978levenberg}\cite{sugihara2011solvability}, with which one can iteratively update the pose $\bm{q}$ by $\Delta\bm{q}$, so to satisfy the posed requirements (equation \ref{eq::2142_levenberg}).
+A damped version of this minimization yields the Levenberg-Marquardt algorithm \cite{more1978levenberg}\cite{sugihara2011solvability}, with which one can iteratively update the pose $\bm{q}$ by $\Delta\bm{q}$, so to satisfy the posed requirements (equation \ref{eq::242_levenberg}).
 \begin{align}
 	\Delta\bm{q} = (\bm{J}^T\bm{J}+\lambda\bm{I})^{-1}\bm{J}^T(\bm{y}-\textbf{FK}(\bm{q}))
-	\label{eq::2142_levenberg}
+	\label{eq::242_levenberg}
 \end{align}
 Therein, the rows of system's Jacobian $\bm{J}$ is governed by $\bm{J}_i=\frac{\partial\textbf{FK}_i(\bm{q})}{\partial\bm{q}}$.

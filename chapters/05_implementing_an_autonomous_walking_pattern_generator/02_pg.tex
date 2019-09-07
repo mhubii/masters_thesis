@@ -1,7 +1,7 @@
 \FloatBarrier
 \section{Implementation of the Pattern Generation Library}
 \label{sec::32_pg}
-The pattern generation library is built upon the fast linear algebra library Eigen \cite{eigenweb}, which makes it perfectly compatible with the rigid body dynamics library RBDL \cite{felis2017rbdl} that is used for the kinematics. Its main duty is to build the formulation of the optimal control problem that was introduced with much detail in section \ref{sec::212_nmpc}. Starting from the linear time-stepping scheme (equations \ref{eq::212_ckp1}-\ref{eq::212_ddckp1}), the \inlinecode{C++}{BaseGenerator} class sets up all of the necessary matrices for the nonlinear model predictive control. What the \inlinecode{C++}{NMPCGenerator} class then mainly does is to inherit from \inlinecode{C++}{BaseGenerator} in order to sort the matrices for the sequential quadratic programming formulation of equation \ref{eq::212_ocp}. All of the ordering is then being done by \inlinecode{C++}{NMPCGenerator::CalculateCommonExpressions}, while \inlinecode{C++}{NMPCGenerator::CalculateDerivatives} computes the linearization of the optimal control problem, which got explained in detail in section \ref{sec::212_gn}. Then to solve the sequential quadratic programming task, the pattern generation library utilizes qpOASES \cite{ferreau2014qpoases}, and the results are being interpolated by the \inlinecode{C++}{Interpolation} class, which relies on the theory of section \ref{sec::213_it}. However, to use the pattern generation library, the user does not have to deal with the private methods and can only use the public interface. A typical use case would involve the initialization of a \inlinecode{C++}{NMPCGenerator} object like so
+The pattern generation library is built upon the fast linear algebra library Eigen \cite{eigenweb}, which makes it perfectly compatible with the rigid body dynamics library RBDL \cite{felis2017rbdl} that is used for the kinematics. Its main duty is to build the formulation of the optimal control problem that was introduced with much detail in section \ref{sec::22_nmpc}. Starting from the linear time-stepping scheme (equations \ref{eq::22_ckp1}-\ref{eq::22_ddckp1}), the \inlinecode{C++}{BaseGenerator} class sets up all of the necessary matrices for the nonlinear model predictive control. What the \inlinecode{C++}{NMPCGenerator} class then mainly does is to inherit from \inlinecode{C++}{BaseGenerator} in order to sort the matrices for the sequential quadratic programming formulation of equation \ref{eq::22_ocp}. All of the ordering is then being done by \inlinecode{C++}{NMPCGenerator::CalculateCommonExpressions}, while \inlinecode{C++}{NMPCGenerator::CalculateDerivatives} computes the linearization of the optimal control problem, which got explained in detail in section \ref{sec::22_gn}. Then to solve the sequential quadratic programming task, the pattern generation library utilizes qpOASES \cite{ferreau2014qpoases}, and the results are being interpolated by the \inlinecode{C++}{Interpolation} class, which relies on the theory of section \ref{sec::23_it}. However, to use the pattern generation library, the user does not have to deal with the private methods and can only use the public interface. A typical use case would involve the initialization of a \inlinecode{C++}{NMPCGenerator} object like so
 \begin{minted}{cpp}
   // Initialize pattern generator.
   const std::string config_file_loc = "/path/to/configs.yaml";
@@ -51,7 +51,7 @@ which brings us to the main loop
       nmpc.SetInitialValues(pg_state);
   }
 \end{minted}
-These are the main methods a user would want to interact with. \inlinecode{C++}{Simulate()} computes the states on the preview horizon for the optimization, according to equations \ref{eq::212_ckp1}-\ref{eq::212_ddckp1}, given the current state, which is then being updated by \inlinecode{C++}{Update()}. It is possible to elaborate feedback by changing the CoM, and, or the feet members of the \inlinecode{}{PatternGeneratorState} struct. Afterwards, the trajectories can be stored with
+These are the main methods a user would want to interact with. \inlinecode{C++}{Simulate()} computes the states on the preview horizon for the optimization, according to equations \ref{eq::22_ckp1}-\ref{eq::22_ddckp1}, given the current state, which is then being updated by \inlinecode{C++}{Update()}. It is possible to elaborate feedback by changing the CoM, and, or the feet members of the \inlinecode{}{PatternGeneratorState} struct. Afterwards, the trajectories can be stored with
 \begin{minted}{cpp}
   // Save interpolated results.
   Eigen::MatrixXd trajectories = ip_nmpc.GetTrajectories().transpose();
@@ -64,45 +64,45 @@ The trajectories, which are being written out with this method, are ordered acco
 		\scriptsize{
 			\hfill \textbf{Specifications}\\
 			\mbox{}~\hfill Double + single support time\\
-			\mbox{}~\hfill Used to shrink convex hull $\bm{p}_i$ in fig.  \ref{fig::212_foot_hull}, \ref{fig::211_support_polygon}\\
-			\mbox{}~\hfill The convex hull $\bm{p}^L_i$ in fig. \ref{fig::212_foot_feasibility}\\
-			\mbox{}~\hfill The convex hull $\bm{p}^R_i$ in fig. \ref{fig::212_foot_feasibility}\\
-			\mbox{}~\hfill Used to compute convex hull $\bm{p}_i$ in fig.  \ref{fig::212_foot_hull}, \ref{fig::211_support_polygon}\\
-			\mbox{}~\hfill Used to compute convex hull $\bm{p}_i$ in fig.  \ref{fig::212_foot_hull}, \ref{fig::211_support_polygon}\\
+			\mbox{}~\hfill Used to shrink convex hull $\bm{p}_i$ in fig.  \ref{fig::22_foot_hull}, \ref{fig::21_support_polygon}\\
+			\mbox{}~\hfill The convex hull $\bm{p}^L_i$ in fig. \ref{fig::22_foot_feasibility}\\
+			\mbox{}~\hfill The convex hull $\bm{p}^R_i$ in fig. \ref{fig::22_foot_feasibility}\\
+			\mbox{}~\hfill Used to compute convex hull $\bm{p}_i$ in fig.  \ref{fig::22_foot_hull}, \ref{fig::21_support_polygon}\\
+			\mbox{}~\hfill Used to compute convex hull $\bm{p}_i$ in fig.  \ref{fig::22_foot_hull}, \ref{fig::21_support_polygon}\\
 			\mbox{}~\hfill Distance between feet frames\\
 			
 			\hfill \textbf{Interpolation}\\
-			\mbox{}~\hfill Evaluate eq. \ref{eq::213_pos_poly}-\ref{eq::213_acc_poly} at $t=nt_\text{command\_period}$\\
+			\mbox{}~\hfill Evaluate eq. \ref{eq::23_pos_poly}-\ref{eq::23_acc_poly} at $t=nt_\text{command\_period}$\\
 			\mbox{}~\hfill Initially stand still for $n_\text{still}$ preview horizons\\
 			\mbox{}~\hfill Double support time\\
-			\mbox{}~\hfill Maximal step height $z_{T/2}$ in eq. \ref{eq::213_step}\\
+			\mbox{}~\hfill Maximal step height $z_{T/2}$ in eq. \ref{eq::23_step}\\
 			
 			\hfill \textbf{Initial Values}\\
-			\mbox{}~\hfill Initial x-CoM $\bm{c}_k^x$ in eq. \ref{eq::212_ckp1}-\ref{eq::212_ddckp1}\\
-			\mbox{}~\hfill Initial y-CoM $\bm{c}_k^y$ in eq. \ref{eq::212_ckp1}-\ref{eq::212_ddckp1}\\
-			\mbox{}~\hfill Initial z-CoM $c_z$ in eq. \ref{eq::212_zmp}\\
-			\mbox{}~\hfill Initial $\theta$-CoM $\bm{c}_k^\theta$ in eq. \ref{eq::212_ckp1}-\ref{eq::212_ddckp1}\\
+			\mbox{}~\hfill Initial x-CoM $\bm{c}_k^x$ in eq. \ref{eq::22_ckp1}-\ref{eq::22_ddckp1}\\
+			\mbox{}~\hfill Initial y-CoM $\bm{c}_k^y$ in eq. \ref{eq::22_ckp1}-\ref{eq::22_ddckp1}\\
+			\mbox{}~\hfill Initial z-CoM $c_z$ in eq. \ref{eq::22_zmp}\\
+			\mbox{}~\hfill Initial $\theta$-CoM $\bm{c}_k^\theta$ in eq. \ref{eq::22_ckp1}-\ref{eq::22_ddckp1}\\
 			\mbox{}~\hfill Initial support foot\\
 			\mbox{}~\hfill Initial support foot $f_k^x$ in eq. \ref{eq:312_feet}\\
 			\mbox{}~\hfill Initial support foot $f_k^y$ in eq. \ref{eq:312_feet}\\
-			\mbox{}~\hfill Initial support foot $\bm{f}_k^\theta$ in eq. \ref{eq::212_ckp1}-\ref{eq::212_ddckp1}\\
+			\mbox{}~\hfill Initial support foot $\bm{f}_k^\theta$ in eq. \ref{eq::22_ckp1}-\ref{eq::22_ddckp1}\\
 			
 			\hfill \textbf{Environment}\\
-			\mbox{}~\hfill Gravity in eq. \ref{eq::212_zmp}\\
+			\mbox{}~\hfill Gravity in eq. \ref{eq::22_zmp}\\
 			
 			\hfill \textbf{Obstacle}\\
 			\mbox{}~\hfill False if no obstacle is used\\
-			\mbox{}~\hfill Obstacle position $x_0$ in eq. \ref{eq::212_obstacle}\\
-			\mbox{}~\hfill Obstacle position $y_0$ in eq. \ref{eq::212_obstacle}\\
-			\mbox{}~\hfill Obstacle radius $R$ in eq. \ref{eq::212_obstacle}\\
+			\mbox{}~\hfill Obstacle position $x_0$ in eq. \ref{eq::22_obstacle}\\
+			\mbox{}~\hfill Obstacle position $y_0$ in eq. \ref{eq::22_obstacle}\\
+			\mbox{}~\hfill Obstacle radius $R$ in eq. \ref{eq::22_obstacle}\\
 			
 			\hfill \textbf{Optimization}\\
-			\mbox{}~\hfill Preview intervals $N$ in eq. \ref{eq::212_preview}\\
-			\mbox{}~\hfill Preview time $T$ in eq. \ref{eq::212_preview_mat}\\
+			\mbox{}~\hfill Preview intervals $N$ in eq. \ref{eq::22_preview}\\
+			\mbox{}~\hfill Preview time $T$ in eq. \ref{eq::22_preview_mat}\\
 			\mbox{}~\hfill CoM and feet position feedback time\\
-			\mbox{}~\hfill Weight in eq. \ref{eq::212_dcxy}-\ref{eq::212_dddcxy}\\
-			\mbox{}~\hfill Weight in eq. \ref{eq::212_dcxy}-\ref{eq::212_dddcxy}\\
-			\mbox{}~\hfill Weight in eq. \ref{eq::212_dcxy}-\ref{eq::212_dddcxy}\\
+			\mbox{}~\hfill Weight in eq. \ref{eq::22_dcxy}-\ref{eq::22_dddcxy}\\
+			\mbox{}~\hfill Weight in eq. \ref{eq::22_dcxy}-\ref{eq::22_dddcxy}\\
+			\mbox{}~\hfill Weight in eq. \ref{eq::22_dcxy}-\ref{eq::22_dddcxy}\\
 			\mbox{}~\hfill Maximally allowed CPU time for qpOASES\\
 			\mbox{}~\hfill Maximally allowed number of calculations for qpOASES}
 	\end{minipage}
@@ -201,7 +201,7 @@ How to use these joint angles, in order to get it running on Heicub, is describe
 			
 			\hfill \textbf{Inverse Kinematic Parameters}\\
 			\mbox{}~\hfill Tolerance used for convergence detection\\
-			\mbox{}~\hfill Damping $\lambda$ in eq. \ref{eq::2142_levenberg}\\
+			\mbox{}~\hfill Damping $\lambda$ in eq. \ref{eq::242_levenberg}\\
 			\mbox{}~\hfill Maximally allowed optimization steps\\
 			
 			\hfill \textbf{Body Points}\\
