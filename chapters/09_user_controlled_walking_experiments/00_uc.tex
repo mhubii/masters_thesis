@@ -1,0 +1,99 @@
+\FloatBarrier
+\label{sec::9_uc}
+Within this chapter, the walking pattern generator implementation will first be benchmarked for purely simulated tasks in section \ref{sec::9_uc}, after which the hyperparameters will be tuned for the pattern generator to run well on Heicub. These parameters will then be kept constant throughout the rest of this thesis, in order to allow for a good comparison between user-controlled walking and autonomously controlled walking. As the fundamental building block for the comparison to autonomous walking, a standardized environment for walking experiments will furthermore be defined in section \ref{sec::92_pt}, to later compare user-controlled performance against autonomously controlled performance in section \ref{sec::11_aw}, in terms of balance and goal achievement.
+\section{Benchmarking of the Pattern Generation Library}
+\label{sec::91_bm}
+To evaluate the pattern generator implementation, it needs to be benchmarked against an existing one of our group, which was written in Python. Therefore, defined velocity commands, as they typically may appear in real-world scenarios, are evaluated. The four defined use cases, which are shown in figures \ref{fig::91_benchmarking_basic} and \ref{fig::91_benchmarking_advanced}, were parametrized in accordance to the HRP-2 humanoid robot.
+\begin{figure}[h!]
+	\centering
+	\subcaptionbox{Straight trajectories at\\$\bm{v}=\begin{pmatrix}
+		0.1 & 0.0 & 0.0
+		\end{pmatrix}^T$.}%
+	[.45\linewidth]{\includegraphics[scale=.45]{chapters/09_user_controlled_walking_experiments/img/01_benchmarking/nmpc_straight.pdf}}
+	\subcaptionbox{Diagonal trajectories at\\$\bm{v}=\begin{pmatrix}
+		0.1 & 0.1 & 0.0
+		\end{pmatrix}^T$.}%
+	[.45\linewidth]{\includegraphics[scale=.45]{chapters/09_user_controlled_walking_experiments/img/01_benchmarking/nmpc_diagonal.pdf}}
+	\caption{Simple trajectories. The velocities are given in units of\\$(\text{m}/\text{s}\,\,\,\,\text{m}/\text{s}\,\,\,\,\text{rad}/\text{s})^T$, where the first two entries describe the robot's velocity in the x-, and the y-direction, and the last entry describes the robot's angular velocity about the z-axis, form a frame that is attached to the robot. The trajectories start on the left-hand side.}
+	\label{fig::91_benchmarking_basic}
+\end{figure} 
+The parameters for these tests can be found in the YAML file at the provided \href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/pattern_generator/configs_hrp2.yaml#L1}{\underline{link}}. To obtain the pattern generator's performance, in terms of speed, the straight walk experiment in figure \ref{fig::91_benchmarking_basic} (a) got executed ten times on an Intel Core i7-7700HQ CPU at $2.8\,\text{GHz}$, for both, the Python and the new implementation. It took $873\pm23\,\text{ms}$ and $147.7\pm0.5\,\text{ms}$ to execute the code for $100$ iterations on average, which means that a single iteration took $8.73\pm0.23\,\text{ms}$ and $1.48\pm0.01\,\text{ms}$. Therefore, a speed-up of around $600$ percent got achieved with the presented implementation. The avoidance of a convex obstacle is furthermore demonstrated with a security margin that keeps the robot at a safe distance in figure \ref{fig::91_benchmarking_advanced} (b). The used obstacle is defined to be located at $x=1.6\,\text{m}$ and $y=1.0\,\text{m}$, with a radius of $R=1.0\,\text{m}$, and a security margin of $m=0.4\,\text{m}$.
+\begin{figure}[h!]
+	\centering
+	\subcaptionbox{Curved trajectories at\\$\bm{v}=\begin{pmatrix}
+	0.1 & 0.0 & 0.1
+	\end{pmatrix}^T$.}%
+	[.45\linewidth]{\includegraphics[scale=.45]{chapters/09_user_controlled_walking_experiments/img/01_benchmarking/nmpc_turn.pdf}}
+	\subcaptionbox{Obstacle avoidance at\\$\bm{v}=\begin{pmatrix}
+	0.1 & 0.0 & 0.0
+	\end{pmatrix}^T$}%
+	[.45\linewidth]{\includegraphics[scale=.45]{chapters/09_user_controlled_walking_experiments/img/01_benchmarking/nmpc_obstacle.pdf}}
+	\caption{Advanced trajectories. The velocities are given in units of\\$(\text{m}/\text{s}\,\,\,\,\text{m}/\text{s}\,\,\,\,\text{rad}/\text{s})^T$, see figure \ref{fig::91_benchmarking_basic}.}
+	\label{fig::91_benchmarking_advanced}
+\end{figure} 
+To always ensure a smooth motion, and to benchmark the interpolation, the x-, y-, and z-trajectories for the left and the right foot are evaluated, as shown in figure \ref{fig::91_benchmarking_inter}. The plots were generated on the curved trajectory of figure \ref{fig::91_benchmarking_advanced} (a), and they reveal a continuous behavior at every time step for all dimensions.
+\begin{figure}[h!]
+	\centering
+	\subcaptionbox{Interpolated\\x-Trajectories}%
+	[.3\linewidth]{\includegraphics[scale=.3]{chapters/09_user_controlled_walking_experiments/img/01_benchmarking/interpolated_x_trajectories.pdf}}
+	\subcaptionbox{Interpolated\\y-Trajectories}%
+	[.3\linewidth]{\includegraphics[scale=.3]{chapters/09_user_controlled_walking_experiments/img/01_benchmarking/interpolated_y_trajectories.pdf}}
+	\subcaptionbox{Interpolated\\z-Trajectories}%
+	[.3\linewidth]{\includegraphics[scale=.3]{chapters/09_user_controlled_walking_experiments/img/01_benchmarking/interpolated_z_trajectories.pdf}}
+	\caption{Interpolated foot trajectories. As explained in figure \ref{fig::23_ip}, the interpolation interpolates the feet's movement, given an initial, and a final foot position. The continuity shows that the interpolation got implemented correctly.}
+	\label{fig::91_benchmarking_inter}
+\end{figure}
+The benchmarked pattern generator then enabled to run it on the real robot, which was done in a specially designed test environment that will be presented in the next section.
+\FloatBarrier
+\section{Performance in Test Environment}
+\label{sec::92_pt}
+For the execution on Heicub, the parameter setting was chosen, such that balanced motion was assured for all velocity commands. This could be achieved by choosing the parameters, which are listed in the YAML configurations file at the provided \href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/pattern_generator/configs.yaml#L1}{\underline{link}}. The most important ones therein are further shown in table \ref{tab::92_params}.
+\begin{table}
+	\centering
+	\caption{Parameters which used to work best on Heicub.}
+	\begin{tabular}{lclc}
+		Parameter&Value&Parameter&Value\\
+		\hline
+		$T_{\text{Step}}$ & $3.20\,\text{s}$ & $N$ & $16\,\text{\#}$ \\
+		$T_{\text{Double Support}}$ & $1.60\,\text{s}$ & $\alpha$ & $1.0\,\text{a.u.}$ \\
+		$T_{\text{Command Period}}$  & $0.01\,\text{s}$& $\beta$ & $100\,\text{a.u.}$ \\
+		$T_{\text{Preview}}$ & $0.40\,\text{s}$ & $\gamma$ & $0.01\,\text{a.u.}$
+	\end{tabular}
+	\label{tab::92_params}
+\end{table}
+Now given these parameters, an environment for Heicub to walk in was designed. A human user had to control the robot in four different scenarios. In each of the scenarios, Heicub started from a reference position, in order to reach a fire extinguisher at a distant location. By design, the setup allows for benchmarking of dynamic balance in all four different scenarios. As will be shown in section \ref{sec::11_aw}, a neural network is required to execute the same tasks, and, therefore, the performances of a human user with that of an autonomous agent can be compared. For the dynamic balance evaluation, the desired ZMP was extracted from the nonlinear model predictive controller, and it was further measured in accordance to equations \ref{eq::21_double_zmp_x} and \ref{eq::21_double_zmp_y}, by recording the ankles' force-torque sensor readouts. Furthermore, the velocity commands to the pattern generator were extracted for all tasks to extract the user's behavior. The first task was simply to go two meters straight forward (figure \ref{fig::92_uc_straight}).
+\begin{figure}[h!]
+	\subcaptionbox{Dynamic balance.}%
+	[.5\linewidth]{\includegraphics[scale=.45]{chapters/09_user_controlled_walking_experiments/img/02_test_environment/straight_walk_01_zmp.pdf}}
+	\subcaptionbox{Behavior.}%
+	[.5\linewidth]{\includegraphics[scale=.45]{chapters/09_user_controlled_walking_experiments/img/02_test_environment/straight_walk_01_entropy.pdf}}
+	\caption{User-controlled straight walk. The robot started to the plot's left-hand side (a), and moved forward until it reached the fire extinguisher.}
+	\label{fig::92_uc_straight}
+\end{figure} 
+The behavior therein is visualized by a histogram of all velocity commands over the course of the task (figure \ref{fig::92_uc_straight} (b)). For the bin size $0.01\,\text{m}/\text{s}$, and $0.01\,\text{rad}/\text{s}$ were chosen, respectively. 
+\begin{figure}[h!]
+	\subcaptionbox{Dynamic balance.}%
+	[.5\linewidth]{\includegraphics[scale=.45]{chapters/09_user_controlled_walking_experiments/img/02_test_environment/curved_walk_01_zmp.pdf}}
+	\subcaptionbox{Behavior.}%
+	[.5\linewidth]{\includegraphics[scale=.45]{chapters/09_user_controlled_walking_experiments/img/02_test_environment/curved_walk_01_entropy.pdf}}
+	\caption{User-controlled curved walk. The robot started to the plot's left-hand side (a), and performed a left turn on its way to the fire extinguisher, where it stopped.}
+	\label{fig::92_uc_curved}
+\end{figure} 
+The second task was to reach the fire extinguisher, which was located to the left of the robot. In order to reach it, it was therefore required to perform a curved walk (figure \ref{fig::92_uc_curved}). The third task (figure \ref{fig::92_uc_obstacle}) involved the avoidance of an obstacle, namely a chair. For the fourth task (figure \ref{fig::92_uc_sight}), the robot started with its back pointing towards the fire extinguisher.
+\begin{figure}[h!]
+	\subcaptionbox{Dynamic balance.}%
+	[.5\linewidth]{\includegraphics[scale=.45]{chapters/09_user_controlled_walking_experiments/img/02_test_environment/obstacle_walk_02_zmp.pdf}}
+	\subcaptionbox{Behavior.}%
+	[.5\linewidth]{\includegraphics[scale=.45]{chapters/09_user_controlled_walking_experiments/img/02_test_environment/obstacle_walk_02_entropy.pdf}}
+	\caption{User-controlled obstacle avoidance. The robot started to the plot's left-hand side (a), and moved towards a fire extinguisher. On about half of the distance it avoided a chair by turning to the right, and then to the left again, until it reached the fire extinguisher and stopped.}
+	\label{fig::92_uc_obstacle}
+\end{figure} 
+\begin{figure}[h!]
+	\subcaptionbox{Dynamic balance.}%
+	[.5\linewidth]{\includegraphics[scale=.45]{chapters/09_user_controlled_walking_experiments/img/02_test_environment/out_of_sight_walk_01_zmp.pdf}}
+	\subcaptionbox{Behavior.}%
+	[.5\linewidth]{\includegraphics[scale=.45]{chapters/09_user_controlled_walking_experiments/img/02_test_environment/out_of_sight_walk_01_entropy.pdf}}
+	\caption{User-controlled environmental scanning. The robot started to the plot's right-hand side (a), facing to the right, and performed a full $180^\circ$ turn, before walking almost straight to the fire extinguisher, which is here located to the plot's left-hand side.}
+	\label{fig::92_uc_sight}
+\end{figure} 
+\newpage

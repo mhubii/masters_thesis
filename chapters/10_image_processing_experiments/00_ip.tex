@@ -1,7 +1,8 @@
 \FloatBarrier
+Before the idea of behavioral cloning can be tackled, which got described in section \ref{sec::51_bc}, one needs to meet the prerequisites, that is one must calibrate the camera, and tune the depth map extraction parameters, which will be done within this chapter in sections \ref{sec::10_cc}, and \ref{sec::102_dp}, respectively.
 \section{Camera Calibration}
-\label{sec::421_cc}
-As described in section \ref{sec::3_ip}, for the stereo block matching algorithm to work properly (equation \ref{eq::31_sad}), it is required to calibrate the cameras. We shortly verified this in figure \ref{fig::421_no_calib}, where we extracted a depth map from the uncalibrated stereo camera pair.
+\label{sec::10_cc}
+As described in section \ref{sec::3_ip}, for the stereo block matching algorithm to work properly (equation \ref{eq::31_sad}), it is required to calibrate the cameras. This is shortly verified in figure \ref{fig::101_no_calib}, where a depth map got extracted from the uncalibrated stereo camera pair.
 \begin{figure}[h!]
 	\centering
 	\subcaptionbox{Left disparity map.}%
@@ -9,19 +10,19 @@ As described in section \ref{sec::3_ip}, for the stereo block matching algorithm
 	\subcaptionbox{Confidence weighted least squares filtered disparity map.}%
 	[.4\linewidth]{\includegraphics[scale=.3]{chapters/10_image_processing_experiments/img/wls_no_calib.png}}
 	\caption{Depth map extraction without calibration. The parameters were set as follows to $N=13$, $D=32$, $\sigma = 1$, and $\lambda=10^4$.}
-	\label{fig::421_no_calib}
+	\label{fig::101_no_calib}
 \end{figure}
-For the calibration we chose to use a chess-board calibration pattern, see figure \ref{fig::421_calib}. The used calibration pattern has width of $W=8$, and a height of $H=6$, where each square has a size of $a=22.5\,\text{mm}$ (equation \ref{eq::32_square_size}). We took a total of $N=60$ images of the calibration pattern for varying orientations and translations with respect to the camera, which results in a total of $W\times H\times N = 2880$ points for the calibration. 
+For the calibration a chess-board calibration pattern was chosen, see figure \ref{fig::101_calib}. The used calibration pattern has width of $W=8$, and a height of $H=6$, where each square has a size of $a=22.5\,\text{mm}$ (equation \ref{eq::32_square_size}). A total of $N=60$ images of the calibration pattern was taken for varying orientations and translations with respect to the camera, which results in a total of $W\times H\times N = 2880$ points for the calibration. 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.28]{chapters/10_image_processing_experiments/img/calib.png}
 	\caption{Exemplary left and right camera views of the calibration pattern as acquired during the calibration process. The colorful points indicate the detected corners in the image plane. Refer to section \ref{sec::32_cc} for the theory.}
-	\label{fig::421_calib}
+	\label{fig::101_calib}
 \end{figure}
-As the resulting mean squared re-projection error $\Delta \bar{x} = 1/(WHN)\sum_0^{WHN} \Delta x$ (equation \ref{eq::32_reprojection}), we obtained $\Delta \bar{x}_l = 0.26\, \text{pixel}$, and $\Delta \bar{x}_r = 0.25\,\text{pixel}$, for the left, and the right camera, respectively. According to equations \ref{eq::32_focal_intrinsics}, \ref{eq::32_x_dist}, and \ref{eq::32_y_dist}, we therefore determined the camera's intrinsic parameters as listed in table \ref{tab::421_intrinsics}.
+The resulting mean squared re-projection error $\Delta \bar{x} = 1/(WHN)\sum_0^{WHN} \Delta x$ (equation \ref{eq::32_reprojection}), is $\Delta \bar{x}_l = 0.26\, \text{pixel}$, and $\Delta \bar{x}_r = 0.25\,\text{pixel}$, for the left, and the right camera, respectively. According to equations \ref{eq::32_focal_intrinsics}, \ref{eq::32_x_dist}, and \ref{eq::32_y_dist}, the camera's intrinsic parameters were, therefore, determined as listed in table \ref{tab::101_intrinsics}.
 \begin{table}
 	\centering
-	\caption{Intrinsic parameters of single cameras. These parameters can be found as YAML file on GitHub (\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/libs/io_module}{\underline{link}}).\label{tab::421_intrinsics}}
+	\caption{Intrinsic parameters of single cameras. These parameters can be found as YAML file on GitHub (\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/libs/io_module}{\underline{link}}).\label{tab::101_intrinsics}}
 	\begin{tabular}{lll}
 		Intrinsic Parameter & Left Camera & Right Camera\\
 		\hline
@@ -36,10 +37,10 @@ As the resulting mean squared re-projection error $\Delta \bar{x} = 1/(WHN)\sum_
 		$p_2\,[1/\text{pixel}]$ & $\quad2.16\cdot10^{-4}$  & $\quad7.63\cdot10^{-4}$		
 	\end{tabular}
 \end{table}
-Then given the calibration of each single camera, for each camera we computed the rectification transforms $\bm{R}_i$, and the projection matrices $\bm{P}_i$ in the rectified coordinate system, all of which can be found in table \ref{tab::421_extrinsics}.
+Then given the calibration of each single camera, the rectification transforms $\bm{R}_i$, and the projection matrices $\bm{P}_i$ in the rectified coordinate system, was determined for each camera, all of which can be found in table \ref{tab::101_extrinsics}.
 \begin{table}
 	\centering
-	\caption{Rectification transforms $\bm{R}_i$, and projection matrices $\bm{P}_i$, for the left, and the right camera, respectively. These parameters can be found as YAML file on GitHub (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/master/libs/io_module/cam_stereo.yaml}{\underline{link}}). \label{tab::421_extrinsics}}
+	\caption{Rectification transforms $\bm{R}_i$, and projection matrices $\bm{P}_i$, for the left, and the right camera, respectively. These parameters can be found as YAML file on GitHub (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/master/libs/io_module/cam_stereo.yaml}{\underline{link}}). \label{tab::101_extrinsics}}
 	\begin{tabular}{lll}
 		Camera & Extrinsic Parameter & \\ 
 		\hline
@@ -67,7 +68,7 @@ Then given the calibration of each single camera, for each camera we computed th
 		\end{pmatrix}$ \\
 	\end{tabular}
 \end{table}
-Exemplary rectified images, which rely on the matrices of table \ref{tab::421_extrinsics}, are shown in figure \ref{fig::421_rect} (a). Since there is a slight rotation of the calibration pattern, it is not obvious that the images got rectified well. Therefore, the same images are shown in figure \ref{fig::421_rect} (b), but slightly rotated such that the calibration pattern aligns horizontally. The blue line therein indicates that in contrast to the original image, straight lines now appear straight across both images, which is crucial for the block matching algorithm in the next section - Depth Map Parameter Tuning.
+Exemplary rectified images, which rely on the matrices of table \ref{tab::101_extrinsics}, are shown in figure \ref{fig::101_rect} (a). Since there is a slight rotation of the calibration pattern, it is not obvious that the images got rectified well. Therefore, the same images are shown in figure \ref{fig::101_rect} (b), but slightly rotated such that the calibration pattern aligns horizontally. The blue line therein indicates that in contrast to the original image, straight lines now appear straight across both images, which is crucial for the block matching algorithm in the next section - Depth Map Parameter Tuning.
 \begin{figure}[h!]
 	\centering
 	\subcaptionbox{Rectified images.}%
@@ -75,12 +76,12 @@ Exemplary rectified images, which rely on the matrices of table \ref{tab::421_ex
 	\subcaptionbox{Rotated rectified images.}%
 	[.4\linewidth]{\includegraphics[scale=.25]{chapters/10_image_processing_experiments/img/rect_line.png}}
 	\caption{Rectified and original view of the stereo camera. Refer to section \ref{sec::32_cc} for the theory.}
-	\label{fig::421_rect}
+	\label{fig::101_rect}
 \end{figure}
 \FloatBarrier
 \section{Depth Map Parameter Tuning}
-\label{sec::422_dp}
-Within this section, we shortly explore the effects of all tuneable parameters on the depth map generation. Therefore, we utilize a simple experimental setup. Within the setup, Heicub points its stereo camera towards three chairs that are located at a distance of $1\,\text{m}$ towards each other, and towards the cameras, so to cover close, medium, and far distances. The consecutive chairs are slightly shifted, in order to enable the simultaneous observation of all of them. The rectified view of the environment is shown in figure \ref{fig::422_wls_rgb}.
+\label{sec::102_dp}
+Within this section, the effects of all tuneable parameters on the depth map generation are explored. Therefore, a simple experimental setup is used. Within the setup, Heicub points its stereo camera towards three chairs that are located at a distance of $1\,\text{m}$ towards each other, and towards the cameras, so to cover close, medium, and far distances. The consecutive chairs are slightly shifted, in order to enable the simultaneous observation of all of them. The rectified view of the environment is shown in figure \ref{fig::102_wls_rgb}.
 \begin{figure}[h!]
 	\centering
 	\subcaptionbox{Left camera's view.}%
@@ -88,9 +89,9 @@ Within this section, we shortly explore the effects of all tuneable parameters o
 	\subcaptionbox{Right camera's view.}%
 	[.4\linewidth]{\includegraphics[scale=.3]{chapters/10_image_processing_experiments/img/r_rgb.png}}
 	\caption{Heicub's perspective of the scene for the depth map parameter tuning.}
-	\label{fig::422_wls_rgb}
+	\label{fig::102_wls_rgb}
 \end{figure}
-The depth map extraction, which utilizes the rectified images, depends on a stereo block matching algorithm that was explained in section \ref{sec::3_ip}. It mainly depends on the window size and the number of disparities for the sum of absolute difference computation. We evaluate the influence of those two parameters in figure \ref{fig::422_disp} (a) in a grid search fashion. It is apparent that the change in the number of disparities has close to no influence onto the depth map quality, while it removes plenty of useful information from the left-hand side of images. The same holds for the window size, except that it removes some noise from the depth maps.
+The depth map extraction, which utilizes the rectified images, depends on a stereo block matching algorithm that was explained in section \ref{sec::3_ip}. It mainly depends on the window size and the number of disparities for the sum of absolute difference computation. The influence of those two parameters was evaluated in a grid search fashion in figure \ref{fig::102_disp} (a). It is apparent that the change in the number of disparities has close to no influence onto the depth map quality, while it removes plenty of useful information from the left-hand side of images. The same holds for the window size, except that it removes some noise from the depth maps.
 \begin{figure}[h!]
 	\centering
 	\subcaptionbox{Left disparity. Please refer to figure \ref{fig::31_left_disparity_map} and equation \ref{eq::31_sad} for the theory.}%
@@ -98,12 +99,12 @@ The depth map extraction, which utilizes the rectified images, depends on a ster
 	\subcaptionbox{Confidence weighted least squares disparity map. Please refer to figure \ref{fig::31_weighted_least_squares_disparity} and equation \ref{eq::31_wls_final} for the theory.}%
 	[.45\linewidth]{\includegraphics[scale=.2]{chapters/10_image_processing_experiments/img/disp_sad_wls.png}}
 	\caption{Left disparity map and confidence weighted least squares disparity for changing SAD window sizes $N$ and number of disparities $D$.}
-	\label{fig::422_disp}
+	\label{fig::102_disp}
 \end{figure}
-In combination with the confidence weighted least squares filtering, we can observe that most of the noise is already removed (figure \ref{fig::422_disp} (b)), for which it is more import to keep the information close to the images' borders. We therefore chose to set the number of disparities $D=32$, and the windows size $N=13$ in the following. Within these depth maps, the global energy weighting $\lambda$ was set to $10^4$, and the local bilateral filter decay $\sigma$ to $1$, since we observed the best performance for them. The influence of those two parameters is visualized in figure \ref{fig::422_sigma_lambda}. We can see that, in good accordance with the theory, $\sigma$ contributes to the smoothing of the depth map, and that $\lambda$ enforces a change in depth across edges within the RGB images. Now given these parameters, we evaluated the performance of our image processing pipeline. We ran it for $1000$ times and observed an average required time of $7.4\pm0.5\,\text{ms}$ on an Intel Core i7-7700HQ CPU at $2.8\,\text{GHz}$.
+In combination with the confidence weighted least squares filtering, one can observe that most of the noise is already removed (figure \ref{fig::102_disp} (b)), for which it is more import to keep the information close to the images' borders. The number of disparities, was therefore chosen to be set to $D=32$, and the windows size to $N=13$ in the following. Within these depth maps, the global energy weighting $\lambda$ was set to $10^4$, and the local bilateral filter decay $\sigma$ to $1$, since the best performance was observed for them. The influence of those two parameters is visualized in figure \ref{fig::102_sigma_lambda}. It can be seen that, in good accordance with the theory, $\sigma$ contributes to the smoothing of the depth map, and that $\lambda$ enforces a change in depth across edges within the RGB images. Now given these parameters, the performance of the image processing pipeline was evaluated. It was run for $1000$ times and an average required time of $7.4\pm0.5\,\text{ms}$ on an Intel Core i7-7700HQ CPU at $2.8\,\text{GHz}$ was observed.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.2]{chapters/10_image_processing_experiments/img/sigma_lambda.png}
 	\caption{Confidence weighted least squares disparity for changing energy weightings $\sigma$ and $\lambda$. Please refer to equations \ref{eq::31_weight} and \ref{eq::31_energy_function} for the theory.}
-	\label{fig::422_sigma_lambda}
+	\label{fig::102_sigma_lambda}
 \end{figure}
