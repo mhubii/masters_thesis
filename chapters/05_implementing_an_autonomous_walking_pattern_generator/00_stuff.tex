@@ -67,3 +67,28 @@ NMPCGenerator::PreprocessSolution
 %%%%%%%%%%%%
 %%% NMPC %%%
 %%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Interpolating Trajectories %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+As already shortly depicted in figure \ref{fig::21_pg}, we need to interpolate the trajectories that we obtain from the nonlinear model predictive control
+
+% feet
+Interpolation::Set4thOrderCoefficients \ref{eq::231_ai_4th}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/c82c64a28da7527e75442764f585bd50a8f61ee9/libs/pattern_generator/src/interpolation.cpp#L779}{\underline{link}})
+
+Step height in configs.yaml \ref{eq::231_step}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/c82c64a28da7527e75442764f585bd50a8f61ee9/libs/pattern_generator/configs.yaml#L22}{\underline{link}})
+
+double support time 
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/c82c64a28da7527e75442764f585bd50a8f61ee9/libs/pattern_generator/configs.yaml#L21}{\underline{link}})
+
+Interpolation::Set5thOrderCoefficients \ref{eq::231_ai_5th}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/c82c64a28da7527e75442764f585bd50a8f61ee9/libs/pattern_generator/src/interpolation.cpp#L806}{\underline{link}})
+
+% com
+Interpolation::InterpolateLIPMStep
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/interpolation.cpp#L776}{\underline{link}})
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Interpolating Trajectories %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
