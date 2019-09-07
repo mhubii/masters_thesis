@@ -22,30 +22,43 @@ The specific values can be set in the configurations file (\href{https://github.
 %%%%%%%%%%%%
 BaseGenerator::Simulate \ref{eq::223_ckp1} - \ref{eq::223_ddckp1}
 (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L887}{\underline{link}})
+\\
 BaseGenerator::InitializeConstantMatrices
 (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L403}{\underline{link}})
+\\
 BaseGenerator::InitializeCopMatrices \ref{eq::223_zmp}
 (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L420}{\underline{link}})
+\\
 BaseGenerator::SetVelocityReference 
 (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L324}{\underline{link}})
+\\
 BaseGenerator::UpdateSelectionMatrices \ref{eq::224_fs}
 (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L740}{\underline{link}})
+\\
 BaseGenerator::UpdateFootSelectionMatrices \ref{eq::224_fsm}
 (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L1281}{\underline{link}})
+\\
 NMPCGenerator::PreprocessSolution \ref{eq::224_canqp}
 (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/nmpc_generator.cpp#L145}{\underline{link}})
+\\
 BaseGenerator::ComputeLinearSystem \ref{fig::225_foot_hull}
 (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L844}{\underline{link}})
+\\
 BaseGenerator::BuildCopContraint \ref{eq::22_cop_hull}
 (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L946}{\underline{link}})
+\\
 BaseGenerator::BuildFootIneqConstraint \ref{eq::225_ineq_foot}
 (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/base_generator.cpp#L1061}{\underline{link}})
+\\
 BaseGenerator::BuildRotIneqConstraint \ref{eq::225_ineq_rot}
 (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/base_generator.cpp#L1244}{\underline{link}})
+\\
 BaseGenerator::BuildObstacleConstraint \ref{eq::225_obs_const}
 (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/base_generator.cpp#L1271}{\underline{link}})
+\\
 NMPCGenerator::CalculateDerivatives \ref{eq::226_ocp}
 (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/nmpc_generator.cpp#L377}{\underline{link}})
+\\
 NMPCGenerator::PreprocessSolution
 (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/nmpc_generator.cpp#L155}{\underline{link}})
 %%%%%%%%%%%%
@@ -58,12 +71,16 @@ As already shortly depicted in figure \ref{fig::21_pg}, we need to interpolate t
 % feet
 Interpolation::Set4thOrderCoefficients \ref{eq::231_ai_4th}
 (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/c82c64a28da7527e75442764f585bd50a8f61ee9/libs/pattern_generator/src/interpolation.cpp#L779}{\underline{link}})
+\\
 Step height in configs.yaml \ref{eq::231_step}
 (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/c82c64a28da7527e75442764f585bd50a8f61ee9/libs/pattern_generator/configs.yaml#L22}{\underline{link}})
+\\
 double support time 
 (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/c82c64a28da7527e75442764f585bd50a8f61ee9/libs/pattern_generator/configs.yaml#L21}{\underline{link}})
+\\
 Interpolation::Set5thOrderCoefficients \ref{eq::231_ai_5th}
 (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/c82c64a28da7527e75442764f585bd50a8f61ee9/libs/pattern_generator/src/interpolation.cpp#L806}{\underline{link}})
+\\
 % com
 Interpolation::InterpolateLIPMStep
 (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/interpolation.cpp#L776}{\underline{link}})
