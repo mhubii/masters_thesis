@@ -12,55 +12,55 @@ Although neural networks have gained early attention in research, they have only
 \FloatBarrier
 \subsection{Fully Connected Neural Network}
 The biologically inspired perceptron model \cite{viglione19704} lay the foundation for neural networks, and it got extended soon to the multi-layer perceptron model
-\cite{ivakhnenko1971polynomial}, which is known today as the fully connected neural network. Due to its similarity to the brain's structure, it is often depicted as in figure \ref{fig::411_fully_connected}, where each orange circle represents a neuron that connects to its surroundings via simple weights $w_{ij}$, as neurons inside the brain are by synapses.
+\cite{ivakhnenko1971polynomial}, which is known today as the fully connected neural network. Due to its similarity to the brain's structure, it is often depicted as in figure \ref{fig::311_fully_connected}, where each orange circle represents a neuron that connects to its surroundings via simple weights $w_{ij}$, as neurons inside the brain are by synapses.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_principles_of_machine_learning/img/fully_connected.png}
 	\caption{Fully connected neural network with three inputs and four outputs. Each orange circle represents what is often referred to as neuron, while the black lines indicate the connections between each neuron.}
-	\label{fig::411_fully_connected}
+	\label{fig::311_fully_connected}
 \end{figure}
 Mathematically speaking, the feed forward process can be described as a simple matrix multiplication with all weights $\bm{W}$, where the input $\bm{x}$ gets converted to the output $\bm{y}$ via
 \begin{align}
 	\bm{y} = \bm{W}\bm{x}+\bm{b}
-	\label{eq::411_fully_connected}
+	\label{eq::311_fully_connected}
 \end{align}
-Therein, the bias $\bm{b}$ is as a shift of isolines that are introduced by hyperplanes. These hyperplanes are learned and expressed by the layer's weights $w_{ij}$ (figure \ref{fig::411_classification}). The output $\bm{y}$, is then further passed through an activation function $f$, and therefore can be compared to the action potential inside a neuron, as it determines the amount by which the next neuron gets excited. This activation function can be anything from a simple step function for classification to a linear function for regression. In practice, some activation functions have shown to be of particular use, such as the rectifying linear unit, or the hyperbolic tangent.
+Therein, the bias $\bm{b}$ is as a shift of isolines that are introduced by hyperplanes. These hyperplanes are learned and expressed by the layer's weights $w_{ij}$ (figure \ref{fig::311_classification}). The output $\bm{y}$, is then further passed through an activation function $f$, and therefore can be compared to the action potential inside a neuron, as it determines the amount by which the next neuron gets excited. This activation function can be anything from a simple step function for classification to a linear function for regression. In practice, some activation functions have shown to be of particular use, such as the rectifying linear unit, or the hyperbolic tangent.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_principles_of_machine_learning/img/classification.png}
 	\caption{Simple interpretation of a fully connected neural network with one layer that takes $\bm{x}=(x_0\,\,x_1)^T$ as input. The dotted lines are isolines to the hyperplane, which showcase the effect of the bias $\bm{b}$.}
-	\label{fig::411_classification}
+	\label{fig::311_classification}
 \end{figure}
 \FloatBarrier
 \subsection{Convolutional Neural Network}
-The concept of convolutional neural networks was first inspired by biological structures inside the visual cortex of the human brain. It was introduced as neocognitron \cite{fukushima1980neocognitron}, and soon after termed convolutional neural network for its mathematical properties, in that it equals convolutions. Figure \ref{fig::412_convolutional} shows how an input $\bm{x}$ is fed forward through the network architecture across two layers.   
+The concept of convolutional neural networks was first inspired by biological structures inside the visual cortex of the human brain. It was introduced as neocognitron \cite{fukushima1980neocognitron}, and soon after termed convolutional neural network for its mathematical properties, in that it equals convolutions. Figure \ref{fig::312_convolutional} shows how an input $\bm{x}$ is fed forward through the network architecture across two layers.   
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_principles_of_machine_learning/img/convolutional.png}
 	\caption{Convolutional neural network with a total of three layers, of which one is the input layer. For visualization, the kernel size is set to be three, and the stride is set to be one.}
-	\label{fig::412_convolutional}
+	\label{fig::312_convolutional}
 \end{figure}
 The operation is again visualized by utilizing orange circles, which may be referred to as neurons. These neurons are connected by weights $k^{l,n}_{ij}$, which together constitute the kernel $\bm{k}^{l,n}$ of each convolution. Therein, $l$ stands for the current layer, and $n$ indexes the kernel within a layer, as there may in principle be many different kernels for a single layer. Mathematically speaking, we can formulate the process as follows
 \begin{align}
 	\bm{y}^{0,0} &= f(\bm{x}*\bm{k}^{0,0}) \\
 	\bm{y}^{1,0} &= f(\bm{y}^{0,0}*\bm{k}^{1,0})	
 \end{align}
-One thing to notice is that the deeper we go, meaning the more layers we have, the more of the initial input contributes to the current activation. This can be seen in figure \ref{fig::412_convolutional}, where each neuron within the first layer only sees a kernel size sized snipped of the original input $\bm{x}$, whereas a neuron within the second layer already sees all of it. This intuitive understanding of convolutional neural networks is backed by visualizations of the highest activity neuron's gradient with respect to the input, where the gradient itself equals the transposed convolution \cite{simonyan2013deep}.  Figure \ref{fig::412_transposed_conv} shows transposed convolutions for a classification network that was trained on ImageNet \cite{deng2009imagenet}. While superficial layers learn to understand edges, deeper layers grab more complex spatial correlations within images, such as car wheels within the third layer.
+One thing to notice is that the deeper we go, meaning the more layers we have, the more of the initial input contributes to the current activation. This can be seen in figure \ref{fig::312_convolutional}, where each neuron within the first layer only sees a kernel size sized snipped of the original input $\bm{x}$, whereas a neuron within the second layer already sees all of it. This intuitive understanding of convolutional neural networks is backed by visualizations of the highest activity neuron's gradient with respect to the input, where the gradient itself equals the transposed convolution \cite{simonyan2013deep}.  Figure \ref{fig::312_transposed_conv} shows transposed convolutions for a classification network that was trained on ImageNet \cite{deng2009imagenet}. While superficial layers learn to understand edges, deeper layers grab more complex spatial correlations within images, such as car wheels within the third layer.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_principles_of_machine_learning/img/transposed_conv.png}
 	\caption{Analysis of neurons with the highest activation, corresponding to a subset of ImageNet. For the first layer, the kernel itself is shown, and image patches at the kernel's scale. For the second and the third layer, a single neuron with the highest activation is upscaled by transposed convolutions to the first layer's feature map. Images taken from \cite{zeiler2014visualizing}.}
-	\label{fig::412_transposed_conv}
+	\label{fig::312_transposed_conv}
 \end{figure}
 Therefore, convolutional neural networks are particularly well-suited for understanding spatial correlations, and while recent advancements also propose the promising use of convolutional neural networks for time series analysis \cite{vaswani2017attention}, a simpler approach are long short-term memory units, which will be explained in the next section - Long Short-Term Memory. 
 \FloatBarrier
 \subsection{Long Short-Term Memory}
-Long short-term memory units were introduced to overcome the vanishing and exploding gradient problem for recurrent neural networks in time series analysis \cite{hochreiter1997long}. That is the gradient tends to diverge exponentially throughout of the backward pass towards earlier inputs, resulting in intractable updates for the weights of the neural network. This issue got solved by adding a constant recurrent self-connection that allows for constant error propagation through the network, which got further refined by replacing the constant self-connection with a forget gate \cite{gers1999learning}. The inner workings of a long short-term memory unit is shown in figure \ref{fig::413_lstm}. 
+Long short-term memory units were introduced to overcome the vanishing and exploding gradient problem for recurrent neural networks in time series analysis \cite{hochreiter1997long}. That is the gradient tends to diverge exponentially throughout of the backward pass towards earlier inputs, resulting in intractable updates for the weights of the neural network. This issue got solved by adding a constant recurrent self-connection that allows for constant error propagation through the network, which got further refined by replacing the constant self-connection with a forget gate \cite{gers1999learning}. The inner workings of a long short-term memory unit is shown in figure \ref{fig::313_lstm}. 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_principles_of_machine_learning/img/lstm.png}
 	\caption{Long short-term memory unit with cell states $\bm{c}_i$, hidden states $\bm{h}_i$, input $\bm{x}_t$, and activation functions $\sigma/\tanh$, as well as addition $+$ and multiplication $\times$ operators.}
-	\label{fig::413_lstm}
+	\label{fig::313_lstm}
 \end{figure}
 The underlying mathematical operations can therein be expressed as follows
 \begin{align}
@@ -71,19 +71,19 @@ The underlying mathematical operations can therein be expressed as follows
 	\bm{c}_t &= \bm{f}_t\cdot c_{t-1} + \bm{i}_t\cdot\bm{g}_t\\
 	\bm{h}_t &= \bm{o}_t \cdot\tanh(\bm{c}_t),
 \end{align}
-where $\cdot$ is an element-wise multiplication. The sigmoid function $\sigma$, which ranges from 0 to 1, assures that the input gate $\bm{i}_t$, the forget gate $\bm{f}_t$, and the output gate $\bm{o}_t$ let only pass values of interest into, and out of the cell. Multiple long short-term memory units can then be linked for time series analysis as shown in figure \ref{fig::413_lstm_chain}.
+where $\cdot$ is an element-wise multiplication. The sigmoid function $\sigma$, which ranges from 0 to 1, assures that the input gate $\bm{i}_t$, the forget gate $\bm{f}_t$, and the output gate $\bm{o}_t$ let only pass values of interest into, and out of the cell. Multiple long short-term memory units can then be linked for time series analysis as shown in figure \ref{fig::313_lstm_chain}.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.28]{chapters/03_principles_of_machine_learning/img/lstm_chain.png}
 	\caption{Chain of long short-term memory units for temporal understanding of the input sequence $\bm{x}_i$.}
-	\label{fig::413_lstm_chain}
+	\label{fig::313_lstm_chain}
 \end{figure}
 \FloatBarrier
 \subsection{Backpropagation}
 The currently most popular way to train a neural network is backpropagation, which got first introduced in \cite{linnainmaa1970representation}. It has no biological equivalent but poses an effective way to optimize a huge number of parameters. Newer methods use evolutionary algorithms and treat network parameters as population that develops over time \cite{montana1989training}, but we will not consider them further. The reason why backpropagation works so well to optimize neural networks, is the simplicity of the mathematical operations that make them up. Not only do the activation functions have an analytical derivative, but further can we apply the chain rule multiple times on the loss function, so to find the gradient for every network parameter. Suppose we have the loss $L$, then the derivative with respect to the weights $\bm{W}_l$ of layer $l$, is just given as
 \begin{align}
 	\frac{\partial L}{\partial \bm{W}_l} = \bm{\delta}_l\bm{x}_{l-1}^T,
-	\label{eq::414_bp}
+	\label{eq::314_bp}
 \end{align}
 where for the last layer $N$, and all previous layers $l$, we have
 \begin{align}
