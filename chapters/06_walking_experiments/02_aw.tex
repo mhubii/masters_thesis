@@ -1,13 +1,13 @@
 \FloatBarrier
 \section{Learning Autonomous Walking: Towards Smart Machines}
 \label{sec::42_ab}
-The autonomous walking is based upon the performance within the test environment from section \ref{sec::412_pt}. The found parameters are used for comparative reason throughout this section as well. As explained in section \ref{sec::43_ip}, the neural network benefits strongly from an available depth map as input. We will therefore deal with the depth map extraction first.
+The autonomous walking is based upon the performance within the test environment from section \ref{sec::412_pt}. The found parameters are used for comparative reason throughout this section as well. As explained in section \ref{sec::33_ip}, the neural network benefits strongly from an available depth map as input. We will therefore deal with the depth map extraction first.
 \FloatBarrier
 \subsection{Autonomous Walking via Behavioral Cloning}
 \FloatBarrier
 \subsubsection{Camera Calibration}
 \label{sec::421_cc}
-As described in section \ref{sec::43_ip}, for the stereo block matching algorithm to work properly (equation \ref{eq::431_sad}), it is required to calibrate the cameras. We shortly verified this in figure \ref{fig::421_no_calib}, where we extracted a depth map from the uncalibrated stereo camera pair.
+As described in section \ref{sec::33_ip}, for the stereo block matching algorithm to work properly (equation \ref{eq::431_sad}), it is required to calibrate the cameras. We shortly verified this in figure \ref{fig::421_no_calib}, where we extracted a depth map from the uncalibrated stereo camera pair.
 \begin{figure}[h!]
 	\centering
 	\subcaptionbox{Left disparity map.}%
@@ -96,7 +96,7 @@ Within this section, we shortly explore the effects of all tuneable parameters o
 	\caption{Heicub's perspective of the scene for the depth map parameter tuning.}
 	\label{fig::422_wls_rgb}
 \end{figure}
-The depth map extraction, which utilizes the rectified images, depends on a stereo block matching algorithm that was explained in section \ref{sec::43_ip}. It mainly depends on the window size and the number of disparities for the sum of absolute difference computation. We evaluate the influence of those two parameters in figure \ref{fig::422_disp} (a) in a grid search fashion. It is apparent that the change in the number of disparities has close to no influence onto the depth map quality, while it removes plenty of useful information from the left-hand side of images. The same holds for the window size, except that it removes some noise from the depth maps.
+The depth map extraction, which utilizes the rectified images, depends on a stereo block matching algorithm that was explained in section \ref{sec::33_ip}. It mainly depends on the window size and the number of disparities for the sum of absolute difference computation. We evaluate the influence of those two parameters in figure \ref{fig::422_disp} (a) in a grid search fashion. It is apparent that the change in the number of disparities has close to no influence onto the depth map quality, while it removes plenty of useful information from the left-hand side of images. The same holds for the window size, except that it removes some noise from the depth maps.
 \begin{figure}[h!]
 	\centering
 	\subcaptionbox{Left disparity. Please refer to figure \ref{fig::431_left_disparity_map} and equation \ref{eq::431_sad} for the theory.}%
@@ -238,7 +238,7 @@ The mean distance with the standard deviation for user-controlled walking therei
 	\caption{Heicub's behavior in the test environment for additional tasks. The robot within these trials was controlled by the U-Net model, shown in figure \ref{fig::423_unet}.}
 \label{fig::424_aw_gif_additional}
 \end{figure} 
-Especially in the behavior plot of figure \ref{fig::424_aw_additional_semantic}, we can see that the robot successfully managed to walk backwards to avoid a collision with the human. Given the successful results of our first approach to train a neural network on autonomous navigation, we then continued to evaluate the proximal policy optimization algorithm, which got described in section \ref{sec::42_rl}.
+Especially in the behavior plot of figure \ref{fig::424_aw_additional_semantic}, we can see that the robot successfully managed to walk backwards to avoid a collision with the human. Given the successful results of our first approach to train a neural network on autonomous navigation, we then continued to evaluate the proximal policy optimization algorithm, which got described in section \ref{sec::32_rl}.
 \begin{figure}[h!]
 	\subcaptionbox{Dynamic balance.}%
 	[.5\linewidth]{\includegraphics[scale=.45]{chapters/06_walking_experiments/02_autonomous_walking/dynamic_walk_01_zmp.pdf}}

@@ -1,6 +1,6 @@
 \FloatBarrier
 \section{Image Processing}
-\label{sec::43_ip}
+\label{sec::33_ip}
 In the previous sections, we have learned about two different approaches to train neural nets on solving certain tasks. Although we came to understand that the complexity of the task to be solved correlates strongly with the amount of data at hand, there exist domains from which it is undeniably easier to do so. To equip a neural network with some prior knowledge by switching the domain may therefore not only be highly desirable but sometimes also needed if the amount or quality of data is not sufficient. One domain which is of special interest when it comes to interacting in a three-dimensional environment is a domain that represents depth information. If there are any, it may sometimes be possible to extract this kind of prior knowledge from a depth camera. As for this work, we need to rely on stereo cameras and powerful algorithms that allow us to compute depth images in real-time. The algorithm that helps us to do so, in terms of the extraction of weighted least squares disparity maps \cite{min2014fast}, will be presented in the following paragraph - Depth Map Extraction.
 \FloatBarrier
 \subsection{Depth Map Extraction}
@@ -11,7 +11,7 @@ As already pointed out, the depth map is generated from stereo camera images by 
 \end{align}
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=.28]{chapters/04_principles_of_machine_learning/img/image_preprocessing.png}
+	\includegraphics[scale=.28]{chapters/03_principles_of_machine_learning/img/image_preprocessing.png}
 	\caption{Image pre-processing to obtain edge filtered images. The images were taken within the simulation environment Gazebo (\href{http://gazebosim.org/}{\underline{link}}), and show a space exploration vehicle, for which, with the friendly support of NASA, we generated a Gazebo version (\href{https://github.com/mhubii/gazebo_models}{\underline{link}}).}
 	\label{fig::431_image_preprocessing}
 \end{figure}
@@ -28,7 +28,7 @@ When having a look at the Sobel kernel $\bm{S}_x$ (equation \ref{eq::431_sobel})
 To understand the block matching algorithm, we first need to figure out the transformation that images undergo for a change in perspective, which is caused by the two different positions of the cameras within the stereo camera pair. For an ideal setup, we have two identical cameras, and they are neither rotated relatively to each other, nor is there any other translation, but a shift along the x-axis (figure. \ref{fig::431_stereo_camera}). This may of course not always be true, and there are methods to correct for uncertainties, which we will present in the following paragraph, but omit for simplicity right now. The principle goal, for the inference of depth information from two images, is to find points in the right image that correspond to points in the left image. By triangulation, the displacement or disparity of a point in the right image, relative to its corresponding point in the left image, can then be used to extract the depth. The farther a point $\bm{X}$ lies away from the cameras, the smaller its displacement will be. In figure \ref{fig::431_stereo_camera}, we can see that a point $\bm{X}$, which is seen by the left camera, could in principle lie anywhere on the epipolar line at $\bm{x}'$, as seen from the right camera, if there is no depth information available. 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=.28]{chapters/04_principles_of_machine_learning/img/stereo_camera.png}
+	\includegraphics[scale=.28]{chapters/03_principles_of_machine_learning/img/stereo_camera.png}
 	\caption{The stereo setup with a left and a right camera.}
 	\label{fig::431_stereo_camera}
 \end{figure}
@@ -40,7 +40,7 @@ It results that, to find correspondences, one only must search along the epipola
 The disparity $d$ that minimizes the sum of absolute differences SAD is taken to serve as the best correspondence and is therefore used in the disparity map.  Here we can already see that due to the uniqueness of the edge filtered the images $\bm{E}$, it is easier to find correspondences there, rather than in the grayscale or RGB images.
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=.28]{chapters/04_principles_of_machine_learning/img/left_disparity_map.png}
+	\includegraphics[scale=.28]{chapters/03_principles_of_machine_learning/img/left_disparity_map.png}
 	\caption{Generation of the left disparity map by the block matching algorithm.}
 	\label{fig::431_left_disparity_map}
 \end{figure}
@@ -67,7 +67,7 @@ where $\alpha = \frac{1}{\text{width}\cdot\text{height}}$ is the normalization f
 where $r$ is a roll-off factor that defines the change of confidence with growing variance. The resulting disparity confidence is shown in figure \ref{fig::431_confidence_map} and is used to outweigh outlying disparity values from the final weighted least squares disparity map. 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=.28]{chapters/04_principles_of_machine_learning/img/confidence_map.png}
+	\includegraphics[scale=.28]{chapters/03_principles_of_machine_learning/img/confidence_map.png}
 	\caption{Generation of the confidence map from the variance within the disparity map.}
 	\label{fig::431_confidence_map}
 \end{figure}
@@ -102,7 +102,7 @@ where $c_{x,y}$ are single pixels of the consistency weighted disparity map. The
 where $\text{WLS}(\bm{U})$ is the weighted least squares filtered version of the left-right consistency $\bm{L}$.
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=.28]{chapters/04_principles_of_machine_learning/img/weighted_least_squares_disparity.png}
+	\includegraphics[scale=.28]{chapters/03_principles_of_machine_learning/img/weighted_least_squares_disparity.png}
 	\caption{Generation of the confidence weighted least squares disparity from the disparity map, and the left-right consistency.}
 	\label{fig::431_weighted_least_squares_disparity}
 \end{figure}
@@ -113,7 +113,7 @@ As already mentioned in figure \ref{fig::431_stereo_camera}, the assumption of a
 To correct images, as we observe them with a camera, it is required to have a mathematical description of it. A simple one for a camera is the pinhole model, which is shown in figure \ref{fig::432_pin_hole_camera}. For a pinhole camera model, the image plane lies behind the coordinate frame of the camera, and is turned the other way around, but it is easier to describe the image in a virtual plane, which is located at a distance $f$ along the $z_c$-axis, where $f$ is the focal length.
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=.28]{chapters/04_principles_of_machine_learning/img/pin_hole_camera.png}
+	\includegraphics[scale=.28]{chapters/03_principles_of_machine_learning/img/pin_hole_camera.png}
 	\caption{Pinhole camera model.}
 	\label{fig::432_pin_hole_camera}
 \end{figure}
@@ -153,7 +153,7 @@ where
 Together, the focal lengths, the principal point, and the distortion coefficients make up the unknowns within our camera model. Goal of the mono camera calibration is now to find these coefficients from images of a well-known calibration pattern. Therefore, images of the calibration pattern are taken from different perspectives (figure \ref{fig::432_calibration_process}). 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=.28]{chapters/04_principles_of_machine_learning/img/calibration_process.png}
+	\includegraphics[scale=.28]{chapters/03_principles_of_machine_learning/img/calibration_process.png}
 	\caption{Calibration pattern, as observed from the camera's coordinate system $C$. Within the object's coordinate system, all chessboard corners lie at a zero $z$-position.}
 	\label{fig::432_calibration_process}
 \end{figure}
@@ -168,9 +168,9 @@ where we now switched to homogeneous coordinates, and $w\in[0,W],h\in[0,H]$ are 
 \begin{figure}[h!]
 	\centering
 	\captionbox{}%
-	[.4\linewidth]{\includegraphics[scale=.2]{chapters/04_principles_of_machine_learning/img/gazebo_calib_left.jpg}}
+	[.4\linewidth]{\includegraphics[scale=.2]{chapters/03_principles_of_machine_learning/img/gazebo_calib_left.jpg}}
 	\captionbox{}%
-	[.4\linewidth]{\includegraphics[scale=.2]{chapters/04_principles_of_machine_learning/img/gazebo_corners.jpg}}
+	[.4\linewidth]{\includegraphics[scale=.2]{chapters/03_principles_of_machine_learning/img/gazebo_corners.jpg}}
 	\caption{Distorted calibration pattern (a), and the image points as found by the algorithm (b).}
 	\label{fig::432_distortion}
 \end{figure} 
@@ -195,9 +195,9 @@ The mapping enables us to rectify the left and the right image \cite{loop1999com
 \begin{figure}[h!]
 	\centering
 	\captionbox{}%
-	[.4\linewidth]{\includegraphics[scale=.2]{chapters/04_principles_of_machine_learning/img/gazebo_rectified_left.jpg}}
+	[.4\linewidth]{\includegraphics[scale=.2]{chapters/03_principles_of_machine_learning/img/gazebo_rectified_left.jpg}}
 	\captionbox{}%
-	[.4\linewidth]{\includegraphics[scale=.2]{chapters/04_principles_of_machine_learning/img/gazebo_rectified_right.jpg}}
+	[.4\linewidth]{\includegraphics[scale=.2]{chapters/03_principles_of_machine_learning/img/gazebo_rectified_right.jpg}}
 	\caption{Undistorted calibration pattern, as observed by the left camera (a), and by the right camera (b). For comparison, see the distorted calibration pattern in figure \ref{fig::432_distortion}, and note how the horizons within the images align.}
 	\label{fig::432_rectified}
 \end{figure}
