@@ -121,49 +121,57 @@ version  = 3.03
 	\input{chapters/02_foundations_for_humanoid_walking/20_nmpc} % nonlinear model predictive control
 	\input{chapters/02_foundations_for_humanoid_walking/30_ip}   % interpolation
 	\input{chapters/02_foundations_for_humanoid_walking/40_ki}   % kinematics
+
+	\chapter{Fundamentals of Image Processing for Depth Map Extraction}
+	\input{chapters/03_fundamentals_of_image_processing/00_ip}   % image processing
 	
 	\chapter{Principles of Machine Learning}
-	\input{chapters/03_principles_of_machine_learning/00_ml}   % short overview of machine learning
-	\input{chapters/03_principles_of_machine_learning/10_nn}   % short introduction to neural networks
-	\input{chapters/03_principles_of_machine_learning/20_rl}   % reinforcement learning
-	\input{chapters/03_principles_of_machine_learning/30_ip}   % image processing
+	\input{chapters/04_principles_of_machine_learning/00_ml}   % short overview of machine learning
+	\input{chapters/04_principles_of_machine_learning/10_nn}   % short introduction to neural networks
+	\input{chapters/04_principles_of_machine_learning/20_rl}   % reinforcement learning
 
 	\chapter{Heicub: Our Humanoid Robot}
-	\input{chapters/04_heicub_our_humanoid_robot/00_he}
+	\input{chapters/05_heicub_our_humanoid_robot/00_he}
 
 	\chapter{Implementation of the Autonomous Walking Pattern Generator}
-	\input{chapters/05_implementing_an_autonomous_walking_pattern_generator/00_stuff}
-	\input{chapters/05_implementing_an_autonomous_walking_pattern_generator/00_in}   % introduction to implementation
-	\input{chapters/05_implementing_an_autonomous_walking_pattern_generator/10_hw}   % short overview of humanoid walking
-	\input{chapters/05_implementing_an_autonomous_walking_pattern_generator/20_bc}   % behavioral cloning
+	\input{chapters/06_implementing_an_autonomous_walking_pattern_generator/00_stuff}
+	\input{chapters/06_implementing_an_autonomous_walking_pattern_generator/00_ml}   % short overview of machine learning
+	\input{chapters/06_implementing_an_autonomous_walking_pattern_generator/00_in}   % introduction to implementation
+	\input{chapters/06_implementing_an_autonomous_walking_pattern_generator/10_hw}   % short overview of humanoid walking
+	\input{chapters/06_implementing_an_autonomous_walking_pattern_generator/20_bc}   % behavioral cloning
 	%\input{chapters/02_background/23_rl}   % reinforcement learning
-	\input{chapters/05_implementing_an_autonomous_walking_pattern_generator/041_in}
-	\input{chapters/05_implementing_an_autonomous_walking_pattern_generator/01_cs}
-	\input{chapters/05_implementing_an_autonomous_walking_pattern_generator/02_pg}
-	\input{chapters/05_implementing_an_autonomous_walking_pattern_generator/03_dl}
+	\input{chapters/06_implementing_an_autonomous_walking_pattern_generator/041_in}
+	\input{chapters/06_implementing_an_autonomous_walking_pattern_generator/01_cs}
+	\input{chapters/06_implementing_an_autonomous_walking_pattern_generator/02_pg}
+	\input{chapters/06_implementing_an_autonomous_walking_pattern_generator/03_dl}
 	
 	\chapter{Running the Autonomous Walking Pattern Generator on Heicub}
-	\input{chapters/06_running_the_autonomous_walking_pattern_generator_on_heicub/00_he}
+	\input{chapters/07_running_the_autonomous_walking_pattern_generator_on_heicub/00_he}
 	
-	\chapter{Walking Experiments}
-	\input{chapters/07_walking_experiments/00_in}
-	\input{chapters/07_walking_experiments/01_uc}
-	\input{chapters/07_walking_experiments/02_aw}
+	\chapter{User-Controlled Walking Experiments}
+	\input{chapters/08_user_controlled_walking_experiments/00_in}
+	\input{chapters/08_user_controlled_walking_experiments/01_uc}
+
+	\chapter{Image Processing Experiments}
+	\input{chapters/09_image_processing_experiments/00_ip}
+
+	\chapter{Autonomous Walking Experiments}
+	\input{chapters/10_autonomous_walking_experiments/02_aw}
 	
 	\chapter{Conclusion}
-	\input{chapters/08_conclusion/00_in}
+	\input{chapters/11_conclusion/00_in}
 	
 	\part{Appendix}
 	\begin{appendix}
 		\label{sec::a}
-		\input{chapters/09_appendix/00_si}
-		\input{chapters/09_appendix/01_su}
+		\input{chapters/12_appendix/00_si}
+		\input{chapters/12_appendix/01_su}
 		\chapter{Lists}
 		\listoffigures
 		\listoftables
 		\bibliographystyle{unsrt}
-		\bibliography{chapters/09_appendix/references}
-		\input{chapters/09_appendix/acknowledgements}
-		\include{chapters/09_appendix/deposition}
+		\bibliography{chapters/12_appendix/references}
+		\input{chapters/12_appendix/acknowledgements}
+		\include{chapters/12_appendix/deposition}
 	\end{appendix}
 \end{document}

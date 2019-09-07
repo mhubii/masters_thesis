@@ -4,7 +4,7 @@
 The goal in reinforcement learning is not only to learn actions $a_t$ at time-step $t$, given a state $s_t$, like it is in behavioral cloning, but further to explore actions and states. This is usually performed as shown in figure \ref{fig::32_rl}, where an agent interacts with an environment to receive a reward $r_t$, and also changes the state as cause of its action. Therein, the actions $a_t$ are sampled from a policy $a_t\sim\pi_\theta(a_t|s_t)$ that depends on parameters $\theta$, which for our case are simply the weights of a neural network. 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=.5]{chapters/03_principles_of_machine_learning/img/reinforcement_learning.png}
+	\includegraphics[scale=.5]{chapters/04_principles_of_machine_learning/img/reinforcement_learning.png}
 	\caption{Reinforcement learning setup. As the agent interacts with the environment, the state of the environment changes.}
 	\label{fig::32_rl}
 \end{figure}
@@ -25,7 +25,7 @@ where $\delta^V_{t,l} = r_t + \gamma V(s_{t+1}) - V(s_t)$ is the temporal differ
 where $\rho_t(\theta) = \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_\text{old}}(a_t|s_t)}$ is the probability ratio of the old and the new policy. The loss is shown in figure \ref{fig::32_ppo}, and it assures for a positive advantage estimate that the gradient does not diverge towards actions that are way more likely under the new policy, than they have been for the old policy.
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=.35]{chapters/03_principles_of_machine_learning/img/ppo_objective.png}
+	\includegraphics[scale=.35]{chapters/04_principles_of_machine_learning/img/ppo_objective.png}
 	\caption{Policy gradient clipping in proximal policy optimization for positive and negative advantage estimates $\hat{A}_t$.}
 	\label{fig::32_ppo}
 \end{figure}

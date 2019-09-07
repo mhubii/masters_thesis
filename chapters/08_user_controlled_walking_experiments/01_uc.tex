@@ -11,11 +11,11 @@ To evaluate the pattern generator implementation of ours, we have benchmarked it
 	\subcaptionbox{Straight trajectories at\\$\bm{v}=\begin{pmatrix}
 		0.1 & 0.0 & 0.0
 		\end{pmatrix}^T$.}%
-	[.45\linewidth]{\includegraphics[scale=.45]{chapters/07_walking_experiments/01_user_controlled_walking/01_benchmarking/nmpc_straight.pdf}}
+	[.45\linewidth]{\includegraphics[scale=.45]{chapters/08_user_controlled_walking_experiments/img/01_benchmarking/nmpc_straight.pdf}}
 	\subcaptionbox{Diagonal trajectories at\\$\bm{v}=\begin{pmatrix}
 		0.1 & 0.1 & 0.0
 		\end{pmatrix}^T$.}%
-	[.45\linewidth]{\includegraphics[scale=.45]{chapters/07_walking_experiments/01_user_controlled_walking/01_benchmarking/nmpc_diagonal.pdf}}
+	[.45\linewidth]{\includegraphics[scale=.45]{chapters/08_user_controlled_walking_experiments/img/01_benchmarking/nmpc_diagonal.pdf}}
 	\caption{Simple trajectories. The velocities are given in units of\\$(\text{m}/\text{s}\,\,\,\,\text{m}/\text{s}\,\,\,\,\text{rad}/\text{s})^T$, where the first two entries describe the robot's velocity in the x-, and the y-direction, and the last entry describes the robot's angular velocity about the z-axis, form a frame that is attached to the robot. The trajectories start on the left-hand side.}
 	\label{fig::411_benchmarking_basic}
 \end{figure} 
@@ -25,11 +25,11 @@ The parameters for these tests can be found in the YAML file at the provided \hr
 	\subcaptionbox{Curved trajectories at\\$\bm{v}=\begin{pmatrix}
 	0.1 & 0.0 & 0.1
 	\end{pmatrix}^T$.}%
-	[.45\linewidth]{\includegraphics[scale=.45]{chapters/07_walking_experiments/01_user_controlled_walking/01_benchmarking/nmpc_turn.pdf}}
+	[.45\linewidth]{\includegraphics[scale=.45]{chapters/08_user_controlled_walking_experiments/img/01_benchmarking/nmpc_turn.pdf}}
 	\subcaptionbox{Obstacle avoidance at\\$\bm{v}=\begin{pmatrix}
 	0.1 & 0.0 & 0.0
 	\end{pmatrix}^T$}%
-	[.45\linewidth]{\includegraphics[scale=.45]{chapters/07_walking_experiments/01_user_controlled_walking/01_benchmarking/nmpc_obstacle.pdf}}
+	[.45\linewidth]{\includegraphics[scale=.45]{chapters/08_user_controlled_walking_experiments/img/01_benchmarking/nmpc_obstacle.pdf}}
 	\caption{Advanced trajectories. The velocities are given in units of\\$(\text{m}/\text{s}\,\,\,\,\text{m}/\text{s}\,\,\,\,\text{rad}/\text{s})^T$, see figure \ref{fig::411_benchmarking_basic}.}
 	\label{fig::411_benchmarking_advanced}
 \end{figure} 
@@ -37,11 +37,11 @@ To always ensure a smooth motion, and to benchmark the interpolation, we plotted
 \begin{figure}[h!]
 	\centering
 	\subcaptionbox{Interpolated\\x-Trajectories}%
-	[.3\linewidth]{\includegraphics[scale=.3]{chapters/07_walking_experiments/01_user_controlled_walking/01_benchmarking/interpolated_x_trajectories.pdf}}
+	[.3\linewidth]{\includegraphics[scale=.3]{chapters/08_user_controlled_walking_experiments/img/01_benchmarking/interpolated_x_trajectories.pdf}}
 	\subcaptionbox{Interpolated\\y-Trajectories}%
-	[.3\linewidth]{\includegraphics[scale=.3]{chapters/07_walking_experiments/01_user_controlled_walking/01_benchmarking/interpolated_y_trajectories.pdf}}
+	[.3\linewidth]{\includegraphics[scale=.3]{chapters/08_user_controlled_walking_experiments/img/01_benchmarking/interpolated_y_trajectories.pdf}}
 	\subcaptionbox{Interpolated\\z-Trajectories}%
-	[.3\linewidth]{\includegraphics[scale=.3]{chapters/07_walking_experiments/01_user_controlled_walking/01_benchmarking/interpolated_z_trajectories.pdf}}
+	[.3\linewidth]{\includegraphics[scale=.3]{chapters/08_user_controlled_walking_experiments/img/01_benchmarking/interpolated_z_trajectories.pdf}}
 	\caption{Interpolated foot trajectories. As explained in figure \ref{fig::23_ip}, the interpolation interpolates the feet's movement, given an initial, and a final foot position. The continuity shows that the interpolation got implemented correctly.}
 	\label{fig::411_benchmarking_inter}
 \end{figure}
@@ -66,35 +66,35 @@ For the execution on Heicub, we chose a parameter setting with which we could en
 Now given these parameters, we designed an environment for Heicub to walk in. A human user had to control the robot in four different scenarios. In each of the scenarios, Heicub started from a reference position, in order to reach a fire extinguisher at a distant location. By design, the setup allows for benchmarking of dynamic balance in all four different scenarios. As will be shown in section \ref{sec::42_ab}, we require a neural network to execute the same tasks, and therefore we can compare the performances of a human user with that of an autonomous agent. For the dynamic balance evaluation, we extracted the desired ZMP from the nonlinear model predictive controller, and measured the true ZMP, in accordance to equations \ref{eq::21_double_zmp_x} and \ref{eq::21_double_zmp_y}, by recording the ankles' force-torque sensor readouts. We further kept track of the velocity commands to the pattern generator for all tasks to extract the user's behavior. The first task was simply to go two meters straight forward (figure \ref{fig::412_uc_straight}).
 \begin{figure}[h!]
 	\subcaptionbox{Dynamic balance.}%
-	[.5\linewidth]{\includegraphics[scale=.45]{chapters/07_walking_experiments/01_user_controlled_walking/02_test_environment/straight_walk_01_zmp.pdf}}
+	[.5\linewidth]{\includegraphics[scale=.45]{chapters/08_user_controlled_walking_experiments/img/02_test_environment/straight_walk_01_zmp.pdf}}
 	\subcaptionbox{Behavior.}%
-	[.5\linewidth]{\includegraphics[scale=.45]{chapters/07_walking_experiments/01_user_controlled_walking/02_test_environment/straight_walk_01_entropy.pdf}}
+	[.5\linewidth]{\includegraphics[scale=.45]{chapters/08_user_controlled_walking_experiments/img/02_test_environment/straight_walk_01_entropy.pdf}}
 	\caption{User-controlled straight walk. The robot started to the plot's left-hand side (a), and moved forward until it reached the fire extinguisher.}
 	\label{fig::412_uc_straight}
 \end{figure} 
 The behavior therein is visualized by a histogram of all velocity commands over the course of the task (figure \ref{fig::412_uc_straight} (b)). For the bin size we chose $0.01\,\text{m}/\text{s}$ and $0.01\,\text{rad}/\text{s}$, respectively. 
 \begin{figure}[h!]
 	\subcaptionbox{Dynamic balance.}%
-	[.5\linewidth]{\includegraphics[scale=.45]{chapters/07_walking_experiments/01_user_controlled_walking/02_test_environment/curved_walk_01_zmp.pdf}}
+	[.5\linewidth]{\includegraphics[scale=.45]{chapters/08_user_controlled_walking_experiments/img/02_test_environment/curved_walk_01_zmp.pdf}}
 	\subcaptionbox{Behavior.}%
-	[.5\linewidth]{\includegraphics[scale=.45]{chapters/07_walking_experiments/01_user_controlled_walking/02_test_environment/curved_walk_01_entropy.pdf}}
+	[.5\linewidth]{\includegraphics[scale=.45]{chapters/08_user_controlled_walking_experiments/img/02_test_environment/curved_walk_01_entropy.pdf}}
 	\caption{User-controlled curved walk. The robot started to the plot's left-hand side (a), and performed a left turn on its way to the fire extinguisher, where it stopped.}
 	\label{fig::412_uc_curved}
 \end{figure} 
 The second task was to reach the fire extinguisher, which was located to the left of the robot. In order to reach it, it was therefore required to perform a curved walk (figure \ref{fig::412_uc_curved}). The third task (figure \ref{fig::412_uc_obstacle}) involved the avoidance of an obstacle, namely a chair. For the fourth task (figure \ref{fig::412_uc_sight}), the robot started with its back pointing towards the fire extinguisher.
 \begin{figure}[h!]
 	\subcaptionbox{Dynamic balance.}%
-	[.5\linewidth]{\includegraphics[scale=.45]{chapters/07_walking_experiments/01_user_controlled_walking/02_test_environment/obstacle_walk_02_zmp.pdf}}
+	[.5\linewidth]{\includegraphics[scale=.45]{chapters/08_user_controlled_walking_experiments/img/02_test_environment/obstacle_walk_02_zmp.pdf}}
 	\subcaptionbox{Behavior.}%
-	[.5\linewidth]{\includegraphics[scale=.45]{chapters/07_walking_experiments/01_user_controlled_walking/02_test_environment/obstacle_walk_02_entropy.pdf}}
+	[.5\linewidth]{\includegraphics[scale=.45]{chapters/08_user_controlled_walking_experiments/img/02_test_environment/obstacle_walk_02_entropy.pdf}}
 	\caption{User-controlled obstacle avoidance. The robot started to the plot's left-hand side (a), and moved towards a fire extinguisher. On about half of the distance it avoided a chair by turning to the right, and then to the left again, until it reached the fire extinguisher and stopped.}
 	\label{fig::412_uc_obstacle}
 \end{figure} 
 \begin{figure}[h!]
 	\subcaptionbox{Dynamic balance.}%
-	[.5\linewidth]{\includegraphics[scale=.45]{chapters/07_walking_experiments/01_user_controlled_walking/02_test_environment/out_of_sight_walk_01_zmp.pdf}}
+	[.5\linewidth]{\includegraphics[scale=.45]{chapters/08_user_controlled_walking_experiments/img/02_test_environment/out_of_sight_walk_01_zmp.pdf}}
 	\subcaptionbox{Behavior.}%
-	[.5\linewidth]{\includegraphics[scale=.45]{chapters/07_walking_experiments/01_user_controlled_walking/02_test_environment/out_of_sight_walk_01_entropy.pdf}}
+	[.5\linewidth]{\includegraphics[scale=.45]{chapters/08_user_controlled_walking_experiments/img/02_test_environment/out_of_sight_walk_01_entropy.pdf}}
 	\caption{User-controlled environmental scanning. The robot started to the plot's right-hand side (a), facing to the right, and performed a full $180^\circ$ turn, before walking almost straight to the fire extinguisher, which is here located to the plot's left-hand side.}
 	\label{fig::412_uc_sight}
 \end{figure} 
