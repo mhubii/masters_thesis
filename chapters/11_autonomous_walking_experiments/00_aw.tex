@@ -1,35 +1,34 @@
 \FloatBarrier
 \label{sec::11_aw}
-All of the above-mentioned steps will then allow us to collect data and to train a newly developed neural network architecture on it in section \ref{sec::423_da}. Finally, we will compare the humanly controlled robot's balance with the artificially controlled robot's balance in section \ref{sec::424_pt} and investigate on the reinforcement learning approach for autonomous navigation in section \ref{sec::43_ar}. TODO
+All of the above-mentioned steps will then allow us to collect data and to train a newly developed neural network architecture on it in section \ref{sec::1111_da}. Finally, we will compare the humanly controlled robot's balance with the artificially controlled robot's balance in section \ref{sec::1112_pt} and investigate on the reinforcement learning approach for autonomous navigation in section \ref{sec::112_ar}. TODO
 \\
-The autonomous walking is based upon the performance within the test environment from section \ref{sec::92_pt}. The found parameters are used for comparative reason throughout this section as well. As explained in section \ref{sec::3_ip}, the neural network benefits strongly from an available depth map as input. We will therefore deal with the depth map extraction first.
-\FloatBarrier
+The autonomous walking experiments are based upon the performance within the test environment from section \ref{sec::92_pt}. The found hyperparameters from section \ref{sec::92_pt} are used for comparative reason throughout this section as well. As explained in section \ref{sec::3_ip}, the neural network benefits strongly from an available depth map as input.
 \section{Autonomous Walking via Behavioral Cloning}
 \FloatBarrier
 \subsection{Data Acquisition and Training}
-\label{sec::423_da}
-As already pointed out, the task we wanted our neural network to solve was to find a fire extinguisher within a room and then to move towards it. For us to apply behavioral cloning to the task, it was necessary to act according to this policy first, and then to train a neural network on the acquired data. For the data, it is essential to sample homogeneously over the task's distribution. We, therefore, recorded velocity commands and the corresponding images for 66 distinct epochs. Each of the epochs was designed to reflect different scenarios, among them obstacle avoidance, interaction with humans, walking towards the fire extinguisher, and searching for the fire extinguisher when it was not possible to directly see it. As a result of the observations that we gained from the user-controlled walking in section \ref{sec::9_uc}, we restricted the user's policy to only use linear velocities along the x-axis, and angular velocities about the z-axis, since linear velocities along the y-axis revealed to pose an inefficient way of moving the robot. Exemplary samples of the recorded dataset are presented in figure \ref{fig::423_dataset}.
+\label{sec::1111_da}
+As already pointed out, the task we wanted our neural network to solve was to find a fire extinguisher within a room and then to move towards it. For us to apply behavioral cloning to the task, it was necessary to act according to this policy first, and then to train a neural network on the acquired data. For the data, it is essential to sample homogeneously over the task's distribution. We, therefore, recorded velocity commands and the corresponding images for 66 distinct epochs. Each of the epochs was designed to reflect different scenarios, among them obstacle avoidance, interaction with humans, walking towards the fire extinguisher, and searching for the fire extinguisher when it was not possible to directly see it. As a result of the observations that we gained from the user-controlled walking in section \ref{sec::9_uc}, we restricted the user's policy to only use linear velocities along the x-axis, and angular velocities about the z-axis, since linear velocities along the y-axis revealed to pose an inefficient way of moving the robot. Exemplary samples of the recorded dataset are presented in figure \ref{fig::1111_dataset}.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.4]{chapters/11_autonomous_walking_experiments/img/dataset_diversity.png}
 	\caption{Samples of the recorded dataset. The dataset shows a very diverse number of situations for the neural network to learn from. It consists of a total of $2\times134401$ recorded images at a resolution of $240\times320$ pixels, which together make up for $4.7\,\text{GB}$, and roughly $7.5\,\text{h}$ of data.}
-	\label{fig::423_dataset}
+	\label{fig::1111_dataset}
 \end{figure}
-It contains 134401 samples in total, which were recorded at a rate of 5 frames per second, and therefore they account for roughly 7.5 hours of data. For each sample, we stored the left camera's RGB view, as well as the confidence weighted least squares disparity map. This led to a total of 268802 recorded images at a resolution of $240\times320$ pixels, which together make up for $4.7\,\text{GB}$ of data. As a pre-processing step, we cropped regions of the recorded images that do not contain useful information. These regions are firstly caused by deformations that are introduced at the rectification step, as can, for example, be seen in figure \ref{fig::102_wls_rgb}, and secondly by the depth map's extraction, which results in unknown regions at the image's borders (figure \ref{fig::102_disp}). The representative samples from the dataset (figure \ref{fig::423_dataset}), are already pre-processed, and we can observe how only useful information is kept, in order not to confuse the neural network. To reduce the required amount of GPU memory, we further downscaled the pre-processed images to a size of $60\times80$ pixels, a size at which most of the information is still being kept, and stacked the RBD images with the confidence weighted least squares disparity map to obtain RBGD images. For the training of the neural network, we split the acquired dataset into a training, and a validation set. The training set held a randomly sampled fraction of $90\%$ of all recorded images, while the validation split held the other $10\%$. We only trained the neural network on the training set and stored the weights that performed best on the validation split, in order to avoid overfitting. Since it has shown good convergence on our dataset, we chose to use a U-Net \cite{ronneberger2015u} as the network architecture, which can be seen in figure \ref{fig::423_unet}.
+It contains 134401 samples in total, which were recorded at a rate of 5 frames per second, and therefore they account for roughly 7.5 hours of data. For each sample, we stored the left camera's RGB view, as well as the confidence weighted least squares disparity map. This led to a total of 268802 recorded images at a resolution of $240\times320$ pixels, which together make up for $4.7\,\text{GB}$ of data. As a pre-processing step, we cropped regions of the recorded images that do not contain useful information. These regions are firstly caused by deformations that are introduced at the rectification step, as can, for example, be seen in figure \ref{fig::102_wls_rgb}, and secondly by the depth map's extraction, which results in unknown regions at the image's borders (figure \ref{fig::102_disp}). The representative samples from the dataset (figure \ref{fig::1111_dataset}), are already pre-processed, and we can observe how only useful information is kept, in order not to confuse the neural network. To reduce the required amount of GPU memory, we further downscaled the pre-processed images to a size of $60\times80$ pixels, a size at which most of the information is still being kept, and stacked the RBD images with the confidence weighted least squares disparity map to obtain RBGD images. For the training of the neural network, we split the acquired dataset into a training, and a validation set. The training set held a randomly sampled fraction of $90\%$ of all recorded images, while the validation split held the other $10\%$. We only trained the neural network on the training set and stored the weights that performed best on the validation split, in order to avoid overfitting. Since it has shown good convergence on our dataset, we chose to use a U-Net \cite{ronneberger2015u} as the network architecture, which can be seen in figure \ref{fig::1111_unet}.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.5]{chapters/11_autonomous_walking_experiments/img/unet.png}
 	\caption{U-Net-LSTM network architecture. B stands for the batch size, and T for the number of images within a time sequence. The arrows indicate the layers that are being used, where we use ReLU activation functions except for the output layer, where we use a hyperbolic tangent and where we expect the output to represent the velocity command. The skip connections take the output of a shallow layer and concatenate it with its deep counterpart. The kernel size of each layer is consistently used, as defined within the legend.}
-	\label{fig::423_unet}
+	\label{fig::1111_unet}
 \end{figure}
-The U-Net promotes image abstraction capabilities of an auto-encoder that is caused by its bottleneck design, and furthermore shows faster convergence due to its residual connections, which allow the gradient flow to reach deeper layers earlier. Each image that is being forwarded goes through several convolutional layers with rectifying linear unit activation functions, and is subsequently downscaled by max-pooling operations. We repeated this process two times. Once the most downscaled layer is reached, the weights are being upscaled by simple interpolations again, which results in the same resolution that the layers had during the downscaling process. The skip connections then concatenate the shallow with the deep layers to a new layer at each scale, which is then being forwarded further through several convolutional layers with rectifying linear units. The nature of the robot's motion, which inherently causes the cameras to move from the left to the right periodically, required us to equip the network architecture by a temporal understanding. We, therefore, extended the U-Net architecture to a novel U-Net-LSTM structure. The developed architecture takes up a sequence of consecutive RGBD images and forwards them through the U-Net until it reaches a fully connected regression layer that shall output velocity values in the end. Each image therein creates a signal, from which the LSTM is supposed only to keep the most relevant information. This design helped the network to understand that a fire extinguisher to the left of the image may only be caused by the cameras that are temporally displaced to the right. The last fully connected layer then returns what we use for the loss function, and therefore a velocity. In contrast to the preceding layers, the last fully connected layer uses a hyperbolic tangent function, which restricts the output to a range of $[-1,1]$, which is then being scaled by the velocity that the pattern generator maximally allows. The architecture can be found at the provided \href{https://github.com/mhubii/nmpc_pattern_generator/blob/master/libs/learning/python/unet_model.py}{\underline{link}}. Due to memory limitations, we trained the network on a sequence length of 5 RGBD images, and a batch size of 32. For the loss, we chose a mean squared error with respect to the most recent velocity command. We used the Adam optimization \cite{kingma2014adam} at a learning rate of  $0.001$ and trained for 100 epochs on an Nvidia GTX 1080 with $8\,\text{GB}$ RAM, to which we were granted access to. This took us around 48 hours. The loss history is shown in figure \ref{fig::423_loss}, which reveals a good convergence after around 40 epochs.
+The U-Net promotes image abstraction capabilities of an auto-encoder that is caused by its bottleneck design, and furthermore shows faster convergence due to its residual connections, which allow the gradient flow to reach deeper layers earlier. Each image that is being forwarded goes through several convolutional layers with rectifying linear unit activation functions, and is subsequently downscaled by max-pooling operations. We repeated this process two times. Once the most downscaled layer is reached, the weights are being upscaled by simple interpolations again, which results in the same resolution that the layers had during the downscaling process. The skip connections then concatenate the shallow with the deep layers to a new layer at each scale, which is then being forwarded further through several convolutional layers with rectifying linear units. The nature of the robot's motion, which inherently causes the cameras to move from the left to the right periodically, required us to equip the network architecture by a temporal understanding. We, therefore, extended the U-Net architecture to a novel U-Net-LSTM structure. The developed architecture takes up a sequence of consecutive RGBD images and forwards them through the U-Net until it reaches a fully connected regression layer that shall output velocity values in the end. Each image therein creates a signal, from which the LSTM is supposed only to keep the most relevant information. This design helped the network to understand that a fire extinguisher to the left of the image may only be caused by the cameras that are temporally displaced to the right. The last fully connected layer then returns what we use for the loss function, and therefore a velocity. In contrast to the preceding layers, the last fully connected layer uses a hyperbolic tangent function, which restricts the output to a range of $[-1,1]$, which is then being scaled by the velocity that the pattern generator maximally allows. The architecture can be found at the provided \href{https://github.com/mhubii/nmpc_pattern_generator/blob/master/libs/learning/python/unet_model.py}{\underline{link}}. Due to memory limitations, we trained the network on a sequence length of 5 RGBD images, and a batch size of 32. For the loss, we chose a mean squared error with respect to the most recent velocity command. We used the Adam optimization \cite{kingma2014adam} at a learning rate of  $0.001$ and trained for 100 epochs on an Nvidia GTX 1080 with $8\,\text{GB}$ RAM, to which we were granted access to. This took us around 48 hours. The loss history is shown in figure \ref{fig::1111_loss}, which reveals a good convergence after around 40 epochs.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.4]{chapters/11_autonomous_walking_experiments/img/05_07_19_loss_history.pdf}
-	\caption{Mean squared error training loss history of the U-Net on the validation split of the dataset, shown in figure \ref{fig::423_unet}. The training took about $48\,\text{h}$ on an Nvidia GTX 1080.}
-	\label{fig::423_loss}
+	\caption{Mean squared error training loss history of the U-Net on the validation split of the dataset, shown in figure \ref{fig::1111_unet}. The training took about $48\,\text{h}$ on an Nvidia GTX 1080.}
+	\label{fig::1111_loss}
 \end{figure}
-After training, we generated velocity histograms, as we already did in section \ref{sec::9_uc}, but this time over the whole validation split for both, the ground truth and the predicted behavior, as shown in figure \ref{fig::423_training_dist}. To generate the predictions on the validation split took $4\,\text{ms}$ with a GeForce GTX 1050 for each of the 13341 images on average.
+After training, we generated velocity histograms, as we already did in section \ref{sec::9_uc}, but this time over the whole validation split for both, the ground truth and the predicted behavior, as shown in figure \ref{fig::1111_training_dist}. To generate the predictions on the validation split took $4\,\text{ms}$ with a GeForce GTX 1050 for each of the 13341 images on average.
 \begin{figure}[h!]
 	\centering
 	\subcaptionbox{Ground truth velocity commands.}%
@@ -37,7 +36,7 @@ After training, we generated velocity histograms, as we already did in section \
 	\subcaptionbox{Predicted velocity commands.}%
 	[.45\linewidth]{\includegraphics[scale=.45]{chapters/11_autonomous_walking_experiments/img/predicted_entropy.pdf}}
 	\caption{Normalized velocity histograms over the validation split. The ground truth (a), and the predicted velocity commands (b), appear to be very similar, which indicates a successful training.}
-	\label{fig::423_training_dist}
+	\label{fig::1111_training_dist}
 \end{figure}
 By pure sight, it can already be seen that the network performs well on the validation split, and the Kullback-Leibler divergence $D_\text{KL}$, which measures the distance of probability distributions, enforces this observation further. The Kullback-Leibler divergence for two discrete probability distributions $p(v)$ and $q(v)$, is computed as follows
 \begin{align}
@@ -46,8 +45,8 @@ By pure sight, it can already be seen that the network performs well on the vali
 where for our case, $p(v)$ is the ground truth velocity distribution, and $q(v)$ is the predicted velocity distribution. For the distribution of linear velocities along the x-axis $v_x$, we computed the Kullback-Leibler divergence to be $D^x_\text{KL}=0.20\,\text{a.u.}$, and for the angular velocity about the z-axis $\omega_z$, we obtained $D^z_\text{KL}=0.01\,\text{a.u.}$. Now the beauty within the task at hand lies in the fact that we were not solely dependent on a validation split for performance evaluations, but instead that we could run Heicub in a previously unseen test environment. It is the same test environment, which we already introduced in section \ref{sec::9_uc}, and we will evaluate the trained neural network's behavior within it in the next section - Performance in Test Environment.
 \FloatBarrier
 \subsection{Performance in Test Environment}
-\label{sec::424_pt}
-For the performance benchmarking, we relied on the well-defined experimental setup from section \ref{sec::9_uc}. Once more, the tasks were to move straight towards a fire extinguisher, to turn and to move towards it, to avoid an obstacle on the way, and to find the fire extinguisher. In order to ensure reproducibility, we let Heicub solve each of these tasks twice, as we did for the user-controlled case. The setup is shown in figure \ref{fig::424_aw_gif_basic}, which shows Heicub's movement over the course of each task along with its sight of the scene.
+\label{sec::1112_pt}
+For the performance benchmarking, we relied on the well-defined experimental setup from section \ref{sec::9_uc}. Once more, the tasks were to move straight towards a fire extinguisher, to turn and to move towards it, to avoid an obstacle on the way, and to find the fire extinguisher. In order to ensure reproducibility, we let Heicub solve each of these tasks twice, as we did for the user-controlled case. The setup is shown in figure \ref{fig::1112_aw_gif_basic}, which shows Heicub's movement over the course of each task along with its sight of the scene.
 \begin{figure}[h!]
 	\centering
 	\subcaptionbox{Straight walk - \href{https://drive.google.com/file/d/1X-RQ9yVLJ9McgeXVoDQhI1uvMJA5o08y/view?usp=sharing}{\underline{link}}.}%
@@ -58,17 +57,17 @@ For the performance benchmarking, we relied on the well-defined experimental set
 	[.4\linewidth]{\animategraphics[height=1.2in,loop,autoplay]{20}{chapters/11_autonomous_walking_experiments/img/obstacle_walk_02/frame-}{001}{017}}
 	\subcaptionbox{Environmental scanning - \href{https://drive.google.com/file/d/1QmtltYTwoXMzHoUA8knA2FEpMsaud0QD/view?usp=sharing}{\underline{link}}.}%
 	[.4\linewidth]{\animategraphics[height=1.2in,loop,autoplay]{20}{chapters/11_autonomous_walking_experiments/img/out_of_sight_walk_01/frame-}{001}{075}}
-	\caption{Heicub's behavior in the test environment for the benchmarking tasks. The robot within these trials was controlled by the U-Net model, shown in figure \ref{fig::423_unet}.}
-	\label{fig::424_aw_gif_basic}
+	\caption{Heicub's behavior in the test environment for the benchmarking tasks. The robot within these trials was controlled by the U-Net model, shown in figure \ref{fig::1111_unet}.}
+	\label{fig::1112_aw_gif_basic}
 \end{figure} 
-While Heicub did manage to solve the straight walk, the curved walk, and the environmental scanning, it had trouble to go towards the fire extinguisher, once it avoided the obstacle. Again, we tracked the zero moment point from the pattern generator, as well as the true zero moment point from the force-torque readouts. The results of these measurements are shown in figures \ref{fig::424_aw_basic_straight} - \ref{fig::424_aw_basic_sight}. It can clearly be seen that the neural network's behavior for within the test environment is much noisier than it was for the validation split in figure \ref{fig::423_training_dist}. This especially holds true for the angular velocity distributions. 
+While Heicub did manage to solve the straight walk, the curved walk, and the environmental scanning, it had trouble to go towards the fire extinguisher, once it avoided the obstacle. Again, we tracked the zero moment point from the pattern generator, as well as the true zero moment point from the force-torque readouts. The results of these measurements are shown in figures \ref{fig::1112_aw_basic_straight} - \ref{fig::1112_aw_basic_sight}. It can clearly be seen that the neural network's behavior for within the test environment is much noisier than it was for the validation split in figure \ref{fig::1111_training_dist}. This especially holds true for the angular velocity distributions. 
 \begin{figure}[h!]
 	\subcaptionbox{Dynamic balance.}%
 	[.5\linewidth]{\includegraphics[scale=.45]{chapters/11_autonomous_walking_experiments/img/straight_walk_01_zmp.pdf}}
 	\subcaptionbox{Behavior.}%
 	[.5\linewidth]{\includegraphics[scale=.45]{chapters/11_autonomous_walking_experiments/img/straight_walk_01_entropy.pdf}}
 	\caption{Autonomously controlled straight walk. The robot started to the plot's left-hand side (a), and then moved straight towards the fire extinguisher until it stopped in front of it.}
-\label{fig::424_aw_basic_straight}
+\label{fig::1112_aw_basic_straight}
 \end{figure} 
 \begin{figure}[h!]
 	\subcaptionbox{Dynamic balance.}%
@@ -76,7 +75,7 @@ While Heicub did manage to solve the straight walk, the curved walk, and the env
 	\subcaptionbox{Behavior.}%
 	[.5\linewidth]{\includegraphics[scale=.45]{chapters/11_autonomous_walking_experiments/img/curved_walk_01_entropy.pdf}}
 	\caption{Autonomously controlled curved walk. The robot started to the plot's left-hand side (a), and moved on a curved line towards the fire extinguisher, which was located to its left.}
-\label{fig::424_aw_basic_curved}
+\label{fig::1112_aw_basic_curved}
 \end{figure} 
 \begin{figure}[h!]
 	\subcaptionbox{Dynamic balance.}%
@@ -84,7 +83,7 @@ While Heicub did manage to solve the straight walk, the curved walk, and the env
 	\subcaptionbox{Behavior.}%
 	[.5\linewidth]{\includegraphics[scale=.45]{chapters/11_autonomous_walking_experiments/img/obstacle_walk_02_entropy.pdf}}
 	\caption{Autonomously controlled obstacle avoidance. The robot started to the plot's left-hand side (a), and avoided an obstacle by turning to the right, but then lost track of it.}
-\label{fig::424_aw_basic_obstacle}
+\label{fig::1112_aw_basic_obstacle}
 \end{figure}
 \begin{figure}[h!] 
 	\subcaptionbox{Dynamic balance.}%
@@ -92,18 +91,18 @@ While Heicub did manage to solve the straight walk, the curved walk, and the env
 	\subcaptionbox{Behavior.}%
 	[.5\linewidth]{\includegraphics[scale=.45]{chapters/11_autonomous_walking_experiments/img/out_of_sight_walk_01_entropy.pdf}}
 	\caption{Autonomously controlled environmental scanning. The robot started to the plot's right-hand side (a), facing to the right, and performed a turn to the right, until it saw the fire extinguisher and walked straight towards it.}
-	\label{fig::424_aw_basic_sight}
+	\label{fig::1112_aw_basic_sight}
 \end{figure} 
 In contrast to the validation split, there is no simple method anymore to compare the results of user-controlled walking and autonomously controlled walking. This has two main reasons. First of all, a human, which controls the robot, does so from a third-person perspective, while the neural network interacts with the environment from a first-person perspective. Secondly, different taken actions result in different states. That said, once the human agent and the artificial agent only take slightly different decisions, the two behaviors will be driven from completely different states, which causes yet another different action. We can therefore only compare whether the task of interest got solved, and how the different behaviors influenced the primal goal of dynamic balance, which brings us back to the observation of the neural network's noisy policy. To assess the level of noise, we computed the entropy $S(p(v))$ within the velocity distributions as follows
 \begin{align}
 	S(p(v)) = \sum_{v\in \bm{V}}p(v)\log p(v)
 \end{align}
-Furthermore, to rate the dynamic balance, we computed the distance $\Delta z$ of the inverted pendulum zero moment point from the pattern generator, and the measured zero moment point. We did so for every behavior and dynamic balance plot of our benchmarking setup. An exemplary distribution of the distances $\Delta z$ is shown in figure \ref{fig::424_aw_zmp_dist}, and it can be seen that there are mainly to contributions to the distribution, of which we figured that the distribution at small distances originates from the rotational degree of freedom, see figure \ref{fig::424_aw_zmp_dist_split}.
+Furthermore, to rate the dynamic balance, we computed the distance $\Delta z$ of the inverted pendulum zero moment point from the pattern generator, and the measured zero moment point. We did so for every behavior and dynamic balance plot of our benchmarking setup. An exemplary distribution of the distances $\Delta z$ is shown in figure \ref{fig::1112_aw_zmp_dist}, and it can be seen that there are mainly to contributions to the distribution, of which we figured that the distribution at small distances originates from the rotational degree of freedom, see figure \ref{fig::1112_aw_zmp_dist_split}.
 \begin{figure}[h!] 
 	\centering
 	\includegraphics[scale=.45]{chapters/11_autonomous_walking_experiments/img/zmp_distribution_benchmark.pdf}
 	\caption{The plot shows the distribution of the distances between the measured zero moment point and the zero moment point as it originates from the nonlinear model predictive control. We can observe two main contributions within it.}
-	\label{fig::424_aw_zmp_dist}
+	\label{fig::1112_aw_zmp_dist}
 \end{figure} 
 \begin{figure}[h!] 
 	\subcaptionbox{ZMP distance distribution for the environmental scanning.}%
@@ -111,33 +110,33 @@ Furthermore, to rate the dynamic balance, we computed the distance $\Delta z$ of
 	\subcaptionbox{ZMP distance distribution for the straight walk.}%
 	[.5\linewidth]{\includegraphics[scale=.45]{chapters/11_autonomous_walking_experiments/img/zmp_distribution_straight.pdf}}
 	\caption{Within the ZMP distance distributions, we can see that the contribution at lower distances mainly originates from the robot's rotation. We can say so, since (a) represents the distribution for the environmental scanning benchmarking test, for which a vast amount of rotation is required. Whereas (b) corresponds to the straight walk, and where we can see that the second contribution to the zero moment point distance is much higher.}
-	\label{fig::424_aw_zmp_dist_split}
+	\label{fig::1112_aw_zmp_dist_split}
 \end{figure} 
-Since it can be seen in figure \ref{fig::424_aw_zmp_dist_split} that the translational velocity $v_x$ contributes to the greater deviations from the desired zero moment point, we used the linear velocity's entropy as reference for the balance evaluation. The mean distance is therefore plotted against the entropy in figure \ref{fig::424_entropy_balance}, in order to probe the influence of noisy decisions onto the balance.
+Since it can be seen in figure \ref{fig::1112_aw_zmp_dist_split} that the translational velocity $v_x$ contributes to the greater deviations from the desired zero moment point, we used the linear velocity's entropy as reference for the balance evaluation. The mean distance is therefore plotted against the entropy in figure \ref{fig::1112_entropy_balance}, in order to probe the influence of noisy decisions onto the balance.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.5]{chapters/11_autonomous_walking_experiments/img/entropy_against_balance.pdf}
 	\caption{Influence of entropic commands onto Heicub's dynamic balance. Within the standard deviation there is no effect of the command signal's entropy on the robot's balance.}
-	\label{fig::424_entropy_balance}
+	\label{fig::1112_entropy_balance}
 \end{figure}
-The mean distance with the standard deviation for user-controlled walking therein is $3.24\pm1.99\,\text{cm}$, while that of autonomously controlled walking is $3.43\pm2.13\,\text{cm}$. Within the $1\sigma$-range, we could, therefore, demonstrate that the control signal's entropy does not have an effect on the balance. In addition to the benchmarking tasks, we further wanted to demonstrate the robot's behavior in two more scenarios. The first additional scenario involves a dynamic environment, in which the robot interacts with a human and a moving fire extinguisher. The second additional scenario demonstrates a semantic understanding of the neural network, in that it poses the challenge of having similarly colored objects to distinguish from. Both additional tests are shown in figure \ref{fig::424_aw_gif_additional}, and they were solved successfully.
+The mean distance with the standard deviation for user-controlled walking therein is $3.24\pm1.99\,\text{cm}$, while that of autonomously controlled walking is $3.43\pm2.13\,\text{cm}$. Within the $1\sigma$-range, we could, therefore, demonstrate that the control signal's entropy does not have an effect on the balance. In addition to the benchmarking tasks, we further wanted to demonstrate the robot's behavior in two more scenarios. The first additional scenario involves a dynamic environment, in which the robot interacts with a human and a moving fire extinguisher. The second additional scenario demonstrates a semantic understanding of the neural network, in that it poses the challenge of having similarly colored objects to distinguish from. Both additional tests are shown in figure \ref{fig::1112_aw_gif_additional}, and they were solved successfully.
 \begin{figure}[h!]
 	\centering
 	\subcaptionbox{Dynamic environment - \href{https://drive.google.com/file/d/1zm-9apobNmsXAcLXB5e9lGqIU7NMHzVl/view?usp=sharing}{\underline{link}}.}%
 	[.4\linewidth]{\animategraphics[height=1.2in,loop,autoplay]{20}{chapters/11_autonomous_walking_experiments/img/dynamic_walk_01/frame-}{001}{031}}
 	\subcaptionbox{Semantic understanding - \href{https://drive.google.com/file/d/1VQIEChA61GDxm-rLf8pfOxCgXeJhuFG9/view?usp=sharing}{\underline{link}}.}%
 	[.4\linewidth]{\animategraphics[height=1.2in,loop,autoplay]{20}{chapters/11_autonomous_walking_experiments/img/semantic_walk_01/frame-}{001}{046}}
-	\caption{Heicub's behavior in the test environment for additional tasks. The robot within these trials was controlled by the U-Net model, shown in figure \ref{fig::423_unet}.}
-\label{fig::424_aw_gif_additional}
+	\caption{Heicub's behavior in the test environment for additional tasks. The robot within these trials was controlled by the U-Net model, shown in figure \ref{fig::1111_unet}.}
+\label{fig::1112_aw_gif_additional}
 \end{figure} 
-Especially in the behavior plot of figure \ref{fig::424_aw_additional_semantic}, we can see that the robot successfully managed to walk backwards to avoid a collision with the human. Given the successful results of our first approach to train a neural network on autonomous navigation, we then continued to evaluate the proximal policy optimization algorithm, which got described in section \ref{sec::42_rl}.
+Especially in the behavior plot of figure \ref{fig::1112_aw_additional_semantic}, we can see that the robot successfully managed to walk backwards to avoid a collision with the human. Given the successful results of our first approach to train a neural network on autonomous navigation, we then continued to evaluate the proximal policy optimization algorithm, which got described in section \ref{sec::42_rl}.
 \begin{figure}[h!]
 	\subcaptionbox{Dynamic balance.}%
 	[.5\linewidth]{\includegraphics[scale=.45]{chapters/11_autonomous_walking_experiments/img/dynamic_walk_01_zmp.pdf}}
 	\subcaptionbox{Behavior.}%
 	[.5\linewidth]{\includegraphics[scale=.45]{chapters/11_autonomous_walking_experiments/img/dynamic_walk_01_entropy.pdf}}
 	\caption{Autonomously controlled in a dynamic environment. The robot started to the plot's left-hand side, and moved forward towards the fire extinguisher, where it stopped on half way to avoid a human, until the pathway was free again.}
-	\label{fig::424_aw_additional_dynamic}
+	\label{fig::1112_aw_additional_dynamic}
 \end{figure}
 \begin{figure}[h!]
 	\subcaptionbox{Dynamic balance.}%
@@ -145,19 +144,19 @@ Especially in the behavior plot of figure \ref{fig::424_aw_additional_semantic},
 	\subcaptionbox{Behavior.}%
 	[.5\linewidth]{\includegraphics[scale=.45]{chapters/11_autonomous_walking_experiments/img/semantic_walk_01_entropy.pdf}}
 	\caption{Autonomously controlled for demonstration of a semantic understanding. The robot started to the plot's left-hand side (a), and moved forward to the fire extinguisher to its left. Heicub had to distinguish between the fire extinguisher and another orange object right in front of it.}
-	\label{fig::424_aw_additional_semantic}
+	\label{fig::1112_aw_additional_semantic}
 \end{figure}
 \FloatBarrier
 \section{Autonomous Walking via Reinforcement Learning}
-\label{sec::43_ar}
-Since there is to this date no feasible way of training an agent on autonomous navigation in real time with reinforcement learning, we first decided to implement a benchmarking environment, which is introduced in section \ref{sec::431_bpp}, and then to use the benchmarking environment to test the fusion of nonlinear model predictive control with proximal policy optimization in, which is demonstrated in section \ref{sec::431_fpp}.
+\label{sec::112_ar}
+Since there is to this date no feasible way of training an agent on autonomous navigation in real time with reinforcement learning, we first decided to implement a benchmarking environment, which is introduced in section \ref{sec::1121_bpp}, and then to use the benchmarking environment to test the fusion of nonlinear model predictive control with proximal policy optimization in, which is demonstrated in section \ref{sec::1122_fpp}.
 \subsection{Benchmarking Proximal Policy Optimization}
-\label{sec::431_bpp}
-To validate the implementation of proximal policy optimization, we used a little benchmarking environment that is shown in figure \ref{fig::431_ppo_env}. The agent's goal within this setup is to move towards the red dot, while keeping a maximum distance of $10\,\text{a.u.}$ towards it. The environment's state is simply described by a concatenation of the agent's position $\bm{a} = \begin{pmatrix}
+\label{sec::1121_bpp}
+To validate the implementation of proximal policy optimization, we used a little benchmarking environment that is shown in figure \ref{fig::1121_ppo_env}. The agent's goal within this setup is to move towards the red dot, while keeping a maximum distance of $10\,\text{a.u.}$ towards it. The environment's state is simply described by a concatenation of the agent's position $\bm{a} = \begin{pmatrix}
 a_x & a_y
 \end{pmatrix}^T$ with that of the goal $\bm{g} = \begin{pmatrix}
 g_x & g_y
-\end{pmatrix}^T$. The reward $r_t$, at time step $t$, is designed to encourage motion towards the goal, by taking the difference of the previous and the current goal distance $r_t = ||\bm{a}_{t-1}-\bm{g}_{t-1}||_2 - ||\bm{a}_{t}-\bm{g}_{t}||_2$. Furthermore, a reward of ten was gained for successful completion, while a reward of negative ten was granted for whenever the agent left the maximally allowed distance towards the goal, see for example figure \ref{fig::431_ppo_env} (a).
+\end{pmatrix}^T$. The reward $r_t$, at time step $t$, is designed to encourage motion towards the goal, by taking the difference of the previous and the current goal distance $r_t = ||\bm{a}_{t-1}-\bm{g}_{t-1}||_2 - ||\bm{a}_{t}-\bm{g}_{t}||_2$. Furthermore, a reward of ten was gained for successful completion, while a reward of negative ten was granted for whenever the agent left the maximally allowed distance towards the goal, see for example figure \ref{fig::1121_ppo_env} (a).
 \begin{figure}[h!]
 	\centering
 	\subcaptionbox{Agent at epoch 1.}%
@@ -165,7 +164,7 @@ g_x & g_y
 	\subcaptionbox{Agent at epoch 30.}%
 	[.45\linewidth]{\includegraphics[scale=.45]{chapters/11_autonomous_walking_experiments/img/epoch_30.pdf}}
 	\caption{Artificial agent in proximal policy optimization test environment. While the agent acts randomly in epoch 1 (a), the goal is reached with high confidence at epoch 30 (b).}	
-	\label{fig::431_ppo_env}
+	\label{fig::1121_ppo_env}
 \end{figure} 
 In each of the cases, the environment was reset, and the goal got spawned at a random location. For both, the agent and the critic network, we used a fully connected neural network with 2 hidden layers of size 16, and 32, respectively. The output layer provided 2 units, which reflect our agent's degrees of freedom in the environment. For the hidden units, we again relied on rectifying linear units as our activation function, while we used a hyperbolic tangent for the output. We were able to produce the best results with a gradient clipping at $\epsilon=0.2$ (see equation \ref{eq::42_clip}), and the cost function hyper-parameters $c_1 = 0.5$ and $c_2 = 0.1/\overline{r_t}$, where $\overline{r_t}$ denotes the average reward, and which can be found in equation \ref{eq::42_ppo_loss}. 
 \begin{figure}[h!]
@@ -175,25 +174,25 @@ In each of the cases, the environment was reset, and the goal got spawned at a r
 	\subcaptionbox{Standard deviation history.}%
 	[.45\linewidth]{\includegraphics[scale=.35]{chapters/11_autonomous_walking_experiments/img/ppo_std_history.pdf}}
 	\caption{Proximal policy optimization in test environment over 50 epochs. The agent learned to maximize the reward after around 20 epochs, by increasing its exploration with a higher standard deviation within the policy $\pi_\theta$ (b).}	
-	\label{fig::431_ppo_hist}
+	\label{fig::1121_ppo_hist}
 \end{figure}
-We ran the environment for $10000$ steps per epoch, and updated the networks every $4096$ actions, with a minibatch size of $M=512$ for $8$ proximal policy optimization epochs (see algorithm \ref{alg::42_ac}). The Adam optimizer then led to convergence at a learning rate of $0.01$ after about thirty epochs (see figure \ref{fig::431_ppo_hist}). A main reason for the fast convergence was caused by the chosen entropy hyperparameter $c_2$, which encouraged exploration on low rewards, and damped exploration on high rewards. We computed the entropy $S[\pi_\theta]$ from the differential entropy of our Gaussian policy $\pi_\theta$ via (\href{https://github.com/mhubii/ppo_libtorch/blob/481c1e326dcd6220b2c1c955a0303a410c2cb0dd/Models.h#L82}{\underline{link}})
+We ran the environment for $10000$ steps per epoch, and updated the networks every $4096$ actions, with a minibatch size of $M=512$ for $8$ proximal policy optimization epochs (see algorithm \ref{alg::42_ac}). The Adam optimizer then led to convergence at a learning rate of $0.01$ after about thirty epochs (see figure \ref{fig::1121_ppo_hist}). A main reason for the fast convergence was caused by the chosen entropy hyperparameter $c_2$, which encouraged exploration on low rewards, and damped exploration on high rewards. We computed the entropy $S[\pi_\theta]$ from the differential entropy of our Gaussian policy $\pi_\theta$ via (\href{https://github.com/mhubii/ppo_libtorch/blob/481c1e326dcd6220b2c1c955a0303a410c2cb0dd/Models.h#L82}{\underline{link}})
 \begin{align}
 S[\pi_\theta] = 0.5 + 0.5\log(2\pi)+\log(\sigma),
 \end{align}
-where $\sigma$ is the standard deviation. We can then see the standard deviation's influence on the reward, as it starts to increase strongly in figure \ref{fig::431_ppo_hist} (b). After having trained the agent successfully for $50$ epochs, we ran the policy $\pi_\theta$ without noise contribution, but rather took the average $\mu$, as proposed by the actor network. An example of the agent's behavior can be seen in figure \ref{fig::431_ppo_test}, which now appears smooth. 
+where $\sigma$ is the standard deviation. We can then see the standard deviation's influence on the reward, as it starts to increase strongly in figure \ref{fig::1121_ppo_hist} (b). After having trained the agent successfully for $50$ epochs, we ran the policy $\pi_\theta$ without noise contribution, but rather took the average $\mu$, as proposed by the actor network. An example of the agent's behavior can be seen in figure \ref{fig::1121_ppo_test}, which now appears smooth. 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.45]{chapters/11_autonomous_walking_experiments/img/test_mode.pdf}
 	\caption{Proximal policy optimization in test mode that is without noisy policy $\pi_\theta$. The agent almost learned to move the shortest path towards the goal.}	
-	\label{fig::431_ppo_test}
+	\label{fig::1121_ppo_test}
 \end{figure}
 We ran the agent ten times for $10000$ steps without noise contribution, and observed $311\pm3$ wins on average, and no lost game at all, which indicates that the neural network learned to generalize the task well.
 \subsection{Fusion of Nonlinear Model Predictive Control with Proximal Policy Optimization}
-\label{sec::431_fpp}
+\label{sec::1122_fpp}
 For the autonomous navigation, it is then possible to combine proximal policy optimization with nonlinear model predictive control (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dev/src/train_ppo_nmpc.cpp}{\underline{link}}). Just as in the previous section, a neural network has to solve goal navigation, but this time the agent's trajectories are computed by using the nonlinear model predictive control. The environment's state is simply described by the goal's position $\bm{g}_a=\begin{pmatrix}
 g_x & g_y
-\end{pmatrix}^T$, as seen from the agent's coordinate frame, which can be expressed by world coordinates via $\bm{g}_a = \bm{R}^{-1}_z(\bm{g}_w-\bm{a}_w)$, where $\bm{R}_z$ is the agent's current rotation, which is given by $\bm{c}_k^\theta[0]$, $\bm{g}_w$ is the goal's position in the world frame, and $\bm{a}_w$ is the agent's position in the world frame. The reward $r_t$ for this task got designed to ensure fast frontal motion towards the goal. It therefore consists of three terms, one of which accounts for motion towards the goal via $r_t^\text{goal} = ||\bm{a}_{t-1}-\bm{g}_{t-1}||_2 - ||\bm{a}_t-\bm{g}_t||_2$, whereas the second term enforces the robot coordinate system's x-axis to point towards the goal via $\bm{r}_t^\text{frontal} = (\bm{g}_{a,t-1}-\bm{g}_{a,t-1})[0]$, and the third term punishes slow paths via $r_t^\text{time}=t$. In total, we found the following weights to work best $r_t=2\cdot10^3r_t^\text{frontal}+6\cdot10^3r_t^\text{goal}-10^{-1}r_t^\text{time}$. An additional reward of $100$ was granted for a successfully finished task. The agent then got trained for 50 epochs, with the Adam optimizer at a learning rate of 0.003. The gradient got clipped at $\epsilon=0.2$, the cost function hyper-parameters were set to $c_1=0.5$, and $c_2=-50$, to ensure a decreasing entropy, as the pattern generator does not allow for arbitrary high commands $v_x$, and $\omega_z$. We ran a single agent $N=1$ for $2000$ preview horizon time-steps, with a mini batch size of $M=200$ for 5 proximal policy optimization epochs (see algorithm \ref{alg::42_ac}). For the network architecture we again chose to go with a fully connected neural network with an input layer of size $2\times64$, two hidden layers at a size of $64\times64$ each, and an output layer of size $64\times2$. The activation functions were set to be hyperbolic tangents. The particular model can be found at the provided \href{https://github.com/mhubii/nmpc_pattern_generator/blob/df058feeb5ba3afd88f2a855e5af148d25c23020/libs/learning/include/learning/models.h#L100}{\underline{link}}. After having fully trained the agent, it was shown that the agent solved the goal navigation task for randomly spawned goals in 100 out of 100 cases. Therefore, we can argue that the agent learned to generalize the task well, and as shown for four exemplary cases in figure \ref{fig::432_nmpc_ppo_env}, the agent also learned to move backwards and turn. 
+\end{pmatrix}^T$, as seen from the agent's coordinate frame, which can be expressed by world coordinates via $\bm{g}_a = \bm{R}^{-1}_z(\bm{g}_w-\bm{a}_w)$, where $\bm{R}_z$ is the agent's current rotation, which is given by $\bm{c}_k^\theta[0]$, $\bm{g}_w$ is the goal's position in the world frame, and $\bm{a}_w$ is the agent's position in the world frame. The reward $r_t$ for this task got designed to ensure fast frontal motion towards the goal. It therefore consists of three terms, one of which accounts for motion towards the goal via $r_t^\text{goal} = ||\bm{a}_{t-1}-\bm{g}_{t-1}||_2 - ||\bm{a}_t-\bm{g}_t||_2$, whereas the second term enforces the robot coordinate system's x-axis to point towards the goal via $\bm{r}_t^\text{frontal} = (\bm{g}_{a,t-1}-\bm{g}_{a,t-1})[0]$, and the third term punishes slow paths via $r_t^\text{time}=t$. In total, we found the following weights to work best $r_t=2\cdot10^3r_t^\text{frontal}+6\cdot10^3r_t^\text{goal}-10^{-1}r_t^\text{time}$. An additional reward of $100$ was granted for a successfully finished task. The agent then got trained for 50 epochs, with the Adam optimizer at a learning rate of 0.003. The gradient got clipped at $\epsilon=0.2$, the cost function hyper-parameters were set to $c_1=0.5$, and $c_2=-50$, to ensure a decreasing entropy, as the pattern generator does not allow for arbitrary high commands $v_x$, and $\omega_z$. We ran a single agent $N=1$ for $2000$ preview horizon time-steps, with a mini batch size of $M=200$ for 5 proximal policy optimization epochs (see algorithm \ref{alg::42_ac}). For the network architecture we again chose to go with a fully connected neural network with an input layer of size $2\times64$, two hidden layers at a size of $64\times64$ each, and an output layer of size $64\times2$. The activation functions were set to be hyperbolic tangents. The particular model can be found at the provided \href{https://github.com/mhubii/nmpc_pattern_generator/blob/df058feeb5ba3afd88f2a855e5af148d25c23020/libs/learning/include/learning/models.h#L100}{\underline{link}}. After having fully trained the agent, it was shown that the agent solved the goal navigation task for randomly spawned goals in 100 out of 100 cases. Therefore, we can argue that the agent learned to generalize the task well, and as shown for four exemplary cases in figure \ref{fig::1122_nmpc_ppo_env}, the agent also learned to move backwards and turn. 
 \begin{figure}[h!]
 	\centering
 	\subcaptionbox{Goal located at $x=0$, $x=-4$.}%
@@ -205,5 +204,5 @@ g_x & g_y
 	\subcaptionbox{Goal located at $x=-4$, $x=-4$.}%
 	[.45\linewidth]{\includegraphics[scale=.45]{chapters/11_autonomous_walking_experiments/img/test_mode_m4_m4.pdf}}
 	\caption{Nonlinear model predictive controlled agent in the test environment. The used fully connected neural network successfully learned to steer the NMPC agent in all cases towards the goal, by taking the goal's position as input. Just as in the behavioral cloning setup, the agent was restricted to only send the velocity commands $v_x$, and $\omega_z$ to the NMPC. The trajectories are similar to the ones shown in figure \ref{fig::91_benchmarking_basic}, but only viewed from above. The blue lines, therefore, represent the robot's center of mass trajectories and it initially faces towards the positive x-direction in all of the four cases. Note how for the cases (c), and (d), the agent learned to walk backwards, and to turn.}	
-	\label{fig::432_nmpc_ppo_env}
+	\label{fig::1122_nmpc_ppo_env}
 \end{figure} 
