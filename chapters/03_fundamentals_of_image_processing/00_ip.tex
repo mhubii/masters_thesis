@@ -28,14 +28,9 @@ The disparity $d$ that minimizes the sum of absolute differences SAD is taken to
 	\caption{Generation of the left disparity map by the block matching algorithm.}
 	\label{fig::31_left_disparity_map}
 \end{figure}
-To further refine the disparity map, and especially to assure good results in textureless  regions, it is possible to apply a weighted least squares filtering, which is based on the confidence of depth measures. The confidence of depth measures is obtained from the variance within the disparity map $\bm{D}$ (equation \ref{eq::31_variance}, figure \ref{fig::31_confidence_map}).
+To further refine the disparity map, and especially to assure good results in textureless  regions, it is possible to apply a weighted least squares filtering, which is based on the confidence of depth measures. The confidence of depth measures is obtained from the variance $\text{Var}(\bm{D}) = \mathbb{E}\left[\bm{D}^2\right] - \mathbb{E}\left[\bm{D}\right]^2$ within the disparity map. Given the variance, one can compute the confidence map $\text{Con}(\bm{D})= \max\left(1-r\text{Var}(\bm{D}),0\right)$, which is a measures the certainty of the computed disparity, as follows
 \begin{align}
-	 \text{Var}(\bm{D}) = \mathbb{E}\left[\bm{D}^2\right] - \mathbb{E}\left[\bm{D}\right]^2
-	\label{eq::31_variance}
-\end{align} 
-Given the variance, one can compute the confidence map $\text{Con}(\bm{D})$, which is a measures the certainty of the computed disparity, as follows
-\begin{align}
-	\text{Con}(\bm{D}) = \max\left(1-r\text{Var}(\bm{D}),0\right),
+	\text{Con}(\bm{D}) ,
 \end{align}
 where $r$ is a roll-off factor that defines the change of confidence with growing variance. The resulting disparity confidence map is used to outweigh outlying disparity values from the final weighted least squares disparity map. An additional measure for the prevention of accidentally assigned correspondences in the initial block matching algorithm is a left-right consistency check \cite{egnal2004stereo}. Therefore, the block matching algorithm is used in the right image, and it searches for correspondences in the left image. The left-right consistency $\bm{L}$ is then obtained by 
 \begin{align}
@@ -147,4 +142,4 @@ from which the re-projection error $\Delta x = ||\bm{x}_{wh,u} - \bm{x}_{wh}||_2
 \begin{align}
 	\bm{x}_{c_\text{right}}^T\bm{F}\bm{x}_{c_\text{left}} = \bm{0}
 \end{align}
-The mapping enables us to rectify the left and the right image \cite{loop1999computing}, using the rectification transforms $\bm{R}_i$, which means that one can compute homography transforms that align epipolar lines within the images (figure \ref{fig::32_rectified}), which were previously defined by the fundamental matrix. These homography transforms map the images, as one observes them with the cameras, to a shared virtual plane, which is defined by the newly obtained projection matrices $\bm{P}_i$. Therefore, it enables one to apply the stereo block matching algorithm, which got introduced earlier, to the transformed images.
+The mapping enables us to rectify the left and the right image \cite{loop1999computing}, using the rectification transforms $\bm{R}_i$, which means that one can compute homography transforms that align epipolar lines within the images, which were previously defined by the fundamental matrix. These homography transforms map the images, as one observes them with the cameras, to a shared virtual plane, which is defined by the newly obtained projection matrices $\bm{P}_i$. Therefore, it enables one to apply the stereo block matching algorithm, which got introduced earlier, to the transformed images.
