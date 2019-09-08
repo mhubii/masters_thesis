@@ -30,7 +30,7 @@ The interpolation is then done based on the pattern generator's state, and there
   Interpolation ip_nmpc(nmpc);
   ip_nmpc.StoreTrajectories(true);
 \end{minted}
-which results in the main loop
+which results in the main loop, where the reference velocity can be set via the provided method \inlinecode{}{NMPCGenerator::SetVelocityReference}
 \begin{minted}{cpp}
   Eigen::Vector3d velocity_reference(0.1, 0., 0.);
 
