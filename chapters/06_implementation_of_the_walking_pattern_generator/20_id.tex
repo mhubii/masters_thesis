@@ -1,0 +1,136 @@
+%%%%%%%%%%%
+%%% ZMP %%%
+%%%%%%%%%%%
+%%% SUPPORT POLYGON %%% explain the software implementation
+We now came to appreciate the importance of the support polygon for the definition of the zero moment point. 
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=.5]{chapters/02_foundations_for_humanoid_walking/img/support_polygon.png}
+	\caption{Full support polygon, and the resulting support polygon with security margin (dashed lines).}
+	\label{fig::21_support_polygon}
+\end{figure}
+The support polygon is defined as the convex hull of all contact points of the feet with the ground, so the minimum number of points to fully contain all of them. As the most restrictive case for balance, in this work, we will only consider the support polygon of one foot at a time. Since a rectangle well describes a foot's convex hull, we only rely on the foot width (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/bc79a6d4f9bcfd3794146355af44429f5b7a9fe0/libs/pattern_generator/configs.yaml#L14}{\underline{link}}), and the foot length (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/bc79a6d4f9bcfd3794146355af44429f5b7a9fe0/libs/pattern_generator/configs.yaml#L15}{\underline{link}}) to fully describe it. Also, to ensure that the zero moment point never comes close to the edges of the feet and therefore to provide balance, we define a security margin to their borders (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/bc79a6d4f9bcfd3794146355af44429f5b7a9fe0/libs/pattern_generator/configs.yaml#L3}{\underline{link}}). The respective values are robot specific and can be set in the configurations file by following the provided links.
+%%% LIPM %%% explain where to set this values or leave it out, cause of config file
+The specific values can be set in the configurations file (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/bc79a6d4f9bcfd3794146355af44429f5b7a9fe0/libs/pattern_generator/configs.yaml#L27}{\underline{link}}).
+%%%%%%%%%%%
+%%% ZMP %%%
+%%%%%%%%%%%
+%%%%%%%%%%%%
+%%% NMPC %%%
+%%%%%%%%%%%%
+BaseGenerator::Simulate \ref{eq::223_ckp1} - \ref{eq::223_ddckp1}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L887}{\underline{link}})
+\\
+BaseGenerator::InitializeConstantMatrices
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L403}{\underline{link}})
+\\
+BaseGenerator::InitializeCopMatrices \ref{eq::223_zmp}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L420}{\underline{link}})
+\\
+BaseGenerator::SetVelocityReference 
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L324}{\underline{link}})
+\\
+BaseGenerator::UpdateSelectionMatrices \ref{eq::224_fs}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L740}{\underline{link}})
+\\
+BaseGenerator::UpdateFootSelectionMatrices \ref{eq::224_fsm}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L1281}{\underline{link}})
+\\
+NMPCGenerator::PreprocessSolution \ref{eq::224_canqp}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/nmpc_generator.cpp#L145}{\underline{link}})
+\\
+BaseGenerator::ComputeLinearSystem \ref{fig::225_foot_hull}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L844}{\underline{link}})
+\\
+BaseGenerator::BuildCopContraint \ref{eq::22_cop_hull}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L946}{\underline{link}})
+\\
+BaseGenerator::BuildFootIneqConstraint \ref{eq::225_ineq_foot}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/base_generator.cpp#L1061}{\underline{link}})
+\\
+BaseGenerator::BuildRotIneqConstraint \ref{eq::225_ineq_rot}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/base_generator.cpp#L1244}{\underline{link}})
+\\
+BaseGenerator::BuildObstacleConstraint \ref{eq::225_obs_const}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/base_generator.cpp#L1271}{\underline{link}})
+\\
+NMPCGenerator::CalculateDerivatives \ref{eq::226_ocp}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/nmpc_generator.cpp#L377}{\underline{link}})
+\\
+NMPCGenerator::PreprocessSolution
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/nmpc_generator.cpp#L155}{\underline{link}})
+%%%%%%%%%%%%
+%%% NMPC %%%
+%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Interpolating Trajectories %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+As already shortly depicted in figure \ref{fig::21_pg}, we need to interpolate the trajectories that we obtain from the nonlinear model predictive control
+% feet
+Interpolation::Set4thOrderCoefficients \ref{eq::231_ai_4th}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/c82c64a28da7527e75442764f585bd50a8f61ee9/libs/pattern_generator/src/interpolation.cpp#L779}{\underline{link}})
+\\
+Step height in configs.yaml \ref{eq::231_step}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/c82c64a28da7527e75442764f585bd50a8f61ee9/libs/pattern_generator/configs.yaml#L22}{\underline{link}})
+\\
+double support time 
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/c82c64a28da7527e75442764f585bd50a8f61ee9/libs/pattern_generator/configs.yaml#L21}{\underline{link}})
+\\
+Interpolation::Set5thOrderCoefficients \ref{eq::231_ai_5th}
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/c82c64a28da7527e75442764f585bd50a8f61ee9/libs/pattern_generator/src/interpolation.cpp#L806}{\underline{link}})
+\\
+% com
+Interpolation::InterpolateLIPMStep
+(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/interpolation.cpp#L776}{\underline{link}})
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Interpolating Trajectories %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\FloatBarrier
+\label{sec::3_me}
+While there is an extensive guide on the installation of the implemented software within the appendix \ref{sec::A_si}, the purpose of this chapter is to give the future reader a good understanding of it. The code itself is generic, such that it is not dependent on the used robot at all, for why it is very well-suited to perform future research on arbitrary humanoid robots. Therefore, section \ref{sec::31_cs} will give the reader a broad overview of the overall code's structure, in order to allow for a quick assessment of possibly reusable implementations. The completely decoupled pattern generation and deep learning parts of the software are hence explained first in section \ref{sec::32_pg}, and section \ref{sec::33_dl}, respectively. Following that, Heicub, our humanoid robot, and the communication with it will be explained in section \ref{sec::34_he}.
+
+\section{Implementation Details}
+\label{sec::31_cs}
+As shown in figure \ref{fig::31_folder}, there are four main folders within the implemented code. Those include the libraries inside the libs folder, the models, among them Heicub's URDF model for computing kinematics, and another one for pure visualization with MeshUp \cite{meshup}, the sh folder, which contains shell scripts for easy execution, and furthermore the source folder, which relies on the libraries to build executables from. Moreover, while these executables are very much dependent on the robot at hand, as they are coupled to the robot's communication system, they pose some nice examples on how the pattern generator can be embedded into a robot's operating system. Now in order to reuse the code for a different robot, one could either install the libraries and include the headers, as explained in section \ref{sec::A1_pg}, or replace the input-output module (io\_module) by a new one and keep the folder's structure. Nonetheless, we will only focus on the libraries' usage by introducing simple examples in the following sections and keep the details of implementation on a different operating system up to the future reader. We will further bridge the gap between the background of section \ref{sec::2_bg} by explaining the different methods, which we implemented, and we will further highlight its correlation with the YAML \cite{ben2005yaml} configuration files that are a building block of each library. 
+\begin{figure}[h!]
+\begin{forest}
+	for tree={
+		font=\ttfamily,
+		grow'=0,
+		child anchor=west,
+		parent anchor=south,
+		anchor=west,
+		calign=first,
+		edge path={
+			\noexpand\path [draw, \forestoption{edge}]
+			(!u.south west) +(7.5pt,0) |- node[fill,inner sep=1.25pt] {} (.child anchor)\forestoption{edge label};
+		},
+		before typesetting nodes={
+			if n=1
+			{insert before={[,phantom]}}
+			{}
+		},
+		fit=band,
+		before computing xy={l=15pt},
+	}
+	[\href{https://github.com/mhubii/nmpc_pattern_generator}{\underline{nmpc\_pattern\_generator}}
+	[\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/libs}{\underline{libs}}
+	[\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/libs/io_module}{\underline{io\_module}}
+	[\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/libs/io_module/include/io_module}{\underline{include/io\_module}}[reader.h][writer.h]]
+	[configs.yaml][cam\_stereo.yaml]]
+	[\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/libs/kinematics}{\underline{kinematics}}[\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/libs/kinematics/include/kinematics}{\underline{include/kinematics}}[kinematics.h]][configs.yaml]
+	]
+	[
+	\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/libs/learning}{\underline{learning}}[\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/libs/learning/include/learning}{\underline{include/learning}}[models.h][proximal\_policy\_optimization.h]][\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/libs/learning/python}{\underline{python}}]
+	]
+	[\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/libs/pattern_generator}{\underline{pattern\_generator}}[\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/libs/pattern_generator/include/pattern_generator}{\underline{include/pattern\_generator}}[base\_generator.h][interpolation.h][nmpc\_generator.h]]
+	[configs.yaml]]
+	]
+	[\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/models}{\underline{models}}]
+	[\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/sh}{\underline{sh}}]
+	[\href{https://github.com/mhubii/nmpc_pattern_generator/tree/master/src}{\underline{src}}]
+	]
+\end{forest}
+\caption{Folder structure of the code, which got implemented for this thesis. The code is freely available on GitHub at the provided \href{https://github.com/mhubii/nmpc_pattern_generator}{\underline{link}}. Install instruction can be found in the appendix \ref{sec::A_si}.}
+\label{fig::31_folder}
+\end{figure}

@@ -156,4 +156,5 @@ and inversion yields the polynomial's coefficients $a_{x,i}$
 The exact same formalism is used to interpolate the foot's y-position during single support phase. In contrast to the interpolation of the feet's positions, the center of mass positions will be extrapolated under the introduced assumption of a linear inverted pendulum, which is shortly explained in the following section.
 \FloatBarrier
 \subsection{Interpolating the Center of Mass Trajectories}
+\label{sec::232_ip}
 The center of mass trajectories can now simply be adjusted to the temporal resolution of the feet trajectories by applying the linear time-stepping scheme from equation \ref{eq::223_ltss} with an adjusted temporal resolution $T$. An iterative application of these matrices then yields the desired interpolation. The only requirement left to get a robot to walk is now the transformation of trajectories from Cartesian space to trajectories within the joint space, which will be resolved in the following section.
