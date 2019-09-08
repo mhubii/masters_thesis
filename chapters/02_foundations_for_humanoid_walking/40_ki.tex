@@ -1,7 +1,9 @@
+
 \FloatBarrier
 \section{Kinematics}
 \label{sec::24_k}
 As already shortly depicted in figure \ref{fig::61_pg}, it is required to compute the robot's kinematics in order to switch between the Cartesian space and the joint space. For our purposes, we need to find joint angles that satisfy the center of mass and the feet trajectories. While it is rather straight forward to compute the forward kinematics, as it is just a concatenation of spatial transformations, the inverse kinematics require an optimization, since there usually is no unique solution.
+
 \FloatBarrier
 \subsection{Forward Kinematics}
 \label{sec::241_fk}
@@ -10,6 +12,7 @@ The goal in forward kinematics is to transform joint angles $\bm{q}$ into Cartes
 	\bm{x}_\text{0} = \prod_{i=N}^{0}\bm{H}_i^{i-1}(q)\bm{x}_\text{N},
 \end{align}
 where $\bm{x}_i=[x\,y\,z\,1]^T$, and $\bm{H}_i^{i-1}=\begin{pmatrix}\bm{R} & \bm{t} \\ \bm{0} & 1 \end{pmatrix}$ are homogeneous coordinates and transformations from frame $i$ to frame $i-1$, respectively.
+
 \FloatBarrier
 \subsection{Inverse Kinematics}
 \label{sec::242_ik}

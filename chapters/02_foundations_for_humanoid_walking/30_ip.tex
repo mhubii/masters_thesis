@@ -1,3 +1,4 @@
+
 \FloatBarrier
 \section{Interpolating Trajectories}
 \label{sec::23_it}
@@ -11,6 +12,7 @@ Since the nonlinear model predictive control only considers the pendulums dynami
 	\caption{Uninterpolated trajectories (a), as obtained from the nonlinear model predictive control, and interpolated trajectories (b) for the feet and the center of mass.}
 	\label{fig::23_ip}
 \end{figure}
+
 \FloatBarrier
 \subsection{Interpolating the Feet Trajectories}
 Any trajectory can in principal be approximated by a polynomial function. For this work purposes, one has to approximate positions $p$ as they evolve over time $t$, and further obtain the corresponding velocities $\dot{p}$ and accelerations $\ddot{p}$ (equations \ref{eq::231_pos_poly} - \ref{eq::231_acc_poly}).  
@@ -154,6 +156,7 @@ and inversion yields the polynomial's coefficients $a_{x,i}$
 	\label{eq::231_ai_5th}
 \end{align}
 The exact same formalism is used to interpolate the foot's y-position during single support phase. In contrast to the interpolation of the feet's positions, the center of mass positions will be extrapolated under the introduced assumption of a linear inverted pendulum, which is shortly explained in the following section.
+
 \FloatBarrier
 \subsection{Interpolating the Center of Mass Trajectories}
 \label{sec::232_ip}

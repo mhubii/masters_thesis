@@ -1,6 +1,7 @@
-\FloatBarrier
+
 \label{sec::3_ip}
 Since this work aims at achieving autonomous navigation for humanoid robots in a 3D environment, it is helpful to work in an image domain, which represent depth information. The depth map extraction from stereo images, which is based on a weighted least squares disparity map \cite{min2014fast}, will, therefore, be explained in section \ref{sec::31_dm}, while the subsequent section \ref{sec::32_cc}, introduces the reader to the camera's calibration, without which the depth map extraction would not work in real setups.
+
 \FloatBarrier
 \section{Depth Map Extraction}
 \label{sec::31_dm}
@@ -68,6 +69,7 @@ where $\text{WLS}(\bm{U})$ is the weighted least squares filtered version of the
 	\label{fig::31_weighted_least_squares_disparity}
 \end{figure}
 Since the assumption of an only translated stereo camera pair is rarely correct, and there exist camera intrinsics that deform the observed image, it is required to calibrate the cameras for the algorithm to work properly, which is explained in the following section.
+
 \FloatBarrier
 \section{Mono and Stereo Camera Calibration}
 \label{sec::32_cc}

@@ -1,7 +1,9 @@
+
 \FloatBarrier
 \section{Nonlinear Model Predictive Control}
 \label{sec::22_nmpc}
 At the heart of nonlinear model predictive control stands sequential quadratic programming. Prior to the actual problem formulation, one needs to understand how sequential quadratic programming can be used to solve nonlinear optimization problems. One will then come to recognize that if one can find a canonical formulation of the problem, it will become possible to apply sequential quadratic programming to it. The next section - Sequential Quadratic Programming, will therefore shortly introduce the reader to the desired method that will be used to solve the nonlinear optimization problem, while the subsequent section - Canonical Formulation of Nonlinear Model Predictive Control, will then explain how to fit humanoid walking into this framework.
+
 \FloatBarrier
 \subsection{Sequential Quadratic Programming}
 \label{sec::221_sqp}
@@ -28,9 +30,11 @@ Therein, $\bm{B}(\bm{x}) = \sum_1^lf_i(\bm{x})\nabla^2f_i(\bm{x})$. If $\bm{x}$ 
 	\label{eq::221_gn_min}
 \end{align}
 where a new iterate is obtained by $\bm{x}_{k+1}=\bm{x}_k + \alpha_k\Delta \bm{x}$ with an appropriate step length parameter $\alpha_k$. This is because equation \ref{eq::221_quasi_gn} defines the normal equations of equation \ref{eq::221_gn_min}. The presented approach assures quadratic convergence, when starting sufficiently close to an optimal solution. The next section will explain how to apply this concept to control the zero moment point of a linear inverted pendulum in a balanced manner.
+
 \FloatBarrier
 \subsection{Canonical Formulation of Nonlinear Model Predictive Control}
 Not only shall a humanoid robot keep dynamic balance in terms of the zero moment point, which was derived in equations \ref{eq::211_zmp_x} and \ref{eq::211_zmp_y}, but further shall this be assured for future time steps that are yet ahead. The underlying model predictive control got first introduced in \cite{kajita2003biped}, and is based upon a linear time-stepping scheme, which integrates the current jerk of the center of mass iteratively, so to estimate its future position. The linear time-stepping scheme will briefly present it in the following section.
+
 \FloatBarrier
 \subsection{Linear Time-Stepping Scheme}
 Suppose that the center of mass' jerk $\dddot{c}_k$ at time step $t_k$ is constant, then given the current acceleration $\ddot{c}_k$, one can obtain the acceleration $\ddot{c}_{k+1}$ at time step $t_{k+1}$ by simple integration. The same can be done for the velocity and position, which yields
@@ -121,7 +125,8 @@ where the new matrices are given by
 	T^3/6 & \dots & 0 \\
 	\vdots & \ddots & \vdots \\
 	(1+3n+3n^2)T^2/6 & \dots & T^3/6
-	\end{pmatrix} \\
+	\end{pmatrix} 
+	\label{eq::223_pos_mat}\\
 	\bm{P}_{vs} &= \begin{pmatrix}
 	0 & 1 & T \\
 	\vdots & & \vdots \\
@@ -129,7 +134,8 @@ where the new matrices are given by
 	\end{pmatrix},\,\,
 	\bm{P}_{vu} = \begin{pmatrix}
 	T^2/2 & \dots & 0 \\
-	\vdots & \ddots & \vdots \\
+	\vdots & \ddots & \vdots 
+	\label{eq::223_vel_mat}\\
 	(1+2n)/T^2/2 & \dots & T^2/2
 	\end{pmatrix} \\
 	\bm{P}_{as} &= \begin{pmatrix}
@@ -142,6 +148,7 @@ where the new matrices are given by
 	\vdots & \ddots & \vdots \\
 	T & \dots & T
 	\end{pmatrix}.
+	\label{eq::223_acc_mat}
 \end{align}
 If one now additionally considers the relation of the zero moment point and the center of mass, which was obtained earlier in equations \ref{eq::211_zmp_x} and \ref{eq::211_zmp_y}, one can further relate the current center of mass state to the zero moment point on the preview horizon by
 \begin{align}
@@ -155,14 +162,17 @@ where the new matrices are given by
 	1 & T & T^2/2 - c_z/g \\
 	\vdots & & \vdots \\
 	1 & nT & n^2T^2/2 - c_z/g
-	\end{pmatrix} \\ 
+	\end{pmatrix} 
+	\label{sec::223_zmp_s_mat}\\ 
 	\bm{P}_{zu} &= \begin{pmatrix}
 	T^3/6 - Tc_z/g & \dots & 0 \\
 	\vdots & \ddots & \vdots \\
 	(1+3n+3n^2)T^3/6 - Tc_z/g & \dots & T^3/6-Tc_z/g
 	\end{pmatrix}.
+	\label{sec::223_zmp_u_mat}
 \end{align}
 The expressions for the preview horizon now allow one to formulate an objective function that takes the robot's dynamic balance for future time steps into account, which in turn results in actions being taken that already take future predictions of the system's dynamics into account. The cost function, therefore, is described in the next section.
+
 \FloatBarrier
 \subsection{The Objective Function}
 To create an objective function, as the one already outlined in section \ref{sec::221_sqp}, one can put together squared $L^2$-norm objectives, which account for a desired reference center of mass velocity $\dot{\bm{C}}_{k+1}^\text{ref}$, a balanced footstep placement $\textbf{F}_{k+1}$ close to the zero moment point $\bm{Z}_{k+1}$, and a smooth motion for which the center of mass jerk $\dddot{\bm{C}}_{k+1}$ enters as a regularization. The objective function itself is similar to the one first introduced in \cite{herdt2010online}, but additionally takes the center of mass' rotation around the z-axis into account, and it can be written down as follows
@@ -299,6 +309,7 @@ The diagonal entries therein just take the same form as a single column of $\bm{
 	\end{pmatrix}
 \end{align}
 where all squared $L^2$-norms were evaluated via $||\bm{a}-\bm{b}||^2_2 = (\bm{a}-\bm{b})^T(\bm{a}-\bm{b})$, and ordered correspondingly. All terms that do not depend on the control variable $\bm{U}_k$ got discarded. Equation \ref{eq::224_canqp} now represents the canonical formulation of the minimization problem from equation \ref{eq::221_objective}. The formulation itself minimizes the objective of keeping the zero moment point close to the center of the feet, but it does not assure that it never leaves the support polygon. Also, does it not consider the kinematic feasibility of the solution. Therefore, one has to introduce constraints on the free parameters of the optimal control problem, which are explained in the next section.
+
 \FloatBarrier
 \subsection{The Constraints}
 There are constraints of different nature. The constraints first constraints, ensure dynamic balance in that they constrain the zero moment point to the support polygon of the feet. Secondly, the feasibility constraints force the feet positioning to a convex hull that describes kinematically feasible motions. Finally, the constraints which restrict the feet's relative velocity, and the feet's relative orientation, as well as the ones, which allow obstacle avoidance, are introduced.
@@ -435,6 +446,7 @@ In contrast to similar methods like \cite{herdt2010walking}, the avoidance of co
 	\label{eq::225_obs_const}
 \end{align}
 which expresses lower bounds for the free variables. Given the constraints, of which some are nonlinear, one can apply a Gauss-Newton method to find the optimal solution. This also implies that one must linearize all of the constraints that were presented within the previous paragraphs. The linearization is described in the following section
+
 \FloatBarrier
 \subsection{The Gauss-Newton Formulation}
 \label{sec::226_gn}
@@ -489,4 +501,9 @@ where
 		\bm{A}_{\text{dori},k}\bm{U}_{k-1}^\theta
 	\end{pmatrix}.
 \end{align}
-It follows that one only needs to compute the gradient of $\bm{A}_{\text{zmp},k}$, and $\bm{A}_{\text{foot},k}$, with respect to the free variable $\bm{U}^{\theta}$, which can analytically be done by deriving the rotation matrices' gradient in equations \ref{eq::225_rot1}, and \ref{eq::225_ineq_foot}. The solution to this optimal control problem yields the update $\Delta\bm{U}_k$ to the current iterate $\bm{U}_k=\bm{U}_{k-1}+\Delta\bm{U}_k$ under quadratic convergence, given that one is sufficiently close to a solution, as discussed earlier. The resulting positioning for the feet needs then to be interpolated, which will be explained in the following section. 
+It follows that one only needs to compute the gradient of $\bm{A}_{\text{zmp},k}$, and $\bm{A}_{\text{foot},k}$, with respect to the free variable $\bm{U}^{\theta}$, which can analytically be done by deriving the rotation matrices' gradient in equations \ref{eq::225_rot1}, and \ref{eq::225_ineq_foot}. The solution to this optimal control problem yields the update $\Delta\bm{U}_k$ to the current iterate 
+\begin{align}
+	\bm{U}_k=\bm{U}_{k-1}+\Delta\bm{U}_k ,
+	\label{sec::226_update}
+\end{align}
+under quadratic convergence, given that one is sufficiently close to a solution, as discussed earlier. The resulting positioning for the feet needs then to be interpolated, which will be explained in the following section. 

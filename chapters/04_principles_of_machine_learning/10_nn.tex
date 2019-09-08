@@ -1,3 +1,4 @@
+
 \FloatBarrier
 \section{Neural Networks}
 \label{sec::41_nn}
@@ -9,6 +10,7 @@ Neural networks are inspired by the brain's structure, and as we will see later 
 	\label{fig::41_neuron}
 \end{figure}
 Although neural networks have gained early attention in research, they have only recently become powerful for their implementation on graphic processing units (GPUs) \cite{oh2004gpu}. This followed from their mathematical description that is linear and very well parallelizable. Running neural nets on GPUs, on the other hand, consumes much energy, which stays in contrast to biological neurons, which communicate by brief energy-efficient spikes \cite{hodgkin1952quantitative}. Moreover, while there are around 100 billion neurons in the human brain, huge neural networks currently have around a factor of 10000 less \cite{goodfellow2016deep}. Not only is the number of neurons in a neural network comparably small, but also is their complexity way below that of a biological neuron. To tackle this discrepancy, and to learn complicated tasks, it is therefore required to introduce activation functions for neural networks, such as the rectifying linear unit \cite{krizhevsky2012imagenet}. This enables neural networks to be used on a variety of problems, but they currently lack in transferring knowledge between different domains and tend to over-fit certain tasks. There exist methods to deal with this tendency, such as max-pooling \cite{weng1992cresceptron} or dropout \cite{srivastava2014dropout} layers, which reduce the number of neurons within a neural network. To build a good understanding of neural networks, we will introduce different architectures in the following that will be used throughout this thesis, and we will start with the simplest in the next paragraph - Fully Connected Neural Network.
+
 \FloatBarrier
 \subsection{Fully Connected Neural Network}
 The biologically inspired perceptron model \cite{viglione19704} lay the foundation for neural networks, and it got extended soon to the multi-layer perceptron model
@@ -31,6 +33,7 @@ Therein, the bias $\bm{b}$ is as a shift of isolines that are introduced by hype
 	\caption{Simple interpretation of a fully connected neural network with one layer that takes $\bm{x}=(x_0\,\,x_1)^T$ as input. The dotted lines are isolines to the hyperplane, which showcase the effect of the bias $\bm{b}$.}
 	\label{fig::411_classification}
 \end{figure}
+
 \FloatBarrier
 \subsection{Convolutional Neural Network}
 The concept of convolutional neural networks was first inspired by biological structures inside the visual cortex of the human brain. It was introduced as neocognitron \cite{fukushima1980neocognitron}, and soon after termed convolutional neural network for its mathematical properties, in that it equals convolutions. Figure \ref{fig::412_convolutional} shows how an input $\bm{x}$ is fed forward through the network architecture across two layers.   
@@ -53,6 +56,7 @@ One thing to notice is that the deeper we go, meaning the more layers we have, t
 	\label{fig::412_transposed_conv}
 \end{figure}
 Therefore, convolutional neural networks are particularly well-suited for understanding spatial correlations, and while recent advancements also propose the promising use of convolutional neural networks for time series analysis \cite{vaswani2017attention}, a simpler approach are long short-term memory units, which will be explained in the next section - Long Short-Term Memory. 
+
 \FloatBarrier
 \subsection{Long Short-Term Memory}
 Long short-term memory units were introduced to overcome the vanishing and exploding gradient problem for recurrent neural networks in time series analysis \cite{hochreiter1997long}. That is the gradient tends to diverge exponentially throughout of the backward pass towards earlier inputs, resulting in intractable updates for the weights of the neural network. This issue got solved by adding a constant recurrent self-connection that allows for constant error propagation through the network, which got further refined by replacing the constant self-connection with a forget gate \cite{gers1999learning}. The inner workings of a long short-term memory unit is shown in figure \ref{fig::413_lstm}. 
@@ -78,6 +82,7 @@ where $\cdot$ is an element-wise multiplication. The sigmoid function $\sigma$, 
 	\caption{Chain of long short-term memory units for temporal understanding of the input sequence $\bm{x}_i$.}
 	\label{fig::413_lstm_chain}
 \end{figure}
+
 \FloatBarrier
 \subsection{Backpropagation}
 The currently most popular way to train a neural network is backpropagation, which got first introduced in \cite{linnainmaa1970representation}. It has no biological equivalent but poses an effective way to optimize a huge number of parameters. Newer methods use evolutionary algorithms and treat network parameters as population that develops over time \cite{montana1989training}, but we will not consider them further. The reason why backpropagation works so well to optimize neural networks, is the simplicity of the mathematical operations that make them up. Not only do the activation functions have an analytical derivative, but further can we apply the chain rule multiple times on the loss function, so to find the gradient for every network parameter. Suppose we have the loss $L$, then the derivative with respect to the weights $\bm{W}_l$ of layer $l$, is just given as

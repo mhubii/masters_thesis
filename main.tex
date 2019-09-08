@@ -36,8 +36,18 @@ version  = 3.03
 \usepackage{forest}            % folder structure
 \usepackage{placeins}          % figures in sections
 \usepackage{minted}            % cpp style
-\usepackage{fancyhdr}
+\usepackage{fancyhdr}          % page style
+ 
+\usepackage{tikz}
+\usetikzlibrary{positioning,shapes,shadows,arrows}
 
+\tikzstyle{abstract}=[rectangle, draw=black, rounded corners, fill=red!40, drop shadow,
+text centered, anchor=north, text=black, text width=7cm]
+\tikzstyle{comment}=[rectangle, draw=black, rounded corners, fill=green!40, drop shadow,
+text centered, anchor=north, text=black, text width=7cm]
+\tikzstyle{myarrow}=[->, >=open triangle 90, thick]
+\tikzstyle{line}=[-, thick]
+ 
 \setminted{fontsize=\small,baselinestretch=1}
 
 \pagestyle{fancy}
@@ -112,9 +122,11 @@ version  = 3.03
 	\tableofcontents
 	
 	%% chapters
+	\FloatBarrier
 	\chapter{Introduction}
 	\input{chapters/01_introduction/00_in}
 	
+	\FloatBarrier
 	\chapter{Theoretical Foundations for Humanoid Walking}
 	\input{chapters/02_foundations_for_humanoid_walking/00_hw}   % short overview of humamnoid walking
 	\input{chapters/02_foundations_for_humanoid_walking/10_zmp}  % zero moment point
@@ -122,41 +134,51 @@ version  = 3.03
 	\input{chapters/02_foundations_for_humanoid_walking/30_ip}   % interpolation
 	\input{chapters/02_foundations_for_humanoid_walking/40_ki}   % kinematics
 
+	\FloatBarrier
 	\chapter{Fundamentals of Image Processing for Depth Map Extraction}
 	\input{chapters/03_fundamentals_of_image_processing/00_ip}   % image processing
 	
+	\FloatBarrier
 	\chapter{Principles of Machine Learning}
 	\input{chapters/04_principles_of_machine_learning/00_ml}   % short overview of machine learning
 	\input{chapters/04_principles_of_machine_learning/10_nn}   % short introduction to neural networks
 	\input{chapters/04_principles_of_machine_learning/20_rl}   % reinforcement learning
 
+	\FloatBarrier
 	\chapter{Heicub: Our Humanoid Robot}
 	\input{chapters/05_heicub_our_humanoid_robot/00_he}
 
+	\FloatBarrier
 	\chapter{Implementation of the Walking Pattern Generator}
 	\input{chapters/06_implementation_of_the_walking_pattern_generator/00_in}
 	\input{chapters/06_implementation_of_the_walking_pattern_generator/10_gc}   % short overview of humanoid walking
 	\input{chapters/06_implementation_of_the_walking_pattern_generator/20_id}
 	\input{chapters/06_implementation_of_the_walking_pattern_generator/30_us}
 	
+	\FloatBarrier
 	\chapter{Autonomous High-Level Control of the Walking Pattern Generator}
 	\input{chapters/07_autonomous_high_level_control_of_the_walking_pattern_generator/00_in}   % introduction to implementation
 	%\input{chapters/07_autonomous_high_level_control_of_the_walking_pattern_generator/00_ip}  % image processing, re-use parts for bc
 	\input{chapters/07_autonomous_high_level_control_of_the_walking_pattern_generator/10_bc}   % behavioral cloning
 	\input{chapters/07_autonomous_high_level_control_of_the_walking_pattern_generator/20_rl}   % reinforcement learning
 	
+	\FloatBarrier
 	\chapter{Running the Autonomous Walking Pattern Generator on Heicub}
 	\input{chapters/08_running_the_autonomous_walking_pattern_generator_on_heicub/00_he}
 	
+	\FloatBarrier
 	\chapter{User-Controlled Walking Experiments}
 	\input{chapters/09_user_controlled_walking_experiments/00_uc}
 
+	\FloatBarrier
 	\chapter{Image Processing Experiments}
 	\input{chapters/10_image_processing_experiments/00_ip}
 
+	\FloatBarrier
 	\chapter{Autonomously Controlled Walking Experiments}
 	\input{chapters/11_autonomous_walking_experiments/00_aw}
 	
+	\FloatBarrier
 	\chapter{Conclusion}
 	\input{chapters/12_conclusion/00_in}
 	
@@ -165,6 +187,7 @@ version  = 3.03
 		\label{sec::a}
 		\input{chapters/13_appendix/00_si}
 		\input{chapters/13_appendix/01_su}
+		\FloatBarrier
 		\chapter{Lists}
 		\listoffigures
 		\listoftables

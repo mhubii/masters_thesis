@@ -1,6 +1,8 @@
+\FloatBarrier
 \chapter{Software Installation}
 \label{sec::A_si}
 Since all the software is freely available on GitHub, you can always find a build section within the provided readme file there. The links to the respective GitHub folders is provided within each following section. For the case of an error that may occur during the build procedure, do not hesitate to open an issue there. I will then help you to get the software running on your device.
+
 \FloatBarrier
 \section{Build the Pattern Generator}
 \label{sec::A1_pg}
@@ -40,6 +42,7 @@ The pattern generator comes with some tests and examples. They can be executed a
 	\newline \inlinecode{}{cd plot}
 	\newline \inlinecode{}{python plot\_pattern.py}
 \end{enumerate}
+
 \FloatBarrier
 \section{Build the Android Joystick App}
 \label{sec::A2_aa}
@@ -69,6 +72,7 @@ The Joystick app can be found on GitHub at the following \href{https://github.co
 	\end{figure}
 	\item Follow the on-screen instructions and wait for the installation to finish (figure \ref{fig::A2_apk} (c) and (d)).
 \end{enumerate}
+
 \FloatBarrier
 \section{Build Proximal Policy Optimization}
 \label{sec::A3_pp}
@@ -93,6 +97,7 @@ You can then train and evaluate the neural network as described below.
 	\item Visualize the results with
 	\newline \inlinecode{}{python plot.py}
 \end{enumerate}
+
 \FloatBarrier
 \section{Build Simulation Models}
 \label{sec::A4_sm}
@@ -112,15 +117,17 @@ The simulation models can be found on GitHub at the following \href{https://gith
 	\newline \inlinecode{}{cd build}
 	\newline \inlinecode{}{make uninstall}
 \end{enumerate}
+
 \FloatBarrier
 \section{Build Third Party Software}
 \label{sec::A5_tp}
 The software that was developed as part of this thesis has some third-party dependencies, of which not all are necessary but required for some additional features.
+
 \FloatBarrier
 \subsection{Necessary Dependencies}
 \label{sec::A51_nd}
 These dependencies need to be installed.
-\FloatBarrier
+
 \subsubsection{Eigen}
 \begin{enumerate}
 	\item The pattern generator is based on the blazingly fast Eigen library. To install it do
@@ -129,7 +136,7 @@ These dependencies need to be installed.
 	\newline \inlinecode{}{sudo ln -s /usr/include/eigen3/Eigen/ /usr/include/}
 	\newline \inlinecode{}{sudo ln -s /usr/include/eigen3/unsupported/ /usr/include/}
 \end{enumerate}
-\FloatBarrier
+
 \subsubsection{qpOASES}
 To solve the sequential quadratic program, we need to install qpOASES. Please follow the \href{https://projects.coin-or.org/qpOASES/wiki/QpoasesInstallation}{\underline{install instructions}}, or head on as described below
 \begin{enumerate}
@@ -146,17 +153,18 @@ To solve the sequential quadratic program, we need to install qpOASES. Please fo
 	\newline \inlinecode{}{make}
 	\newline \inlinecode{}{sudo make install}
 \end{enumerate}
-\FloatBarrier
+
 \subsubsection{YAML}
 The configurations are read in using the YAML file format. Run the command
 \begin{enumerate}
 	\item \inlinecode{}{sudo apt install libyaml-cpp-dev}
 \end{enumerate}
+
 \FloatBarrier
 \subsection{Real Robot and Simulation Dependencies}
 \label{sec::A52_rs}
 To run the NMPC generator on a real robot or the simulation, we will need to install some more dependencies.
-\FloatBarrier
+
 \subsubsection{Gazebo}
 The simulation environment can be installed according to the \href{http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install}{\underline{install instructions}}. The main steps are
 \begin{enumerate}
@@ -167,7 +175,7 @@ The simulation environment can be installed according to the \href{http://gazebo
 	\newline \inlinecode{}{sudo apt-get install gazebo9}
 	\newline \inlinecode{}{sudo apt-get install libgazebo9-dev}
 \end{enumerate}
-\FloatBarrier
+
 \subsubsection{RBDL}
 The rigid body kinematics are solved with RBDL. To install RBDL, do
 \begin{enumerate}
@@ -178,7 +186,7 @@ The rigid body kinematics are solved with RBDL. To install RBDL, do
 	\newline \inlinecode{}{cmake -DCMAKE\_BUILD\_TYPE=Release \\}
 	\newline \inlinecode{}{-DRBDL\_BUILD\_ADDON\_URDFREADER=ON ..}
 \end{enumerate}
-\FloatBarrier
+
 \subsubsection{YARP}
 \label{sec::a52_yarp}
 Additionally, for communicating with the real robot, or the simulation, we need YARP. To install YARP, follow the \href{https://www.yarp.it/install.html}\underline{{installation instructions}}, or head on as described below
@@ -194,7 +202,7 @@ Additionally, for communicating with the real robot, or the simulation, we need 
 	\newline \inlinecode{}{make}
 	\newline \inlinecode{}{sudo make install}
 \end{enumerate}
-\FloatBarrier
+
 \subsubsection{Gazebo YARP Plugins}
 \label{sec::a52_plugins}
 Plugins for Gazebo are used to clone the behavior of the real robot into the simulation environment. Proceed as below
@@ -209,15 +217,16 @@ Plugins for Gazebo are used to clone the behavior of the real robot into the sim
 	\newline \inlinecode{}{export GAZEBO\_PLUGIN\_PATH=\$\{GAZEBO\_PLUGIN\_PATH\}}
 	\newline \inlinecode{}{:\$HOME/gazebo-yarp-plugins/lib}
 \end{enumerate}
-\FloatBarrier
+
 \subsubsection{Gazebo Models}
 The models are used within the simulation environment Gazebo. See section \ref{sec::A4_sm}.
-\FloatBarrier
+
 \subsubsection{NCurses}
 For the visualization of the control panel, we need to install ncurses, do
 \begin{enumerate}
 	\item \inlinecode{}{sudo apt install libncurses5-dev}
 \end{enumerate}
+
 \FloatBarrier
 \subsection{Deep Learning Dependencies}
 \label{sec::A53_dl}

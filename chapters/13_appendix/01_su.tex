@@ -1,6 +1,8 @@
+\FloatBarrier
 \chapter{Start-up and Shutdown Procedures}
 \label{sec::B_su}
 In this chapter, we will briefly document how to run the software that was developed within this thesis. In section \ref{sec::B1_rr}, we will introduce how the Heicub robot is supposed to be started, while in the subsequent section \ref{sec::B2_ss}, we will explain how to run the robot within the simulation environment Gazebo. Furthermore, once the robot has been started, either in real or in simulation, it is possible to use the provided pattern generator for control in real-time with the terminal interface or the Android joystick app. Both possibilities will be explained in section \ref{sec::B3_sp}. Finally, a short demonstration for the behavioral augmentation is given in section \ref{sec::B4_ba}.
+
 \FloatBarrier
 \section{Real Robot Start-up}
 \label{sec::B1_rr}
@@ -56,6 +58,7 @@ In this chapter, we will briefly document how to run the software that was devel
 	\end{figure}
 	\item We can now turn on the motors and the cameras, as well as to connect our own laptop, which is explained in the following sections.
 \end{enumerate}
+
 \FloatBarrier
 \subsection{Start the Motors}
 \label{sec::B11_sm}
@@ -91,6 +94,7 @@ If the real robot is up and running (section \ref{sec::B1_rr}), you can now star
 	\end{figure}
 	\item The motors may need to be calibrated when the robot runs for a long time. Therefore, lift up the robot, and bring it to the home position via the yarpmotorgui. Then, start a new terminal on pc104 and run the command \newline \inlinecode{}{yarp rpc /wholeBodyDynamics/rpc} \newline In the interface that will open up, type \newline \inlinecode{}{calib all 300}. 
 \end{enumerate}
+
 \FloatBarrier
 \subsection{Start the Cameras}
 \label{sec::B12_sc}
@@ -108,6 +112,7 @@ If the real robot is up and running (section \ref{sec::B1_rr}), you can now star
 		\label{fig::B12_yarpview}
 	\end{figure}
 \end{enumerate}
+
 \FloatBarrier
 \subsection{Connect your own Laptop}
 Make sure you installed YARP, as described in section \ref{sec::A5_tp}. You can then connect your own laptop via ethernet to the same network as Heicub. Therefore, proceed as described below.
@@ -116,6 +121,7 @@ Make sure you installed YARP, as described in section \ref{sec::A5_tp}. You can 
 	\item  Check the connection by pinging the icubsrv via \inlinecode{}{ping 10.0.0.1}. If this works, skip this point, otherwise you can create a manual connection.  Therefore, search for \inlinecode{}{Network Connections} among your applications and open it. Then, click \inlinecode{}{Add}. If it is not set already, check the hardware address by running \inlinecode{}{ifconfig}, it should show something similar to \inlinecode{}{HWaddr 9C:EB:E8:B2:AB:27}, choose this as your device. Then go to IPv4 settings and set the IP address to \inlinecode{}{10.0.0.3}, the netmask to \inlinecode{}{24}, and the gateway to \inlinecode{}{10.0.0.255}. Then press save.
 	\item If you connected successfully, open a terminal on your device and run \newline \inlinecode{}{yarp detect --write} \newline If it does not find the running yarpserver, manually configure the connection via the following commands from a terminal \newline \inlinecode{}{yarp conf 10.0.0.1 1000} \newline \inlinecode{}{yarp namespace /iCubHeidelberg} \newline \inlinecode{}{yarp detect}
 \end{enumerate}
+
 \FloatBarrier
 \section{Simulated Robot Start-up}
 \label{sec::B2_ss}
@@ -125,10 +131,12 @@ Make sure you installed Gazebo, YARP, and the Gazebo YARP plugins as described i
 	\item Open another terminal and start Gazebo via \newline \inlinecode{}{gazebo -s libgazebo_yarp_clock.so}\newline The clock library will thereby synchronize the YARP clock, and the Gazebo clock.
 	\item  In Gazebo, go to the \inlinecode{}{Insert} bar, and insert \inlinecode{}{heicub_without_weights}.
 \end{enumerate}
+
 \FloatBarrier
 \section{Start the Pattern Generator}
 \label{sec::B3_sp}
 Make sure you installed the pattern generator library as described in section \ref{sec::A1_pg}. The robot needs to be running, either in real (section \ref{sec::B1_rr}, and section \ref{sec::B11_sm}) or in simulation (section \ref{sec::B2_ss}). By construction, the start-up procedure for the simulation and the real robot is the same. You can choose to control the robot via the terminal, or the provided Android app. Both possibilities are described below in section \ref{sec::B31_terminal}, and section \ref{sec::B32_app}, respectively.
+
 \FloatBarrier
 \subsection{Control via the Terminal}
 \label{sec::B31_terminal}
@@ -148,6 +156,7 @@ The terminal user interface comes with the pattern generator, so there is no add
 		\label{fig::B31_keyboard}
 	\end{figure}
 \end{enumerate}
+
 \FloatBarrier
 \subsection{Control via the Android Joystick App}
 \label{sec::B32_app}
@@ -185,6 +194,7 @@ Make sure you installed the Android joystick app as described in section \ref{se
 	\item Go to the app user interface on the laptop (figure \ref{fig::B32_app} (b)), and press \inlinecode{}{r} to run the pattern generator.
 	\item Within the navigation drawer, choose from one of two joysticks to control the robot.
 \end{enumerate}
+
 \FloatBarrier
 \section{Start the Behavioral Augmentation Demo}
 \label{sec::B4_ba}
@@ -199,6 +209,7 @@ There is a trained neural network available on heicub01 to run a demonstration o
 	\item The shell script will then ask you for the mode to run in. Write \inlinecode{}{ba} and press enter.
 	\item The user interface should now show up (figure \ref{fig::B31_keyboard} (b)). Press \inlinecode{}{r} to run the pattern generator. The robot will now be controlled by the trained neural network.
 \end{enumerate}
+
 \FloatBarrier
 \section{Real Robot Shutdown}
 Before you shut down the robot, make sure it is in a safe position, that is, lift it up. Proceed as described below.

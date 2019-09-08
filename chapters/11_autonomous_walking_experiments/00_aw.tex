@@ -1,10 +1,12 @@
-\FloatBarrier
+
 \label{sec::11_aw}
 The previous results from the user controlled walking experiments (chapter \ref{sec::9_uc}), as well as the image processing experiments (chapter \ref{sec::10_ip}), now allow to train the proposed system on autonomous navigation. As already stated, all of the autonomous walking experiments are, therefore, for comparative reasons, based upon the walking hyperparameters from section \ref{sec::92_pt}. The found camera's intrinsic and extrinsic parameters are used from section \ref{sec::10_cc}, and the found depth map extraction parameters from section \ref{sec::102_dp}. For this work, it was decided to train Heicub on finding a fire extinguisher within a room by the use of behavioral cloning, which is demonstrated in section \ref{sec::111_bc}. The reinforcement learning approach for autonomous navigation, on the other hand, is performed within a simulation, and is shown in section \ref{sec::112_ar}. 
-\section{Autonomous Walking via Behavioral Cloning}
 \FloatBarrier
+\section{Autonomous Walking via Behavioral Cloning}
+
 \label{sec::111_bc}
 The most prominent requirement for behavioral cloning is the acquisition of data for the required task, which will be explained in section \ref{sec::1111_da}. Within the same section, a newly developed network architecture is train on the acquired data. The trained neural network will then be used for the autonomous navigation benchmarking experiments in section \ref{sec::1112_pt}, which are, for comparative reasons, the same tasks, which were already being used for the user-controlled tests in section \ref{sec::92_pt}. 
+\FloatBarrier
 \subsection{Data Acquisition and Training}
 \label{sec::1111_da}
 As already pointed out, the neural network was supposed to solve the task of finding a fire extinguisher within a room and then to move towards it. In order to apply behavioral cloning to the task, it was necessary to act according to this policy first, and then to train a neural network on the acquired data. For the data, it is essential to sample homogeneously over the task's distribution. Velocity commands and the corresponding images, were, therefore, recorded for 66 distinct epochs. Each of the epochs was designed to reflect different scenarios, among them obstacle avoidance, interaction with humans, walking towards the fire extinguisher, and searching for the fire extinguisher when it was not possible to directly see it. As a result of the observations, which were gained from the user-controlled walking in section \ref{sec::9_uc}, the user's policy was restricted to only use linear velocities along the x-axis, and angular velocities about the z-axis, since linear velocities along the y-axis revealed to pose an inefficient way of moving the robot. Exemplary samples of the recorded dataset are presented in figure \ref{fig::1111_dataset}.
@@ -43,6 +45,7 @@ By pure sight, it can already be seen that the network performs well on the vali
 	D_\text{KL} = \sum_{v\in \bm{V}}p(v)\log\frac{p(v)}{q(v)},
 \end{align}
 where for the presented case, $p(v)$ is the ground truth velocity distribution, and $q(v)$ is the predicted velocity distribution. For the distribution of linear velocities along the x-axis $v_x$, the Kullback-Leibler divergence was computed to be $D^x_\text{KL}=0.20\,\text{a.u.}$, and for the angular velocity about the z-axis $\omega_z$, $D^z_\text{KL}=0.01\,\text{a.u.}$ was obtained. Now the beauty within the task at hand lies in the fact that one was not solely dependent on a validation split for performance evaluations, but instead that one could run Heicub in a previously unseen test environment. It is the same test environment, which was already introduced in section \ref{sec::9_uc}, and within which the trained neural network's behavior will be evaluated in the next section.
+
 \FloatBarrier
 \subsection{Performance in Test Environment}
 \label{sec::1112_pt}
@@ -146,10 +149,12 @@ Especially in the behavior plot of figure \ref{fig::1112_aw_additional_semantic}
 	\caption{Autonomously controlled for demonstration of a semantic understanding. The robot started to the plot's left-hand side (a), and moved forward to the fire extinguisher to its left. Heicub had to distinguish between the fire extinguisher and another orange object right in front of it.}
 	\label{fig::1112_aw_additional_semantic}
 \end{figure}
+
 \FloatBarrier
 \section{Autonomous Walking via Reinforcement Learning}
 \label{sec::112_ar}
 Since there is to this date no feasible way of training an agent on autonomous navigation in real time with reinforcement learning, it was decided to implement a benchmarking environment, which is introduced in section \ref{sec::1121_bpp}, and then to use the benchmarking environment to test the fusion of nonlinear model predictive control with proximal policy optimization in, which is demonstrated in section \ref{sec::1122_fpp}.
+\FloatBarrier
 \subsection{Benchmarking Proximal Policy Optimization}
 \label{sec::1121_bpp}
 To validate the implementation of proximal policy optimization, a little benchmarking environment was used that is shown in figure \ref{fig::1121_ppo_env}. The agent's goal within this setup is to move towards the red dot, while keeping a maximum distance of $10\,\text{a.u.}$ towards it. The environment's state is simply described by a concatenation of the agent's position $\bm{a} = \begin{pmatrix}
@@ -188,6 +193,7 @@ where $\sigma$ is the standard deviation. One can then see the standard deviatio
 	\label{fig::1121_ppo_test}
 \end{figure}
 The agent was run ten times for $10000$ steps without noise contribution, and $311\pm3$ wins were observed on average, and no lost game at all, which indicates that the neural network learned to generalize the task well.
+\FloatBarrier
 \subsection{Fusion of Nonlinear Model Predictive Control with Proximal Policy Optimization}
 \label{sec::1122_fpp}
 For the autonomous navigation, it is then possible to combine proximal policy optimization with nonlinear model predictive control (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dev/src/train_ppo_nmpc.cpp}{\underline{link}}). Just as in the previous section, a neural network has to solve goal navigation, but this time the agent's trajectories are computed by using the nonlinear model predictive control. The environment's state is simply described by the goal's position $\bm{g}_a=\begin{pmatrix}

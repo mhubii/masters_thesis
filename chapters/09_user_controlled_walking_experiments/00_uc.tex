@@ -1,6 +1,7 @@
-\FloatBarrier
+
 \label{sec::9_uc}
 Within this chapter, the walking pattern generator implementation will first be benchmarked for purely simulated tasks in section \ref{sec::9_uc}, after which the hyperparameters will be tuned for the pattern generator to run well on Heicub. These parameters will then be kept constant throughout the rest of this thesis, in order to allow for a good comparison between user-controlled walking and autonomously controlled walking. As the fundamental building block for the comparison to autonomous walking, a standardized environment for walking experiments will furthermore be defined in section \ref{sec::92_pt}, to later compare user-controlled performance against autonomously controlled performance in section \ref{sec::11_aw}, in terms of balance and goal achievement.
+\FloatBarrier
 \section{Benchmarking of the Pattern Generation Library}
 \label{sec::91_bm}
 To evaluate the pattern generator implementation, it needs to be benchmarked against an existing one of our group, which was written in Python. Therefore, defined velocity commands, as they typically may appear in real-world scenarios, are evaluated. The four defined use cases, which are shown in figures \ref{fig::91_benchmarking_basic} and \ref{fig::91_benchmarking_advanced}, were parametrized in accordance to the HRP-2 humanoid robot.
@@ -44,6 +45,7 @@ To always ensure a smooth motion, and to benchmark the interpolation, the x-, y-
 	\label{fig::91_benchmarking_inter}
 \end{figure}
 The benchmarked pattern generator then enabled to run it on the real robot, which was done in a specially designed test environment that will be presented in the next section.
+
 \FloatBarrier
 \section{Performance in Test Environment}
 \label{sec::92_pt}

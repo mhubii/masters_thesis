@@ -1,6 +1,7 @@
-\FloatBarrier
+
 \label{sec::10_ip}
 Before the idea of behavioral cloning can be tackled, which got described in section \ref{sec::71_bc}, one needs to meet the prerequisites, that is one must calibrate the camera, and tune the depth map extraction parameters, which will be done within this chapter in sections \ref{sec::10_cc}, and \ref{sec::102_dp}, respectively.
+\FloatBarrier
 \section{Camera Calibration}
 \label{sec::10_cc}
 As described in section \ref{sec::3_ip}, for the stereo block matching algorithm to work properly (equation \ref{eq::31_sad}), it is required to calibrate the cameras. This is shortly verified in figure \ref{fig::101_no_calib}, where a depth map got extracted from the uncalibrated stereo camera pair.
@@ -79,6 +80,7 @@ Exemplary rectified images, which rely on the matrices of table \ref{tab::101_ex
 	\caption{Rectified and original view of the stereo camera. Refer to section \ref{sec::32_cc} for the theory.}
 	\label{fig::101_rect}
 \end{figure}
+
 \FloatBarrier
 \section{Depth Map Parameter Tuning}
 \label{sec::102_dp}

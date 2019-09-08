@@ -18,47 +18,12 @@ The specific values can be set in the configurations file (\href{https://github.
 %%%%%%%%%%%%
 %%% NMPC %%%
 %%%%%%%%%%%%
-BaseGenerator::Simulate \ref{eq::223_ckp1} - \ref{eq::223_ddckp1}
-(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L887}{\underline{link}})
-\\
-BaseGenerator::InitializeConstantMatrices
-(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L403}{\underline{link}})
-\\
-BaseGenerator::InitializeCopMatrices \ref{eq::223_zmp}
-(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L420}{\underline{link}})
-\\
-BaseGenerator::SetVelocityReference 
-(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L324}{\underline{link}})
-\\
-BaseGenerator::UpdateSelectionMatrices \ref{eq::224_fs}
-(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L740}{\underline{link}})
-\\
-BaseGenerator::UpdateFootSelectionMatrices \ref{eq::224_fsm}
-(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L1281}{\underline{link}})
 \\
 NMPCGenerator::PreprocessSolution \ref{eq::224_canqp}
 (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/nmpc_generator.cpp#L145}{\underline{link}})
 \\
-BaseGenerator::ComputeLinearSystem \ref{fig::225_foot_hull}
-(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L844}{\underline{link}})
-\\
-BaseGenerator::BuildCopContraint \ref{eq::22_cop_hull}
-(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L946}{\underline{link}})
-\\
-BaseGenerator::BuildFootIneqConstraint \ref{eq::225_ineq_foot}
-(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/base_generator.cpp#L1061}{\underline{link}})
-\\
-BaseGenerator::BuildRotIneqConstraint \ref{eq::225_ineq_rot}
-(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/base_generator.cpp#L1244}{\underline{link}})
-\\
-BaseGenerator::BuildObstacleConstraint \ref{eq::225_obs_const}
-(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/base_generator.cpp#L1271}{\underline{link}})
-\\
 NMPCGenerator::CalculateDerivatives \ref{eq::226_ocp}
 (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/nmpc_generator.cpp#L377}{\underline{link}})
-\\
-NMPCGenerator::PreprocessSolution
-(\href{https://github.com/mhubii/nmpc_pattern_generator/blob/dc1f5a9366cbbbf76f1b02cada642f6ac9a04c89/libs/pattern_generator/src/nmpc_generator.cpp#L155}{\underline{link}})
 %%%%%%%%%%%%
 %%% NMPC %%%
 %%%%%%%%%%%%
@@ -86,9 +51,88 @@ Interpolation::InterpolateLIPMStep
 %%% Interpolating Trajectories %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 While there is an extensive guide on the installation of the implemented software within the appendix \ref{sec::A_si}, the purpose of this chapter is to give the future reader a good understanding of it. The code itself is generic, such that it is not dependent on the used robot at all, for why it is very well-suited to perform future research on arbitrary humanoid robots. Therefore, section \ref{sec::62_id} will give the reader a broad overview of the overall code's structure, in order to allow for a quick assessment of possibly reusable implementations. The completely decoupled pattern generation and deep learning parts of the software are hence explained first in section \ref{sec::63_us}, and section \ref{sec::33_dl}, respectively. Following that, Heicub, our humanoid robot, and the communication with it will be explained in section \ref{sec::34_he}.
-
+\FloatBarrier
 \section{Implementation Details}
 \label{sec::62_id}
+The pattern generator, which got conceptually explained in the previous section, and which is shown in figure \ref{fig::61_pg}, consists of mainly four building blocks. That is, the forward kinematics, the nonlinear model predictive control, the interpolation, and the inverse kinematics. All of these building blocks got written from scratch within the presented work, but all of them rely on already existing software. While the nonlinear model predictive control, as well as the interpolation, were implemented as separated classes in C++, the inverse, and the forward kinematics were integrated into a single kinematics class.
+\FloatBarrier
+\subsection{Nonlinear Model Predictive Control Class}
+The kinematics class utilizes the rigid body dynamics library \cite{felis2017rbdl}, which in turn is based upon the linear algebra library Eigen \cite{eigenweb}. Therefore, Eigen was used for the formulation of the nonlinear model predictive control, as well as for the interpolation class.
+\begin{figure}
+	\centering
+	\begin{tikzpicture}[node distance=2cm]
+	\node (base_generator) [abstract, rectangle split, rectangle split parts=1]
+	{
+		\textbf{BaseGenerator}
+	};
+	\node (base_generator_methods) [comment, rectangle split, rectangle split parts=3, below=0.2cm of base_generator, text justified]
+	{
+		\textbf{Methods}
+		\nodepart{second}\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/pattern_generator/src/base_generator.cpp#L225}{SetSecurityMargin} \ref{fig::225_foot_hull}\\
+		\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/pattern_generator/src/base_generator.cpp#L325}{SetVelocityReference} \ref{eq::224_dcxy}\\
+		\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/pattern_generator/src/base_generator.cpp#L945}{Simulate} \ref{eq::223_ckp1} - \ref{eq::223_ddckp1}\\
+		\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/pattern_generator/src/base_generator.cpp#L252}{SetInitialValues} \ref{eq::223_ckp1} - \ref{eq::223_ddckp1}
+		\nodepart{third}\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/pattern_generator/src/base_generator.cpp#L478}{InitializeConstantMatrices} \ref{eq::223_pos_mat} - \ref{eq::223_acc_mat}\\
+		\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L420}{InitializeCopMatrices} \ref{sec::223_zmp_s_mat}-\ref{sec::223_zmp_u_mat}\\
+		\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/pattern_generator/src/base_generator.cpp#L798}{UpdateSelectionMatrices} \ref{eq::224_fs}\\
+		\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/pattern_generator/src/base_generator.cpp#L1339}{UpdateFootSelectionMatrices} \ref{eq::224_fsm}\\
+		\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/pattern_generator/src/base_generator.cpp#L902}{ComputeLinearSystem} \ref{fig::225_foot_hull}\\
+		\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L946}{BuildCopConstraint} \ref{eq::22_cop_hull}\\\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L1004}{BuildFootIneqConstraint} \ref{eq::225_ineq_foot}\\
+		\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L1187}{BuildRotIneqConstraint} \ref{eq::225_ineq_rot}\\
+		\href{https://github.com/mhubii/nmpc_pattern_generator/blob/5a213044c927dc6aac9f7e32ce1e5fb472cd67bb/libs/pattern_generator/src/base_generator.cpp#L1214}{BuildObstacleConstraint} \ref{eq::225_obs_const}
+	};
+	\node (nmpc_generator) [abstract, rectangle split, rectangle split parts=1, below=8cm of base_generator]
+	{
+		\textbf{NMPCGenerator}
+	};
+	\node (nmpc_generator_methods) [comment, rectangle split, rectangle split parts=3, below=0.2cm of nmpc_generator, text justified]
+	{
+		\textbf{Methods}
+		\nodepart{second}\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/pattern_generator/src/nmpc_generator.cpp#L65}{Solve}
+		\nodepart{third}\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/pattern_generator/src/nmpc_generator.cpp#L155}{PreProcessSolution} \ref{eq::224_canqp}\\
+		\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/pattern_generator/src/nmpc_generator.cpp#L668}{SolveQP}\\
+		\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/pattern_generator/src/nmpc_generator.cpp#L700}{PostProcessSolution} \ref{sec::226_update}
+	};
+	
+	\draw[line] (nmpc_generator.west) -- ++ (0,0) -- ([yshift=0cm, xshift=-0.2cm] nmpc_generator.west) -- ([yshift=0cm, xshift=-0.2cm] base_generator.west) -- (base_generator.west) -- ++(0,0) ;
+	\end{tikzpicture}
+\end{figure}
+\FloatBarrier
+\subsection{Interpolation Class}
+\begin{figure}
+	\centering
+	\begin{tikzpicture}[node distance=2cm]
+	\node (interpolation) [abstract, rectangle split, rectangle split parts=1]
+	{
+		\textbf{Interpolation}
+	};
+	\node (interpolation_methods) [comment, rectangle split, rectangle split parts=3, below=0.2cm of interpolation, text justified]
+	{
+		\textbf{Methods}
+		\nodepart{second}\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/pattern_generator/src/interpolation.cpp#L194}{InterpolateStep} \ref{eq::231_pos_poly} - \ref{eq::231_acc_poly}
+		\nodepart{third}\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/pattern_generator/src/interpolation.cpp#L797}{Set4thOrderCoefficients} \ref{eq::231_ai_4th}\\
+		\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/pattern_generator/src/interpolation.cpp#L824}{Set5thOrderCoefficients} \ref{eq::231_ai_5th}\\
+		\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/pattern_generator/src/interpolation.cpp#L222}{InitializeLIPM} \ref{eq::223_ltss}
+	};
+	\end{tikzpicture}
+\end{figure}
+\FloatBarrier
+\subsection{Kinematics Class}
+\begin{figure}
+	\centering
+	\begin{tikzpicture}[node distance=2cm]
+	\node (kinematics) [abstract, rectangle split, rectangle split parts=1]
+	{
+		\textbf{Kinematics}
+	};
+	\node (kinematics_methods) [comment, rectangle split, rectangle split parts=2, below=0.2cm of kinematics, text justified]
+	{
+		\textbf{Methods}
+		\nodepart{second}\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/kinematics/src/kinematics.cpp#L40}{SetQInit}\\\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/kinematics/src/kinematics.cpp#L47}{Forward}\\\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/kinematics/src/kinematics.cpp#L64}{Inverse}
+	};
+	\end{tikzpicture}
+\end{figure}
+
 As shown in figure \ref{fig::62_folder}, there are four main folders within the implemented code. Those include the libraries inside the libs folder, the models, among them Heicub's URDF model for computing kinematics, and another one for pure visualization with MeshUp \cite{meshup}, the sh folder, which contains shell scripts for easy execution, and furthermore the source folder, which relies on the libraries to build executables from. Moreover, while these executables are very much dependent on the robot at hand, as they are coupled to the robot's communication system, they pose some nice examples on how the pattern generator can be embedded into a robot's operating system. Now in order to reuse the code for a different robot, one could either install the libraries and include the headers, as explained in section \ref{sec::A1_pg}, or replace the input-output module (io\_module) by a new one and keep the folder's structure. Nonetheless, we will only focus on the libraries' usage by introducing simple examples in the following sections and keep the details of implementation on a different operating system up to the future reader. We will further bridge the gap between the background of section \ref{sec::2_bg} by explaining the different methods, which we implemented, and we will further highlight its correlation with the YAML \cite{ben2005yaml} configuration files that are a building block of each library. 
 \begin{figure}[h!]
 \begin{forest}
