@@ -1,13 +1,13 @@
 \FloatBarrier
 \section{Usage}
-\label{sec::32_pg}
+\label{sec::63_us}
 The pattern generation library is built upon the fast linear algebra library Eigen \cite{eigenweb}, which makes it perfectly compatible with the rigid body dynamics library RBDL \cite{felis2017rbdl} that is used for the kinematics. Its main duty is to build the formulation of the optimal control problem that was introduced with much detail in section \ref{sec::22_nmpc}. Starting from the linear time-stepping scheme (equations \ref{eq::223_ckp1}-\ref{eq::223_ddckp1}), the \inlinecode{C++}{BaseGenerator} class sets up all of the necessary matrices for the nonlinear model predictive control. What the \inlinecode{C++}{NMPCGenerator} class then mainly does is to inherit from \inlinecode{C++}{BaseGenerator} in order to sort the matrices for the sequential quadratic programming formulation of equation \ref{eq::226_ocp}. All of the ordering is then being done by \inlinecode{C++}{NMPCGenerator::CalculateCommonExpressions}, while \inlinecode{C++}{NMPCGenerator::CalculateDerivatives} computes the linearization of the optimal control problem, which got explained in detail in section \ref{sec::226_gn}. Then to solve the sequential quadratic programming task, the pattern generation library utilizes qpOASES \cite{ferreau2014qpoases}, and the results are being interpolated by the \inlinecode{C++}{Interpolation} class, which relies on the theory of section \ref{sec::23_it}. However, to use the pattern generation library, the user does not have to deal with the private methods and can only use the public interface. A typical use case would involve the initialization of a \inlinecode{C++}{NMPCGenerator} object like so
 \begin{minted}{cpp}
   // Initialize pattern generator.
   const std::string config_file_loc = "/path/to/configs.yaml";
   NMPCGenerator nmpc(config_file_loc);
 \end{minted} 
-where the YAML configurations file loads the robot specific settings at run time, that is they can be changed without having to recompile the code. An example of the pattern generator's configurations file is shown in figure \ref{sec::32_pg_conf}. One then one must set the initial values as follows
+where the YAML configurations file loads the robot specific settings at run time, that is they can be changed without having to recompile the code. An example of the pattern generator's configurations file is shown in figure \ref{sec::63_us_conf}. One then one must set the initial values as follows
 \begin{minted}{cpp}
   // Pattern generator preparation.
   nmpc.SetSecurityMargin(nmpc.SecurityMarginX(), 
@@ -64,11 +64,11 @@ The trajectories, which are being written out with this method, are ordered acco
 		\scriptsize{
 			\hfill \textbf{Specifications}\\
 			\mbox{}~\hfill Double + single support time\\
-			\mbox{}~\hfill Used to shrink convex hull $\bm{p}_i$ in fig.  \ref{fig::225_foot_hull}, \ref{fig::21_support_polygon}\\
+			\mbox{}~\hfill Used to shrink convex hull $\bm{p}_i$ in fig.  \ref{fig::225_foot_hull}, \ref{fig::62_support_polygon}\\
 			\mbox{}~\hfill The convex hull $\bm{p}^L_i$ in fig. \ref{fig::225_foot_feasibility}\\
 			\mbox{}~\hfill The convex hull $\bm{p}^R_i$ in fig. \ref{fig::225_foot_feasibility}\\
-			\mbox{}~\hfill Used to compute convex hull $\bm{p}_i$ in fig.  \ref{fig::225_foot_hull}, \ref{fig::21_support_polygon}\\
-			\mbox{}~\hfill Used to compute convex hull $\bm{p}_i$ in fig.  \ref{fig::225_foot_hull}, \ref{fig::21_support_polygon}\\
+			\mbox{}~\hfill Used to compute convex hull $\bm{p}_i$ in fig.  \ref{fig::225_foot_hull}, \ref{fig::62_support_polygon}\\
+			\mbox{}~\hfill Used to compute convex hull $\bm{p}_i$ in fig.  \ref{fig::225_foot_hull}, \ref{fig::62_support_polygon}\\
 			\mbox{}~\hfill Distance between feet frames\\
 			
 			\hfill \textbf{Interpolation}\\
@@ -153,7 +153,7 @@ cpu_time: 0.1
 nwsr: 1000
 		\end{lstlisting}
 	\end{minipage}
-	\label{sec::32_pg_conf}
+	\label{sec::63_us_conf}
 	\captionof{table}{The configurations YAML file for the pattern generator, and its relation to the background of section \ref{sec::2_bg}. It can be found at the provided \href{https://github.com/mhubii/nmpc_pattern_generator/blob/master/libs/pattern_generator/configs.yaml}{\underline{link}}.}
 \end{minipage}
 \\
@@ -164,7 +164,7 @@ To run the code on a real robot, one must use inverse kinematics, which turn the
   const std::string config_file_loc = "/path/to/configs.yaml";
   Kinematics ki(config_file_loc);
 \end{minted}
-which loads the configurations from a YAML file that can be found in figure \ref{sec::32_ki_conf}. One of the most important settings in there is the location of the robot's URDF model. For Heicub, this model is located in the models folder from figure \ref{fig::31_folder}.  It is then required to initialize the inverse kinematics with an appropriate guess, such that it does not converge to an unwanted local minimum. We can do so by setting the initial joint angles with
+which loads the configurations from a YAML file that can be found in figure \ref{sec::63_ki_conf}. One of the most important settings in there is the location of the robot's URDF model. For Heicub, this model is located in the models folder from figure \ref{fig::62_folder}.  It is then required to initialize the inverse kinematics with an appropriate guess, such that it does not converge to an unwanted local minimum. We can do so by setting the initial joint angles with
 \begin{minted}{cpp}
   // Initialize position with a good guess.
   Eigen::VectorXd q_init(21 /*heicub's degrees of freedom*/);
@@ -228,7 +228,7 @@ lf_body_point: [0.0, 0.0, 0.0]
 rf_body_point: [0.0, 0.0, 0.0]
 		\end{lstlisting}
 	\end{minipage}
-	\label{sec::32_ki_conf}
+	\label{sec::63_ki_conf}
 	\captionof{table}{The configurations YAML file for the kinematics, and its relation to the background of section \ref{sec::2_bg}. It can be found at the provided \href{https://github.com/mhubii/nmpc_pattern_generator/blob/master/libs/kinematics/configs.yaml}{\underline{link}}.}
 \end{minipage}
 

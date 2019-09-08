@@ -10,7 +10,7 @@ We now came to appreciate the importance of the support polygon for the definiti
 	\centering
 	\includegraphics[scale=.5]{chapters/02_foundations_for_humanoid_walking/img/support_polygon.png}
 	\caption{Full support polygon, and the resulting support polygon with security margin (dashed lines).}
-	\label{fig::21_support_polygon}
+	\label{fig::62_support_polygon}
 \end{figure}
 The support polygon is defined as the convex hull of all contact points of the feet with the ground, so the minimum number of points to fully contain all of them. As the most restrictive case for balance, in this work, we will only consider the support polygon of one foot at a time. Since a rectangle well describes a foot's convex hull, we only rely on the foot width (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/bc79a6d4f9bcfd3794146355af44429f5b7a9fe0/libs/pattern_generator/configs.yaml#L14}{\underline{link}}), and the foot length (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/bc79a6d4f9bcfd3794146355af44429f5b7a9fe0/libs/pattern_generator/configs.yaml#L15}{\underline{link}}) to fully describe it. Also, to ensure that the zero moment point never comes close to the edges of the feet and therefore to provide balance, we define a security margin to their borders (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/bc79a6d4f9bcfd3794146355af44429f5b7a9fe0/libs/pattern_generator/configs.yaml#L3}{\underline{link}}). The respective values are robot specific and can be set in the configurations file by following the provided links.
 %%% LIPM %%% explain where to set this values or leave it out, cause of config file
@@ -68,7 +68,7 @@ NMPCGenerator::PreprocessSolution
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Interpolating Trajectories %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-As already shortly depicted in figure \ref{fig::21_pg}, we need to interpolate the trajectories that we obtain from the nonlinear model predictive control
+As already shortly depicted in figure \ref{fig::61_pg}, we need to interpolate the trajectories that we obtain from the nonlinear model predictive control
 % feet
 Interpolation::Set4thOrderCoefficients \ref{eq::231_ai_4th}
 (\href{https://github.com/mhubii/nmpc_pattern_generator/blob/c82c64a28da7527e75442764f585bd50a8f61ee9/libs/pattern_generator/src/interpolation.cpp#L779}{\underline{link}})
