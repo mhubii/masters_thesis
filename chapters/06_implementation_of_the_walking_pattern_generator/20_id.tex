@@ -73,7 +73,7 @@ The kinematics class utilizes the rigid body dynamics library \cite{felis2017rbd
 	{
 		\textbf{Methods}
 		\nodepart{second}\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/pattern_generator/src/nmpc_generator.cpp#L65}{Solve}
-		\nodepart{third}\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/pattern_generator/src/nmpc_generator.cpp#L155}{PreProcessSolution} \ref{eq::224_canqp}\\
+		\nodepart{third}\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/pattern_generator/src/nmpc_generator.cpp#L155}{PreProcessSolution} \ref{eq::226_ocp} - \ref{eq::226_lin}\\
 		\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/pattern_generator/src/nmpc_generator.cpp#L668}{SolveQP}\\
 		\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/pattern_generator/src/nmpc_generator.cpp#L700}{PostProcessSolution} \ref{sec::226_update}
 	};
@@ -115,7 +115,7 @@ The \inlinecode{}{Interpolation} class takes a \inlinecode{}{BaseGenerator} obje
 \end{figure}
 \FloatBarrier
 \subsection{Kinematics Class}
-The kinematics within this thesis are implemented with RBDL. The \inlinecode{}{Kinematics} class provides features with which it is possible to compute the forward, as well as the inverse kinematics for the control loop of figure \ref{fig::61_pg}. Methods that are used to achieve this, are listed in figure \ref{fig::623_kinematics}. As was noted in the \ref{sec::24_k} section, the inverse kinematics are based on a Levenberg-Marquardt algorithm, which may converge to local minima. The \inlinecode{}{Kinematics} class, therefore, provides a method to set the initial joint angles $\bm{q}$. Just as for the previous sections, the \inlinecode{}{Kinematics} class also loads settings from a YAML configurations file, where for example the number of recalculations, or the damping parameter $\lambda$ can be set. Within the YAML file, one can further specify the location of the robot's universal robot description file, which is used by RBDL to compute the kinematics. Within the \inlinecode{}{Kinematics::Forward} method, the center of mass orientations, and positions, are constrained in accordance to the results of the nonlinear model predictive control, so are the positions of the feet. The feet are, however, not allowed to rotate about the horizontal axes to the floor, which assures that they always stay parallel to it. The methods further constrains the robot's root frame to the initial values, which assures that the inverse kinematics does not drift to prevent hip dislocations.
+The kinematics within this thesis are implemented with RBDL. The \inlinecode{}{Kinematics} class provides features with which it is possible to compute the forward, as well as the inverse kinematics for the control loop of figure \ref{fig::61_pg}. Methods that are used to achieve this, are listed in figure \ref{fig::623_kinematics}. As was noted in the \ref{sec::24_k} section, the inverse kinematics are based on a Levenberg-Marquardt algorithm, which may converge to local minima. The \inlinecode{}{Kinematics} class, therefore, provides a method to set the initial joint angles $\bm{q}$ via \inlinecode{}{Kinematics::SetQInit}. Just as for the previous sections, the \inlinecode{}{Kinematics} class also loads settings from a YAML configurations file, where for example the number of recalculations, or the damping parameter $\lambda$ can be set. Within the YAML file, one can further specify the location of the robot's universal robot description file, which is used by RBDL to compute the kinematics. Within the \inlinecode{}{Kinematics::Inverse} method, the center of mass orientations, and positions, are constrained in accordance to the results of the nonlinear model predictive control, so are the positions of the feet. The feet are, however, not allowed to rotate about the horizontal axes to the floor, which assures that they always stay parallel to it. The methods further constrains the robot's root frame to the initial values, which assures that the inverse kinematics does not drift to prevent hip dislocations. The \inlinecode{}{Kinematics::Forward} method then allows the user to update the current center of mass and feet positions, given the current robot's joint angles. The positions can then be obtained via the provided getter methods, which are shown in figure \ref{fig::623_kinematics}.
 \begin{figure}
 	\centering
 	\begin{tikzpicture}[node distance=2cm]
@@ -126,9 +126,12 @@ The kinematics within this thesis are implemented with RBDL. The \inlinecode{}{K
 	\node (kinematics_methods) [comment, rectangle split, rectangle split parts=2, below=0.2cm of kinematics, text justified]
 	{
 		\textbf{Methods}
-		\nodepart{second}\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/kinematics/src/kinematics.cpp#L40}{SetQInit}\\\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/kinematics/src/kinematics.cpp#L47}{Forward}\\\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/kinematics/src/kinematics.cpp#L64}{Inverse}
+		\nodepart{second}\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/kinematics/src/kinematics.cpp#L40}{SetQInit}\\\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/kinematics/src/kinematics.cpp#L47}{Forward}\\\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/kinematics/src/kinematics.cpp#L64}{Inverse}\\
+		\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/kinematics/include/kinematics/kinematics.h#L31}{GetComPos}\\
+		\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/kinematics/include/kinematics/kinematics.h#L34}{GetLFPos}\\
+		\href{https://github.com/mhubii/nmpc_pattern_generator/blob/719fde0bb73925923de85cbf379c5523e075dfeb/libs/kinematics/include/kinematics/kinematics.h#L35}{GetRFPos}
 	};
 	\end{tikzpicture}
-	\caption{The \inlinecode{}{Kinematics} class is based upon RBDL.}
+	\caption{The \inlinecode{}{Kinematics} class is based upon RBDL..}
 	\label{fig::623_kinematics}
 \end{figure}

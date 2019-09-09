@@ -1,4 +1,9 @@
 \label{sec::8_co}
+Exemplary code, with which the depth map parameters are tuned, can be found at the provided \href{https://github.com/mhubii/nmpc_pattern_generator/blob/master/src/tune_disp_map.cpp}{\underline{link}}. It relies on the rectification matrices $\bm{R}_i$, and the projection matrices $\bm{P}_i$ that got explained in section \ref{sec::3_ip}. 
+
+
+YAML files store them inside of the io\_module folder of figure \ref{fig::62_folder}. They are highly dependent on the robot but will not change for Heicub over time, for why the future reader will be able to reuse them. 
+\\\\ TODO
 With YARP \cite{metta2006yarp}, it is possible to directly interface the robot's motors, the cameras, and the force-torque sensors. Moreover, it enables the user to run multiple programs in parallel, which can then communicate with each other, which is of special importance for the control loop that was implemented within the scope of this thesis (see figure \ref{fig::341_yarp}).
 \begin{figure}[h!]
 	\hspace*{-1cm}
