@@ -37,6 +37,14 @@ version  = 3.03
 \usepackage{placeins}          % figures in sections
 \usepackage{minted}            % cpp style
 \usepackage{fancyhdr}          % page style
+\usepackage{afterpage}         % blank pages
+
+\newcommand\blankpage{
+	\null
+	\thispagestyle{empty}
+	\addtocounter{page}{-1}
+	\newpage
+}
  
 \usepackage{tikz}
 \usetikzlibrary{positioning,shapes,shadows,arrows}
@@ -118,7 +126,8 @@ text centered, anchor=north, text=black, text width=7cm, font=\small]
 	\include{chapters/00_title/titlepages-ger} % select either german
 	\include{chapters/00_title/titlepages-eng} % or english title page
 	\include{chapters/00_title/abstracts}
-	
+
+	\afterpage{\blankpage}
 	\tableofcontents
 	
 	%% chapters
@@ -154,7 +163,7 @@ text centered, anchor=north, text=black, text width=7cm, font=\small]
 	\input{chapters/06_implementation_of_the_walking_pattern_generator/10_gc}   % short overview of humanoid walking
 	\input{chapters/06_implementation_of_the_walking_pattern_generator/20_id}
 	\input{chapters/06_implementation_of_the_walking_pattern_generator/30_us}
-	
+
 	\FloatBarrier
 	\chapter{Autonomous High-Level Control of the Walking Pattern Generator}
 	\input{chapters/07_autonomous_high_level_control_of_the_walking_pattern_generator/00_in}   % introduction to implementation
