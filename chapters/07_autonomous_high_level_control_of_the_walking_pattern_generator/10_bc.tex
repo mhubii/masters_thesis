@@ -5,7 +5,7 @@ The first approach to train a neural network on autonomous navigation is based u
 \FloatBarrier
 \subsection{General Concept}
 \label{sec::711_gc}
-Behavioral cloning in itself is not always related to machine learning but poses one possible way of training a neural network in a supervised manner. The presented concept is easy to understand and got inspired by \cite{bojarski2016end}, where it was used for self-driving cars. It utilizes the control loop, which was already introduced in figure \ref{fig::7_cl}. In order to then replace the human user by an artificial agent, one has a human user to perform a desired behavior, and copy it. The required extended control loop is shown in figure \ref{fig::71_bc}.
+Behavioral cloning in itself is not always related to machine learning but poses one possible way of training a neural network in a supervised manner. The presented concept is easy to understand and got inspired by \cite{bojarski2016end}, where it was used for self-driving cars. It utilizes the control loop, which was already introduced in figure \ref{fig::7_cl}. In order to then replace the human user by an artificial agent, one has a human user perform a desired behavior, and copy it. The required extended control loop is shown in figure \ref{fig::71_bc}.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=.5]{chapters/07_autonomous_high_level_control_of_the_walking_pattern_generator/img/behavioral_cloning.png}
@@ -20,4 +20,4 @@ Heicub does only support a pair of stereo RGB cameras, and the RGBD images are, 
 \begin{minted}{cpp}
   auto module = torch::jit::load(net_location);
 \end{minted}
-The code to convert a model, can be found at the following \href{https://github.com/mhubii/nmpc_pattern_generator/blob/master/libs/learning/python/python_to_cpp.py}{\underline{link}}. Once the neural network predicts a desired velocity for the pattern generation, one only has to convert the desired velocity from a \inlinecode{}{torch::Tensor} to a \inlinecode{C++}{Eigen::Vector3d}, which is the datatype that the pattern generation library works with. This velocity is then forwarded, via the \inlinecode{}{NMPCGenerator::SetVelocityReference} method, just as described in section \ref{sec::63_us}, and a new iteration is executed.
+The code to convert a model, can be found at the following \href{https://github.com/mhubii/nmpc_pattern_generator/blob/master/libs/learning/python/python_to_cpp.py}{\underline{link}}. Once the neural network is trained to predict a desired velocity for the pattern generation, one only has to convert the desired velocity from a \inlinecode{}{torch::Tensor} to an \inlinecode{C++}{Eigen::Vector3d}, which is the datatype that the pattern generation library works with. This velocity is then forwarded, via the \inlinecode{}{NMPCGenerator::SetVelocityReference} method, just as described in section \ref{sec::63_us}, and a new iteration is executed.
