@@ -124,13 +124,16 @@ text centered, anchor=north, text=black, text width=7cm, font=\small]
 \begin{document}
 	%% title pages similar to providet template instead of maketitle
 	\include{chapters/00_title/titlepages-ger} % select either german
+	\afterpage{\blankpage}
 	\include{chapters/00_title/titlepages-eng} % or english title page
+	\afterpage{\blankpage}
 	\include{chapters/00_title/abstracts}
 
 	\afterpage{\blankpage}
 	\tableofcontents
 	
 	%% chapters
+	\afterpage{\blankpage}
 	\FloatBarrier
 	\chapter{Introduction}
 	\input{chapters/01_introduction/00_in}
@@ -164,12 +167,14 @@ text centered, anchor=north, text=black, text width=7cm, font=\small]
 	\input{chapters/06_implementation_of_the_walking_pattern_generator/20_id}
 	\input{chapters/06_implementation_of_the_walking_pattern_generator/30_us}
 
+	\afterpage{\blankpage}
 	\FloatBarrier
 	\chapter{Autonomous High-Level Control of the Walking Pattern Generator}
 	\input{chapters/07_autonomous_high_level_control_of_the_walking_pattern_generator/00_in}   % introduction to implementation
 	\input{chapters/07_autonomous_high_level_control_of_the_walking_pattern_generator/10_bc}   % behavioral cloning
 	\input{chapters/07_autonomous_high_level_control_of_the_walking_pattern_generator/20_rl}   % reinforcement learning
 	
+	\afterpage{\blankpage}
 	\FloatBarrier
 	\chapter{Running the Autonomous Walking Pattern Generator on Heicub}
 	\input{chapters/08_running_the_autonomous_walking_pattern_generator_on_heicub/00_he}
@@ -182,6 +187,8 @@ text centered, anchor=north, text=black, text width=7cm, font=\small]
 	\chapter{Image Processing Experiments}
 	\input{chapters/10_image_processing_experiments/00_ip}
 
+	\afterpage{\blankpage}
+	\afterpage{\blankpage}
 	\FloatBarrier
 	\chapter{Autonomously Controlled Walking Experiments}
 	\input{chapters/11_autonomous_walking_experiments/00_aw}
@@ -189,7 +196,7 @@ text centered, anchor=north, text=black, text width=7cm, font=\small]
 	\FloatBarrier
 	\chapter{Conclusion}
 	\input{chapters/12_conclusion/00_in}
-	
+
 	\part{Appendix}
 	\begin{appendix}
 		\label{sec::a}
